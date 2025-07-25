@@ -1,0 +1,16 @@
+/* LocalizedSelect/LocalizedSelect.scss */
+.localized-select-wrapper {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+}
+
+.localized-select-label {
+  margin-bottom: 0.25rem;
+  font-weight: 500;
+}
+
+.localized-select {
+  padding: 0.5rem;
+  font-size: 1rem;
+}

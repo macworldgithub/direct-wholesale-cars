@@ -1,0 +1,15 @@
+// Breadcrumbs/Breadcrumbs.scss
+.breadcrumbs {
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+.breadcrumb-item a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.breadcrumb-item a:hover {
+  text-decoration: underline;
+}

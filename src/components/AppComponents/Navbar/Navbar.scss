@@ -1,0 +1,92 @@
+.navbar {
+  width: 100%;
+  background-color: rgba(255, 255, 255, 0.6); 
+  backdrop-filter: blur(12px); 
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  transition: background-color 0.3s ease, backdrop-filter 0.3s ease;
+}
+
+.navbar-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 20px;
+  height: 100px; 
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+}
+
+.navbar-logo {
+  flex-shrink: 0;
+
+  .navbar-logo-img {
+    width: auto;
+    height: auto;
+  }
+}
+
+.navbar-links {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 32px;
+
+  a {
+    font-weight: 500;
+    font-size: 17px;
+    text-decoration: none;
+    letter-spacing: 0.5px;
+    position: relative;
+    padding: 6px 0;
+    transition: color 0.3s ease, letter-spacing 0.3s ease;
+
+    &:hover {
+      color: #1801B4; // red on hover
+      letter-spacing: 1px;
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: 0px;
+      width: 0;
+      height: 2px;
+      background-color: #1801B4;
+      transition: width 0.3s ease;
+    }
+
+    &:hover::after {
+      width: 100%;
+    }
+  }
+}
+
+.navbar-login {
+  a {
+    padding: 10px 30px;
+    background-color: #1801B4;
+    color: #fff;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 15px;
+    letter-spacing: 0.5px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+
+    &:hover {
+      background-color: #0f0072;
+      transform: translateY(-1px);
+    }
+
+    &:active {
+      transform: scale(0.98);
+    }
+  }
+}
