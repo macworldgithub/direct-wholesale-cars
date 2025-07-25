@@ -1,6 +1,5 @@
-// LocalizedInput/LocalizedInput.tsx
-import React from 'react';
-import './LocalizedInput.scss';
+import React from "react";
+import "./LocalizedInput.scss";
 
 interface LocalizedInputProps {
   name: string;
@@ -9,18 +8,29 @@ interface LocalizedInputProps {
   placeholderKey?: string;
   className?: string;
   type?: string;
+  size?: "sm" | "md" | "lg" | "xl";
 }
 
-const LocalizedInput: React.FC<LocalizedInputProps> = ({ name, value, onChange, placeholderKey, className = '', type = 'text' }) => {
+const LocalizedInput: React.FC<LocalizedInputProps> = ({
+  name,
+  value,
+  onChange,
+  placeholderKey,
+  className = "",
+  type = "text",
+  size = "md", 
+}) => {
   return (
-    <input
-      type={type}
-      name={name}
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
-      placeholder={placeholderKey ? (placeholderKey) : ''}
-      className={`localized-input ${className}`}
-    />
+    <form autoComplete="off">
+      <input
+        type={type}
+        name={name}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder={placeholderKey || ""}
+        className={`localized-input input-${size} ${className}`}
+      />
+    </form>
   );
 };
 

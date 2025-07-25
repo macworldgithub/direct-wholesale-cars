@@ -1,9 +1,16 @@
-import Image from "next/image";
-import Link from "next/link";
-import "./Navbar.scss";
-import React from "react";
+'use client';
 
-export default function Navbar() {
+import React, { useState } from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
+import BurgerMenu from '@/components/UIComponents/BurgerMenu/BurgerMenu';
+import './Navbar.scss';
+
+const Navbar = () => {
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const toggleMenu = () => setMenuOpen((prev) => !prev);
+
   return (
     <nav className="navbar">
       <div className="navbar-container">
@@ -12,27 +19,33 @@ export default function Navbar() {
             <Image
               src="/images/logo.png"
               alt="Logo"
-              fill={false}
-              width={150}
-              height={50}
-              priority
-              className="navbar-logo-img" 
+              width={140}
+              height={40}
+              className="navbar-logo-img"
             />
           </Link>
         </div>
 
+        {/* Desktop Links only */}
         <div className="navbar-links">
-          <Link href="/">HOME</Link>
-          <Link href="/buy">BUY</Link>
-          <Link href="/sell">SELL</Link>
-          <Link href="/valuations">VALUATION</Link>
-          <Link href="/insights">INSIGHTS</Link>
+          <Link href="/">Home</Link>
+          <Link href="/about">About</Link>
+          <Link href="/services">Services</Link>
+          <Link href="/contact">Contact</Link>
         </div>
 
+        {/* Desktop Login */}
         <div className="navbar-login">
-          <Link href="/login">LOGIN</Link>
+          <Link href="/login">Login</Link>
+        </div>
+
+        {/* Burger icon + dropdown */}
+        <div className="navbar-burger">
+          <BurgerMenu isOpen={menuOpen} toggle={toggleMenu} />
         </div>
       </div>
     </nav>
   );
-}
+};
+
+export default Navbar;

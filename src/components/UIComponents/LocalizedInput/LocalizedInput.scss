@@ -1,7 +1,38 @@
-// LocalizedInput/LocalizedInput.scss
 .localized-input {
-  padding: 0.5rem;
   border: 1px solid #bbb;
   border-radius: 4px;
   font-size: 1rem;
+  background-color: white;
+  color: black;
+  width: 100%;
+  transition: border-color 0.2s;
+
+  &:focus {
+    outline: none;
+    border-color: #1801b4;
+  }
+}
+
+.input-sm {
+  padding: 6px 10px;
+  font-size: 14px;
+  max-width: 200px;
+}
+
+.input-md {
+  padding: 10px 14px;
+  font-size: 16px;
+  max-width: 300px;
+}
+
+.input-lg {
+  padding: 12px 18px;
+  font-size: 18px;
+  max-width: 400px;
+}
+
+.input-xl {
+  padding: 14px 20px;
+  font-size: 20px;
+  max-width: 500px;
 }

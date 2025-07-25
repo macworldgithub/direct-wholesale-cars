@@ -1,31 +1,78 @@
-// BurgerMenu/BurgerMenu.scss
+.burger-wrapper {
+  position: relative;
+  z-index: 1200;
+}
+
 .burger-menu {
-  background: none;
-  border: none;
-  display: flex;
+  display: none;
   flex-direction: column;
   justify-content: space-between;
-  width: 30px;
+  width: 28px;
   height: 20px;
-  padding: 0;
+  background: none;
+  border: none;
   cursor: pointer;
+  padding: 0;
+  z-index: 1300;
+
+  span {
+    display: block;
+    height: 3px;
+    width: 100%;
+    background-color: #000;
+    border-radius: 2px;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+  }
+
+  &.open span:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 5px);
+  }
+
+  &.open span:nth-child(2) {
+    opacity: 0;
+  }
+
+  &.open span:nth-child(3) {
+    transform: rotate(-45deg) translate(5px, -5px);
+  }
+
+  @media (max-width: 768px) {
+    display: flex;
+  }
 }
 
-.burger-menu span {
-  height: 4px;
-  background: #333;
-  border-radius: 2px;
-  transition: all 0.3s ease;
-}
-
-.burger-menu.open span:nth-child(1) {
-  transform: translateY(8px) rotate(45deg);
-}
-
-.burger-menu.open span:nth-child(2) {
+.burger-dropdown {
+  position: absolute;
+  top: 50px;
+  right: 0;
+  width: 200px;
+  background-color: white;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
   opacity: 0;
-}
+  transform: translateY(-10px);
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s ease;
 
-.burger-menu.open span:nth-child(3) {
-  transform: translateY(-8px) rotate(-45deg);
+  display: flex;
+  flex-direction: column;
+
+  a {
+    padding: 14px 20px;
+    font-size: 16px;
+    color: #333;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background-color: #f5f5f5;
+    }
+  }
+
+  &.show {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
 }
