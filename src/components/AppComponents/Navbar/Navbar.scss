@@ -99,8 +99,11 @@
 }
 
 .navbar-login {
+  display: flex;
+  gap: 16px; // Adjust as needed
+
   a {
-    padding: 10px 30px;
+    padding: 10px 24px;
     background-color: #1801B4;
     color: #fff;
     border-radius: 4px;
@@ -111,14 +114,28 @@
     transition: background-color 0.3s ease, transform 0.2s ease;
 
     &:hover {
-      background-color: #0f0072;
+      border: 1px solid #1801B4;
+      color: #1801B4;
+      background-color: transparent;
       transform: translateY(-1px);
     }
 
     &:active {
       transform: scale(0.98);
     }
+
+    &.signup {
+      background-color: transparent;
+      border: 1px solid #1801B4;
+      color: #1801B4;
+
+      &:hover {
+        background-color: #1801B4;
+        color: #fff;
+      }
+    }
   }
+
   @media (max-width: 768px) {
     display: none;
   }

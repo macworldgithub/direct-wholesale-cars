@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
-import BurgerMenu from '@/components/UIComponents/BurgerMenu/BurgerMenu';
-import './Navbar.scss';
+import React, { useState } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import BurgerMenu from "@/components/UIComponents/BurgerMenu/BurgerMenu";
+import "./Navbar.scss";
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -29,14 +29,19 @@ const Navbar = () => {
         {/* Desktop Links only */}
         <div className="navbar-links">
           <Link href="/">Home</Link>
-          <Link href="/about">About</Link>
-          <Link href="/services">Services</Link>
-          <Link href="/contact">Contact</Link>
+          <Link href="/buy">Buy</Link>
+          <Link href="/sell">Sell</Link>
+          <Link href="/valuation">Valuation</Link>
+          <Link href="/insights">Insights</Link>
         </div>
 
         {/* Desktop Login */}
+        {/* Desktop Login */}
         <div className="navbar-login">
           <Link href="/login">Login</Link>
+          <Link href="/signup" className="signup">
+            Signup
+          </Link>
         </div>
 
         {/* Burger icon + dropdown */}

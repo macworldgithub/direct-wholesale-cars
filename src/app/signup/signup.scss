@@ -1,0 +1,160 @@
+.signup-wrapper {
+  display: flex;
+  height: 100vh;
+  font-family: var(--font-poppins);
+
+  .signup-left,
+  .signup-right {
+    width: 50%;
+  }
+
+  .signup-left {
+    padding: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #ffffff;
+  }
+
+  .signup-content {
+    width: 100%;
+    max-width: 400px;
+
+    .signup-logo {
+      margin-bottom: 40px;
+      max-width: 100%;
+      height: auto;
+    }
+
+    .signup-heading {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: #1801B4;
+    }
+
+    .signup-text {
+      font-size: 14px;
+      color: #555;
+      margin-bottom: 32px;
+    }
+
+    .signup-inputs {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .signup-options {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 20px 0;
+
+      .signup-forgot {
+        font-size: 14px;
+        color: #1801B4;
+        text-decoration: none;
+        transition: color 0.3s ease;
+
+        &:hover {
+          color: #FF302D;
+        }
+      }
+    }
+
+    .signup-button {
+      width: 100%;
+      background-color: #1801B4;
+      color: #fff;
+      font-weight: 600;
+      padding: 12px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+
+      &:hover {
+        background-color: #FF302D;
+      }
+    }
+  }
+
+  .signup-right {
+    position: relative;
+
+    .signup-image {
+      object-fit: cover;
+    }
+  }
+
+  @media (max-width: 1024px) {
+    .signup-left {
+      padding: 60px;
+    }
+
+    .signup-content {
+      .signup-heading {
+        font-size: 24px;
+      }
+
+      .signup-text {
+        font-size: 13px;
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+
+    .signup-left,
+    .signup-right {
+      width: 100%;
+    }
+
+    .signup-left {
+      padding: 40px 20px;
+      order: 2;
+    }
+
+    .signup-right {
+      height: 200px;
+      order: 1;
+
+      .signup-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+
+    .signup-options {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .signup-button {
+      font-size: 16px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .signup-heading {
+      font-size: 22px;
+    }
+
+    .signup-text {
+      font-size: 12px;
+    }
+
+    .signup-inputs {
+      gap: 16px;
+    }
+
+    .signup-button {
+      padding: 10px;
+      font-size: 15px;
+    }
+  }
+}
