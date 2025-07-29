@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import Price from "../components/UIComponents/Price/Price";
 import Card from "../components/UIComponents/Card/Card";
@@ -74,6 +76,10 @@ const networkSteps = [
 ];
 
 export default function Home() {
+  const handleSearch = (searchData: any) => {
+    console.log('Search performed:', searchData);
+  };
+
   return (
     <div className="main-container">
     

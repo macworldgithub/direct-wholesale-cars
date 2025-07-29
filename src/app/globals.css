@@ -46,6 +46,16 @@ a {
   text-decoration: none;
 }
 
+.main-container {
+  width: 100%;
+  min-height: 100vh;
+}
+
+.page-content {
+  width: 100%;
+  min-height: 100vh;
+}
+
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;
