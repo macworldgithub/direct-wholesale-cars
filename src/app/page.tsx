@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import Hero from "../components/AppComponents/Hero/Hero";
+// import Hero from "../components/AppComponents/Hero/Hero";
 
 export default function Home() {
   const handleSearch = (searchData: any) => {
@@ -10,9 +10,9 @@ export default function Home() {
 
   return (
     <div className="main-container">
-      <main className="page-content">
+      {/* <main className="page-content">
         <Hero onSearch={handleSearch} />
-      </main>
+      </main> */}
     </div>
   );
 }

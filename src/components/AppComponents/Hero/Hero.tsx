@@ -79,7 +79,7 @@ const Hero: React.FC<HeroProps> = ({ onSearch }) => {
       <div className="hero-background">
         <div className="hero-overlay"></div>
       </div>
-      
+
         <div className="search-container">
           <div className="search-bar">
             <div className="search-field">
