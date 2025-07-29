@@ -28,7 +28,7 @@ const Navbar = () => {
 
         {/* Desktop Links only */}
         <div className="navbar-links">
-          <Link href="/">Home</Link>
+          <Link href="/home">Home</Link>
           <Link href="/buy">Buy</Link>
           <Link href="/sell">Sell</Link>
           <Link href="/valuation">Valuation</Link>

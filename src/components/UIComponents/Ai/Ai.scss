@@ -1,0 +1,56 @@
+.ai-features-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  margin: 2rem 0;
+}
+
+.ai-feature-card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  padding: 2rem 1.5rem 1.5rem 1.5rem;
+  min-width: 220px;
+  max-width: 270px;
+  flex: 1 1 220px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  transition: box-shadow 0.2s;
+}
+
+.ai-feature-icon {
+  font-size: 2.2rem;
+  margin-bottom: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.ai-feature-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #111;
+  margin-bottom: 0.5rem;
+}
+
+.ai-feature-subtitle {
+  color: #888;
+  font-size: 1rem;
+  font-weight: 400;
+}
+
+@media (max-width: 900px) {
+  .ai-features-wrapper {
+    flex-direction: column;
+    align-items: center;
+    gap: 1.2rem;
+  }
+  .ai-feature-card {
+    width: 100%;
+    max-width: 400px;
+    min-width: 0;
+  }
+}
