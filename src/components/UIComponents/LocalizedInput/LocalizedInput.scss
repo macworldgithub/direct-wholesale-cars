@@ -13,6 +13,18 @@
   }
 }
 
+.input-label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.required {
+  color: red;
+  margin-left: 2px;
+}
+
 .input-sm {
   padding: 6px 10px;
   font-size: 14px;
@@ -35,4 +47,8 @@
   padding: 14px 20px;
   font-size: 20px;
   max-width: 500px;
+}
+
+.input-full {
+  max-width: 100% !important;
 }

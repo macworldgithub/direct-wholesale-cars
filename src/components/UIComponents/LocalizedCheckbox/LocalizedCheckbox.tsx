@@ -6,7 +6,7 @@ interface LocalizedCheckboxProps {
   name: string;
   checked: boolean;
   onChange: (checked: boolean) => void;
-  labelKey: string;
+  labelKey: React.ReactNode;
   className?: string;
 }
 

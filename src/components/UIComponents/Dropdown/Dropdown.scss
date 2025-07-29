@@ -1,6 +1,61 @@
 .dropdown {
-  padding: 0.5rem;
-  font-size: 1rem;
+  width: 100%;
   border: 1px solid #ccc;
-  border-radius: 4px;
+  border-radius: 6px;
+  background-color: #fff;
+  color: #333;
+  outline: none;
+  transition: all 0.3s ease;
+  appearance: none;
+  background-image: url('/icons/arrow-down.svg');
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 16px 16px;
+
+  &:hover {
+    border-color: #999;
+    box-shadow: 0 0 4px rgba(24, 1, 180, 0.2);
+  }
+
+  &:focus {
+    border-color: #1801b4;
+    box-shadow: 0 0 0 1px rgba(24, 1, 180, 0.15);
+  }
+}
+
+.input-label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.required {
+  color: red;
+  margin-left: 2px;
+}
+
+// Size variants
+.input-sm {
+  padding: 6px 10px;
+  font-size: 14px;
+  max-width: 200px;
+}
+
+.input-md {
+  padding: 10px 14px;
+  font-size: 16px;
+  max-width: 300px;
+}
+
+.input-lg {
+  padding: 12px 18px;
+  font-size: 18px;
+  max-width: 400px;
+}
+
+.input-xl {
+  padding: 14px 20px;
+  font-size: 20px;
+  max-width: 500px;
 }

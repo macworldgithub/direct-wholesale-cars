@@ -1,5 +1,4 @@
-"use client";
-
+import HomePage from "@/components/AppComponents/HomePage/HomePage";
 import React from "react";
 // import Hero from "../components/AppComponents/Hero/Hero";
 
@@ -9,10 +8,8 @@ export default function Home() {
   };
 
   return (
-    <div className="main-container">
-      {/* <main className="page-content">
-        <Hero onSearch={handleSearch} />
-      </main> */}
+    <div>
+      <HomePage/>
     </div>
   );
 }

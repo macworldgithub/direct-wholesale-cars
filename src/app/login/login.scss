@@ -1,6 +1,9 @@
 .login-wrapper {
   display: flex;
-  height: 100vh;
+  height: 100%;
+  min-height: 100vh;
+  width: 100%;
+  position: relative;
   font-family: var(--font-poppins);
 
   .login-left,
@@ -30,7 +33,7 @@
       font-size: 28px;
       font-weight: 700;
       margin-bottom: 12px;
-      color: #1801B4;
+      color: #1801b4;
     }
 
     .login-text {
@@ -53,29 +56,30 @@
 
       .login-forgot {
         font-size: 14px;
-        color: #1801B4;
+        color: #1801b4;
         text-decoration: none;
         transition: color 0.3s ease;
 
         &:hover {
-          color: #FF302D;
+          color: #ff302d;
         }
       }
     }
 
     .login-button {
       width: 100%;
-      background-color: #1801B4;
+      background-color: #1801b4;
       color: #fff;
-      font-weight: 600;
       padding: 12px;
       border: none;
       border-radius: 6px;
       cursor: pointer;
-      transition: background-color 0.3s ease;
+      transition: all 0.3s ease;
 
       &:hover {
-        background-color: #FF302D;
+        background-color: transparent;
+        color: #1801b4;
+        border: 1px solid #1801b4;
       }
     }
   }
@@ -155,6 +159,25 @@
     .login-button {
       padding: 10px;
       font-size: 15px;
+    }
+  }
+}
+
+.signup-redirect {
+  text-align: center;
+  margin-top: 1rem;
+  font-size: 0.95rem;
+  color: black;
+
+  .signup-link {
+    color: #ff302d;
+    font-weight: 600;
+    margin-left: 5px;
+    text-decoration: underline;
+    transition: color 0.3s;
+
+    &:hover {
+      color: #1801b4;
     }
   }
 }
