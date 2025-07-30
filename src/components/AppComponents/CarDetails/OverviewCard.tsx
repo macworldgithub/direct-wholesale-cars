@@ -5,66 +5,75 @@ import './OverviewCard.scss';
 
 interface OverviewCardProps {
   carData: {
-    name: string;
-    price: string;
+    year: string;
     mileage: string;
-    location: string;
+    fuelType: string;
+    condition: string;
     vin: string;
     engine: string;
     transmission: string;
     drivetrain: string;
     exterior: string;
     interior: string;
-    images: string[];
   };
 }
 
 const OverviewCard: React.FC<OverviewCardProps> = ({ carData }) => (
-  <div className="overview-section">
-    <div className="car-images">
-      <div className="main-image">
-        <img src={carData.images[0]} alt="Car" />
+  <div className="overview-card-root">
+    {/* Metrics Row */}
+    <div className="metrics-row">
+      <div className="metric">
+        <img src="/images/calender.png" alt="Year" className="metric-icon" />
+        <div className="metric-value blue">{carData.year}</div>
+        <div className="metric-label">Year</div>
       </div>
-      <div className="thumbnail-images">
-        {carData.images.slice(1).map((img, idx) => (
-          <img key={idx} src={img} alt={`Thumbnail ${idx + 1}`} />
-        ))}
+      <div className="metric">
+        <img src="/images/miles.png" alt="Miles" className="metric-icon" />
+        <div className="metric-value blue">{carData.mileage}</div>
+        <div className="metric-label">Miles</div>
+      </div>
+      <div className="metric">
+        <img src="/images/Fuel.png" alt="Fuel Type" className="metric-icon" />
+        <div className="metric-value blue">{carData.fuelType}</div>
+        <div className="metric-label">Fuel Type</div>
+      </div>
+      <div className="metric">
+        <img src="/images/Verify.png" alt="Condition" className="metric-icon" />
+        <div className="metric-value blue">{carData.condition}</div>
+        <div className="metric-label">Condition</div>
       </div>
     </div>
-    <div className="car-info">
-      <LocalizedHeading heading={carData.name} level={1} className="car-title" />
-      <div className="price-section">
-        <LocalizedText text={carData.price} className="price" />
-        <LocalizedText text={carData.mileage} className="mileage" />
+
+    {/* Details 2-column grid */}
+    <div className="details-2col">
+      <div className="details-col">
+        <LocalizedHeading heading="Vehicle Details" level={6} className="details-heading blue" />
+        <div className="details-row">
+          <span className="details-label">VIN:</span>
+          <span className="details-value bold">{carData.vin}</span>
+        </div>
+        <div className="details-row">
+          <span className="details-label">Engine:</span>
+          <span className="details-value bold">{carData.engine}</span>
+        </div>
+        <div className="details-row">
+          <span className="details-label">Transmission:</span>
+          <span className="details-value bold">{carData.transmission}</span>
+        </div>
+        <div className="details-row">
+          <span className="details-label">Drivetrain:</span>
+          <span className="details-value bold">{carData.drivetrain}</span>
+        </div>
       </div>
-      <div className="car-details-grid">
-        <div className="detail-item">
-          <LocalizedText text="Location" className="detail-label" />
-          <LocalizedText text={carData.location} className="detail-value" />
+      <div className="details-col">
+        <LocalizedHeading heading="Colors" level={6} className="details-heading blue" />
+        <div className="details-row">
+          <span className="details-label">Exterior:</span>
+          <span className="details-value bold">{carData.exterior}</span>
         </div>
-        <div className="detail-item">
-          <LocalizedText text="VIN" className="detail-label" />
-          <LocalizedText text={carData.vin} className="detail-value" />
-        </div>
-        <div className="detail-item">
-          <LocalizedText text="Engine" className="detail-label" />
-          <LocalizedText text={carData.engine} className="detail-value" />
-        </div>
-        <div className="detail-item">
-          <LocalizedText text="Transmission" className="detail-label" />
-          <LocalizedText text={carData.transmission} className="detail-value" />
-        </div>
-        <div className="detail-item">
-          <LocalizedText text="Drivetrain" className="detail-label" />
-          <LocalizedText text={carData.drivetrain} className="detail-value" />
-        </div>
-        <div className="detail-item">
-          <LocalizedText text="Exterior" className="detail-label" />
-          <LocalizedText text={carData.exterior} className="detail-value" />
-        </div>
-        <div className="detail-item">
-          <LocalizedText text="Interior" className="detail-label" />
-          <LocalizedText text={carData.interior} className="detail-value" />
+        <div className="details-row">
+          <span className="details-label">Interior:</span>
+          <span className="details-value bold">{carData.interior}</span>
         </div>
       </div>
     </div>

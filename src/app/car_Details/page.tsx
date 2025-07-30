@@ -47,12 +47,14 @@ const CarDetailsOverviewPage = () => {
       "Heated Front Seats"
     ],
     inspection: {
+      overall: "Excellent",
+      exterior: "Excellent",
+      interior: "Very Good",
       engine: "Excellent",
       transmission: "Excellent",
       brakes: "Good",
-      tires: "Good",
-      interior: "Excellent",
-      exterior: "Good"
+      tires: "Very Good",
+      notes: "Vehicle shows minimal wear consistent with mileage. Recent maintenance records available."
     }
   };
 
@@ -81,62 +83,7 @@ const CarDetailsOverviewPage = () => {
 
   const renderOverview = () => (
     <div className="overview-content">
-      <div className="vehicle-details-card">
-        <div className="key-metrics">
-          <div className="metric-item">
-            <SvgIcons name="calendar" size={20} color="#666" />
-            <LocalizedText text={carData.year} className="metric-value" />
-          </div>
-          <div className="metric-item">
-            <SvgIcons name="speedometer" size={20} color="#666" />
-            <LocalizedText text={`${carData.mileage} miles`} className="metric-value" />
-          </div>
-          <div className="metric-item">
-            <SvgIcons name="fuel" size={20} color="#666" />
-            <LocalizedText text={carData.fuelType} className="metric-value" />
-          </div>
-          <div className="metric-item">
-            <SvgIcons name="shield" size={20} color="#666" />
-            <LocalizedText text={carData.condition} className="metric-value" />
-          </div>
-        </div>
-
-        <div className="details-section">
-          <LocalizedHeading heading="Vehicle Details" level={3} className="section-subtitle" />
-          <div className="details-grid">
-            <div className="detail-row">
-              <LocalizedText text="VIN" className="detail-label" />
-              <LocalizedText text={carData.vin} className="detail-value" />
-            </div>
-            <div className="detail-row">
-              <LocalizedText text="Engine" className="detail-label" />
-              <LocalizedText text={carData.engine} className="detail-value" />
-            </div>
-            <div className="detail-row">
-              <LocalizedText text="Transmission" className="detail-label" />
-              <LocalizedText text={carData.transmission} className="detail-value" />
-            </div>
-            <div className="detail-row">
-              <LocalizedText text="Drivetrain" className="detail-label" />
-              <LocalizedText text={carData.drivetrain} className="detail-value" />
-            </div>
-          </div>
-        </div>
-
-        <div className="details-section">
-          <LocalizedHeading heading="Colors" level={3} className="section-subtitle" />
-          <div className="details-grid">
-            <div className="detail-row">
-              <LocalizedText text="Exterior" className="detail-label" />
-              <LocalizedText text={carData.exterior} className="detail-value" />
-            </div>
-            <div className="detail-row">
-              <LocalizedText text="Interior" className="detail-label" />
-              <LocalizedText text={carData.interior} className="detail-value" />
-            </div>
-          </div>
-        </div>
-      </div>
+      <OverviewCard carData={carData} />
     </div>
   );
 

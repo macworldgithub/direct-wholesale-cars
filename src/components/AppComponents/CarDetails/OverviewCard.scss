@@ -1,172 +1,154 @@
-.overview-section {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 3rem;
-  
-  @media (max-width: 1024px) {
-    grid-template-columns: 1fr;
-    gap: 2rem;
+.overview-card-root {
+  width: 100%;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  padding: 2rem 2.5rem;
+  margin: 0 auto;
+
+  @media (max-width: 900px) {
+    padding: 1.5rem 1rem;
   }
-  
-  @media (max-width: 768px) {
+  @media (max-width: 600px) {
+    padding: 1rem 0.5rem;
+  }
+}
+
+.metrics-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+  margin-bottom: 2.5rem;
+  text-align: center;
+
+  @media (max-width: 900px) {
+    grid-template-columns: repeat(2, 1fr);
     gap: 1.5rem;
   }
-}
-
-.car-images {
-  .main-image {
-    margin-bottom: 1rem;
-    
-    img {
-      width: 100%;
-      height: 300px;
-      object-fit: cover;
-      border-radius: 8px;
-      
-      @media (max-width: 768px) {
-        height: 250px;
-      }
-      
-      @media (max-width: 480px) {
-        height: 200px;
-      }
-    }
-  }
-  
-  .thumbnail-images {
-    display: flex;
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
     gap: 1rem;
-    
-    @media (max-width: 768px) {
-      gap: 0.75rem;
-    }
-    
-    @media (max-width: 480px) {
-      gap: 0.5rem;
-    }
-    
-    img {
-      width: 80px;
-      height: 60px;
-      object-fit: cover;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: opacity 0.3s ease;
-      
-      @media (max-width: 768px) {
-        width: 70px;
-        height: 52px;
-      }
-      
-      @media (max-width: 480px) {
-        width: 60px;
-        height: 45px;
-      }
-      
-      &:hover {
-        opacity: 0.8;
-      }
-    }
+    margin-bottom: 1.5rem;
   }
 }
 
-.car-info {
-  .car-title {
-    font-size: 2rem;
-    font-weight: 700;
-    color: #333;
-    margin-bottom: 1rem;
-    
-    @media (max-width: 768px) {
-      font-size: 1.5rem;
-    }
-    
-    @media (max-width: 480px) {
-      font-size: 1.25rem;
-    }
+.metric {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  background: none;
+}
+
+.metric-icon {
+  width: 36px;
+  height: 36px;
+  margin-bottom: 0.25rem;
+  @media (max-width: 900px) {
+    width: 30px;
+    height: 30px;
   }
-  
-  .price-section {
-    display: flex;
-    align-items: center;
-    gap: 2rem;
-    margin-bottom: 2rem;
-    
-    @media (max-width: 768px) {
-      gap: 1rem;
-      flex-direction: column;
-      align-items: flex-start;
-    }
-    
-    .price {
-      font-size: 2rem;
-      font-weight: 700;
-      color: #1801b4;
-      
-      @media (max-width: 768px) {
-        font-size: 1.5rem;
-      }
-      
-      @media (max-width: 480px) {
-        font-size: 1.25rem;
-      }
-    }
-    
-    .mileage {
-      font-size: 1.1rem;
-      color: #666;
-      
-      @media (max-width: 768px) {
-        font-size: 1rem;
-      }
-    }
+  @media (max-width: 600px) {
+    width: 26px;
+    height: 26px;
   }
 }
 
-.car-details-grid {
+.metric-value {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1801b4;
+  &.blue {
+    color: #1801b4;
+  }
+  @media (max-width: 900px) {
+    font-size: 1.1rem;
+  }
+  @media (max-width: 600px) {
+    font-size: 1rem;
+  }
+}
+
+.metric-label {
+  font-size: 0.95rem;
+  color: #888;
+  font-weight: 400;
+  @media (max-width: 900px) {
+    font-size: 0.9rem;
+  }
+  @media (max-width: 600px) {
+    font-size: 0.85rem;
+  }
+}
+
+.details-2col {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1.5rem;
-  
-  @media (max-width: 768px) {
+  grid-template-columns: 1fr 1fr;
+  gap: 2.5rem;
+  @media (max-width: 900px) {
+    gap: 1.5rem;
+  }
+  @media (max-width: 600px) {
     grid-template-columns: 1fr;
     gap: 1rem;
   }
-  
-  .detail-item {
-    padding: 1rem;
-    background: #f8f9fa;
-    border-radius: 8px;
-    
-    @media (max-width: 768px) {
-      padding: 0.75rem;
-    }
-    
-    @media (max-width: 480px) {
-      padding: 0.5rem;
-    }
-    
-    .detail-label {
-      font-size: 0.9rem;
-      color: #666;
-      text-transform: uppercase;
-      font-weight: 500;
-      margin-bottom: 0.5rem;
-      display: block;
-      
-      @media (max-width: 480px) {
-        font-size: 0.8rem;
-      }
-    }
-    
-    .detail-value {
-      font-size: 1rem;
-      color: #333;
-      font-weight: 500;
-      
-      @media (max-width: 480px) {
-        font-size: 0.9rem;
-      }
-    }
+}
+
+.details-col {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.details-heading {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  &.blue {
+    color: #1801b4;
+  }
+  @media (max-width: 900px) {
+    font-size: 1.1rem;
+  }
+  @media (max-width: 600px) {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+  }
+}
+
+.details-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.details-label {
+  color: #888;
+  font-size: 1rem;
+  min-width: 110px;
+  @media (max-width: 900px) {
+    font-size: 0.95rem;
+    min-width: 90px;
+  }
+  @media (max-width: 600px) {
+    font-size: 0.9rem;
+    min-width: 80px;
+  }
+}
+
+.details-value {
+  color: #111;
+  font-size: 1.08rem;
+  font-weight: 500;
+  &.bold {
+    font-weight: 700;
+  }
+  @media (max-width: 900px) {
+    font-size: 1rem;
+  }
+  @media (max-width: 600px) {
+    font-size: 0.95rem;
   }
 } 
