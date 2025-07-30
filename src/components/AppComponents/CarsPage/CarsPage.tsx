@@ -50,7 +50,7 @@ const CarsPage = () => {
     <div className="main-container">
       <main className="page-content">
         <Banner
-          imageSrc="/images/home-banner.jpg"
+          imageSrc="/images/car-banner.jpg"
           altText="A beautiful banner image"
           headingLevel={1}
           title={

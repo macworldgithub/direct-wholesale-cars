@@ -1,4 +1,5 @@
-import HomePage from "@/components/AppComponents/HomePage/HomePage";
+"use client";
+
 import React from "react";
 import Price from "../components/UIComponents/Price/Price";
 import Card from "../components/UIComponents/Card/Card";
@@ -8,6 +9,9 @@ import "./cars/cars.scss";
 import ContactInfo from "@/components/UIComponents/ContactInfo/ContactInfo";
 import ContactForm from "@/components/UIComponents/ContactForm/ContactForm";
 
+import Banner from "@/components/UIComponents/Banner/Banner";
+import LocalizedButton from "@/components/UIComponents/LocalizedButton/LocalizedButton";
+import Hero from "@/components/AppComponents/Hero/Hero";
 
 const carsData = [
   {
@@ -108,6 +112,43 @@ const networkSteps = [
 export default function Home() {
   return (
     <div className="main-container">
+      <Banner
+        className="banner-left-align"
+        imageSrc="/images/home-banner.png"
+        altText="A beautiful banner image"
+        headingLevel={1}
+        title={
+          <>
+            <div>
+              <span className="white">Professional </span>
+              <span className="red">Wholesale</span>
+            </div>
+            <div>
+              <span className="red">Automotive </span>
+              <span className="white">Platform</span>
+            </div>
+          </>
+        }
+        subtitle="Streamline your wholesale operations with our comprehensive platform designed for dealers and automotive professionals. AI-powered search, secure transactions, and verified dealer network."
+        button={
+          <LocalizedButton
+            label="Start Searching"
+            size="sm"
+            variant="outlined"
+            className="banner-cta"
+            onClick={() => console.log("CTA clicked")}
+          />
+        }
+      />
+      <div className="hero-wrapper">
+        <img
+          src="/images/filter-background.png"
+          alt="filter-background"
+          className="hero-background"
+        />
+        <Hero />
+      </div>
+
       <Price />
       
       <div className="results-header">
