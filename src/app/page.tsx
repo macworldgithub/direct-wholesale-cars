@@ -147,14 +147,13 @@ export default function Home() {
           />
         }
       />
-      <div className="hero-wrapper">
-        <img
-          src="/images/filter-background.png"
-          alt="filter-background"
-          className="hero-background"
-        />
-        <Hero />
-      </div>
+     <div className="hero-wrapper">
+  <div className="hero-background" />
+  <div className="hero-overlay">
+    <Hero />
+  </div>
+</div>
+
 
       <Price />
       
