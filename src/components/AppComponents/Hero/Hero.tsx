@@ -4,7 +4,6 @@ import React, { useState } from 'react';
 import './Hero.scss';
 import Dropdown from '../../UIComponents/Dropdown/Dropdown';
 import LocalizedInput from '../../UIComponents/LocalizedInput/LocalizedInput';
-import LocalizedButton from '../../UIComponents/LocalizedButton/LocalizedButton';
 import SvgIcons from '../../UIComponents/SvgIcons/SvgIcons';
 
 interface HeroProps {
@@ -28,7 +27,6 @@ const Hero: React.FC<HeroProps> = ({ onSearch }) => {
     maxMileage: ''
   });
 
-  // Sample data for dropdowns
   const makeOptions = [
     { label: 'Select Make', value: '' },
     { label: 'Toyota', value: 'toyota' },
@@ -76,72 +74,65 @@ const Hero: React.FC<HeroProps> = ({ onSearch }) => {
 
   return (
     <div className="hero">
-      <div className="hero-background">
-        <div className="hero-overlay"></div>
-      </div>
+      <div className="search-container">
+        <div className="search-bar">
+          <div className="search-field">
+            <Dropdown
+              options={makeOptions}
+              value={searchData.make}
+              onChange={(value) => handleInputChange('make', value)}
+              className="search-dropdown"
+            />
+          </div>
 
-        <div className="search-container">
-          <div className="search-bar">
-            <div className="search-field">
-              <Dropdown
-                options={makeOptions}
-                value={searchData.make}
-                onChange={(value) => handleInputChange('make', value)}
-                className="search-dropdown"
-              />
-            </div>
-            
-            <div className="search-field">
-              <Dropdown
-                options={modelOptions}
-                value={searchData.model}
-                onChange={(value) => handleInputChange('model', value)}
-                className="search-dropdown"
-              />
-            </div>
-            
-            <div className="search-field">
-              <Dropdown
-                options={yearOptions}
-                value={searchData.year}
-                onChange={(value) => handleInputChange('year', value)}
-                className="search-dropdown"
-              />
-            </div>
-            
-            <div className="search-field">
-              <LocalizedInput
-                name="maxPrice"
-                value={searchData.maxPrice}
-                onChange={(value) => handleInputChange('maxPrice', value)}
-                placeholderKey="Max Price"
-                className="search-input"
-                size="md"
-              />
-            </div>
-            
-            <div className="search-field">
-              <LocalizedInput
-                name="maxMileage"
-                value={searchData.maxMileage}
-                onChange={(value) => handleInputChange('maxMileage', value)}
-                placeholderKey="Max Mileage"
-                className="search-input"
-                size="md"
-              />
-            </div>
-            
-            <div className="search-field">
-              <button
-                onClick={handleSearch}
-                className="search-button"
-              >
-                <SvgIcons name="search" size={20} color="white" />
-              </button>
-            </div>
+          <div className="search-field">
+            <Dropdown
+              options={modelOptions}
+              value={searchData.model}
+              onChange={(value) => handleInputChange('model', value)}
+              className="search-dropdown"
+            />
+          </div>
+
+          <div className="search-field">
+            <Dropdown
+              options={yearOptions}
+              value={searchData.year}
+              onChange={(value) => handleInputChange('year', value)}
+              className="search-dropdown"
+            />
+          </div>
+
+          <div className="search-field">
+            <LocalizedInput
+              name="maxPrice"
+              value={searchData.maxPrice}
+              onChange={(value) => handleInputChange('maxPrice', value)}
+              placeholderKey="Max Price"
+              className="hero-input"
+              size="md"
+            />
+          </div>
+
+          <div className="search-field">
+            <LocalizedInput
+              name="maxMileage"
+              value={searchData.maxMileage}
+              onChange={(value) => handleInputChange('maxMileage', value)}
+              placeholderKey="Max Mileage"
+              className="hero-input"
+              size="md"
+            />
+          </div>
+
+          <div className="search-field">
+            <button onClick={handleSearch} className="search-button">
+              <SvgIcons name="search" size={25} color="white" />
+            </button>
           </div>
         </div>
       </div>
+    </div>
   );
 };
 
