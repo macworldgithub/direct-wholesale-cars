@@ -5,6 +5,9 @@ import Card from "../components/UIComponents/Card/Card";
 import Ai from "../components/UIComponents/Ai/Ai";
 import Network from "../components/UIComponents/Network/Network";
 import "./cars/cars.scss";
+import ContactInfo from "@/components/UIComponents/ContactInfo/ContactInfo";
+import ContactForm from "@/components/UIComponents/ContactForm/ContactForm";
+
 
 const carsData = [
   {
@@ -106,7 +109,19 @@ export default function Home() {
   return (
     <div className="main-container">
       <Price />
-
+      
+      <div className="results-header">
+        <div className="results-count">6 Vehicles Found</div>
+        <div className="sort-dropdown">
+          <select className="sort-select">
+            <option>Sort by Price: Low to high</option>
+            <option>Sort by Price: High to low</option>
+            <option>Sort by Date: Newest first</option>
+            <option>Sort by Date: Oldest first</option>
+          </select>
+        </div>
+      </div>
+      
       <div className="featured-heading-wrapper">
         <h2 className="featured-heading">Featured Inventory</h2>
         <div className="featured-subheading">
@@ -141,6 +156,18 @@ export default function Home() {
         }
         steps={networkSteps}
       />
+
+      {/* <div className="featured-heading-wrapper">
+        <h2 className="featured-heading">Get In Touch</h2>
+        <div className="featured-subheading">Have questions? Our support team is here to help you succeed.</div>
+      </div> */}
+
+      <div className="contact-container">
+        <ContactInfo />
+        <ContactForm />
+      </div>
+
+
     </div>
   );
 }

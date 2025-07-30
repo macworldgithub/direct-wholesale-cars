@@ -1,0 +1,122 @@
+.contact-form {
+  flex: 1.2;
+  background: white;
+  padding: 2.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e5e7eb;
+  
+  .form-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: 2rem;
+    
+    @media (max-width: 768px) {
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+  }
+  
+  .form-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    
+    .form-row {
+      display: flex;
+      gap: 1rem;
+      
+      @media (max-width: 768px) {
+        flex-direction: row;
+        gap: 0.75rem;
+        
+        .localized-input-wrapper {
+          flex: 1;
+          width: 50%;
+        }
+      }
+      
+      .localized-input-wrapper {
+        flex: 1;
+      }
+    }
+    
+    .localized-input-wrapper,
+    .localized-select-wrapper,
+    .localized-textarea {
+      width: 100%;
+      
+      input,
+      select,
+      textarea {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: border-color 0.2s ease;
+        
+        &:focus {
+          outline: none;
+          border-color: #3b82f6;
+          box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        
+        &::placeholder {
+          color: #9ca3af;
+        }
+      }
+      
+      textarea {
+        resize: vertical;
+        min-height: 100px;
+      }
+      
+      label {
+        display: block;
+        font-weight: 500;
+        color: #374151;
+        margin-bottom: 0.5rem;
+        font-size: 0.875rem;
+      }
+    }
+    
+    .submit-button {
+      width: auto;
+      margin: 1rem auto 0;
+      padding: 0.75rem 2rem;
+      background: #1800B2;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+      display: block;
+      
+      @media (max-width: 768px) {
+        padding: 0.6rem 1.5rem;
+        font-size: 0.85rem;
+        margin-top: 0.75rem;
+      }
+      
+      &:disabled {
+        background: #9ca3af;
+        cursor: not-allowed;
+      }
+    }
+  }
+  
+  @media (max-width: 768px) {
+    padding: 1.5rem;
+    margin-top: 1rem;
+    width: 100%;
+    flex: 1;
+    
+    .form-content {
+      gap: 1rem;
+    }
+  }
+} 

@@ -14,7 +14,7 @@ const carsData = [
     price: "$22,500",
     tags: ["Certified"],
     image: "/images/cars.png",
-    location: "Atlanta, GA · Premium Auto Dealer"
+    location: "Atlanta, GA · Premium Auto Dealer",
   },
   {
     name: "2023 Toyota Camry LE",
@@ -22,7 +22,7 @@ const carsData = [
     price: "$35,900",
     tags: ["Featured"],
     image: "/images/cars.png",
-    location: "Atlanta, GA · Premium Auto Dealer"
+    location: "Atlanta, GA · Premium Auto Dealer",
   },
   {
     name: "2023 Toyota Camry LE",
@@ -30,8 +30,8 @@ const carsData = [
     price: "$28,750",
     tags: ["New"],
     image: "/images/cars.png",
-    location: "Atlanta, GA · Premium Auto Dealer"
-  }
+    location: "Atlanta, GA · Premium Auto Dealer",
+  },
 ];
 
 const CarsPage = () => {
@@ -70,34 +70,45 @@ const CarsPage = () => {
           />
           <Hero />
         </Banner>
-         <div className="cards-rows-wrapper">
-        <div className="cards-wrapper">
-          {carsData.map((car, idx) => (
-            <Card
-              key={idx}
-              name={car.name}
-              description={car.description}
-              price={car.price}
-              tags={car.tags}
-              image={car.image}
-              location={car.location}
-            />
-          ))}
+
+        <div className="results-header">
+          <div className="results-count">6 Vehicles Found</div>
+          <div className="sort-dropdown">
+            <select className="sort-select">
+              <option>Sort by Price: Low to high</option>
+              <option>Sort by Price: High to low</option>
+            </select>
+          </div>
         </div>
-        <div className="cards-wrapper">
-          {carsData.map((car, idx) => (
-            <Card
-              key={idx + carsData.length}
-              name={car.name}
-              description={car.description}
-              price={car.price}
-              tags={car.tags}
-              image={car.image}
-              location={car.location}
-            />
-          ))}
+
+        <div className="cards-rows-wrapper">
+          <div className="cards-wrapper">
+            {carsData.map((car, idx) => (
+              <Card
+                key={idx}
+                name={car.name}
+                description={car.description}
+                price={car.price}
+                tags={car.tags}
+                image={car.image}
+                location={car.location}
+              />
+            ))}
+          </div>
+          <div className="cards-wrapper">
+            {carsData.map((car, idx) => (
+              <Card
+                key={idx + carsData.length}
+                name={car.name}
+                description={car.description}
+                price={car.price}
+                tags={car.tags}
+                image={car.image}
+                location={car.location}
+              />
+            ))}
+          </div>
         </div>
-      </div>
       </main>
       {/* <div className="cards-rows-wrapper">
         <div className="cards-wrapper">
