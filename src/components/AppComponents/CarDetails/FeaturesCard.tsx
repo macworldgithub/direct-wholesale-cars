@@ -18,7 +18,7 @@ const FeaturesCard: React.FC<FeaturesCardProps> = ({ features }) => (
           <LocalizedText text={feature} className="feature-text" />
         </div>
       ))}
-    </div>
+    </div>  
   </div>
 );
 
