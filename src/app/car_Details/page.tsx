@@ -181,22 +181,19 @@ const CarDetailsOverviewPage = () => {
                 label="Buy Now"
                 onClick={() => console.log('Buy Now clicked')}
                 className="buy-now-btn"
-                variant="filled"
-                size="md"
+                variant="full"
               />
               <LocalizedButton
                 label="Make Offer"
                 onClick={() => console.log('Make Offer clicked')}
                 className="make-offer-btn"
-                variant="filled"
-                size="md"
+                variant="full"
               />
               <LocalizedButton
                 label="Contact"
                 onClick={() => console.log('Contact clicked')}
                 className="contact-btn"
-                variant="filled-dark-and-uppercase"
-                size="md"
+                variant="full"
               />
             </div>
           </Card>
