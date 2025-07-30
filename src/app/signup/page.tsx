@@ -420,7 +420,6 @@ const SignupPage = () => {
                 label="Previous"
                 onClick={handlePrev}
                 size="lg"
-                variant="outlined"
                 className="prev-button"
               />
             )}
