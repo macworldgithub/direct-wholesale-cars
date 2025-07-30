@@ -67,6 +67,23 @@ const CarsPage = () => {
             </>
           }
         />
+
+
+
+   <div className="results-header">
+          <div className="results-count">6 Vehicles Found</div>
+          <div className="sort-dropdown">
+            <select className="sort-select">
+              <option>Sort by Price: Low to high</option>
+              <option>Sort by Price: High to low</option>
+              
+            </select>
+          </div>
+        </div>
+
+
+
+
          <div className="cards-rows-wrapper">
         <div className="cards-wrapper">
           {carsData.map((car, idx) => (
