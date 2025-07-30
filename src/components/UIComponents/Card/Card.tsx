@@ -2,17 +2,40 @@
 import React from 'react';
 import './Card.scss';
 import { CiHeart } from "react-icons/ci";
+
 interface CardProps {
-  name: string;
-  description: string;
-  price: string;
-  tags: string[];
-  image: string;
-  location: string;
+  name?: string;
+  description?: string;
+  price?: string;
+  tags?: string[];
+  image?: string;
+  location?: string;
   onViewDetails?: () => void;
+  className?: string;
+  children?: React.ReactNode;
 }
 
-const Card: React.FC<CardProps> = ({ name, description, price, tags, image, location, onViewDetails }) => {
+const Card: React.FC<CardProps> = ({ 
+  name, 
+  description, 
+  price, 
+  tags = [], 
+  image, 
+  location, 
+  onViewDetails,
+  className = "",
+  children 
+}) => {
+  // If children are provided, render as a wrapper component
+  if (children) {
+    return (
+      <div className={`card ${className}`}>
+        {children}
+      </div>
+    );
+  }
+
+  // Original card implementation for car listings
   return (
     <div className="card">
       <img src={image} alt={name} className="card-image" />
