@@ -1,7 +1,18 @@
-// LocalizedCheckbox/LocalizedCheckbox.scss
 .localized-checkbox {
   display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 1rem;
+  align-items: flex-start;
+  gap: 8px;
+  margin-top: 1rem;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.localized-checkbox input[type="checkbox"] {
+  margin-top: 2px;
+}
+
+.error-text {
+  color: red;
+  font-size: 0.85rem;
+  margin-top: 0.25rem;
 }

@@ -1,19 +1,25 @@
-import React, { JSX } from 'react';
+import React, { JSX, ReactNode } from "react";
+import "./LocalizedHeading.scss";
 
 export interface LocalizedHeadingProps {
-  heading: string;
+  heading?: string;
   level?: 1 | 2 | 3 | 4 | 5 | 6;
   className?: string;
+  children?: ReactNode;
+  variant?: "black" | "white"; 
 }
 
 const LocalizedHeading: React.FC<LocalizedHeadingProps> = ({
   heading,
   level = 2,
-  className = ''
+  className = "",
+  children,
+  variant = "black",
 }) => {
   const Tag = `h${level}` as keyof JSX.IntrinsicElements;
+  const combinedClassName = `localized-heading h${level} variant-${variant} ${className}`.trim();
 
-  return <Tag className={className}>{(heading)}</Tag>;
+  return <Tag className={combinedClassName}>{children ?? heading}</Tag>;
 };
 
 export default LocalizedHeading;

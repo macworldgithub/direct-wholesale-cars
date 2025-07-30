@@ -32,7 +32,7 @@ const CarDetailsOverviewPage = () => {
     interior: "Black Leather",
     images: [
       "/images/car.png",
-      "/images/car.png", 
+      "/images/car.png",
       "/images/car.png",
       "/images/car.png"
     ],
@@ -48,7 +48,7 @@ const CarDetailsOverviewPage = () => {
     ],
     inspection: {
       engine: "Excellent",
-      transmission: "Excellent", 
+      transmission: "Excellent",
       brakes: "Good",
       tires: "Good",
       interior: "Excellent",
@@ -100,7 +100,7 @@ const CarDetailsOverviewPage = () => {
             <LocalizedText text={carData.condition} className="metric-value" />
           </div>
         </div>
-        
+
         <div className="details-section">
           <LocalizedHeading heading="Vehicle Details" level={3} className="section-subtitle" />
           <div className="details-grid">
@@ -122,7 +122,7 @@ const CarDetailsOverviewPage = () => {
             </div>
           </div>
         </div>
-        
+
         <div className="details-section">
           <LocalizedHeading heading="Colors" level={3} className="section-subtitle" />
           <div className="details-grid">
@@ -142,20 +142,20 @@ const CarDetailsOverviewPage = () => {
 
   return (
     <div className="car-details-overview-page">
-      <Banner 
-        src="/images/banner.png" 
-        alt="Car Details Banner" 
+      <Banner
+        src="/images/banner.png"
+        alt="Car Details Banner"
         showText={true}
         bannerText=""
       />
-      
+
       <div className="main-content">
         <div className="left-column">
           <div className="car-gallery">
             <div className="main-image-container">
-              <img 
-                src={carData.images[currentImageIndex]} 
-                alt={`Car ${currentImageIndex + 1}`} 
+              <img
+                src={carData.images[currentImageIndex]}
+                alt={`Car ${currentImageIndex + 1}`}
                 className="main-car-image"
               />
               <div className="image-counter">
@@ -178,12 +178,12 @@ const CarDetailsOverviewPage = () => {
                 </button>
               </div>
             </div>
-            
+
             <div className="thumbnail-container">
               {carData.images.map((img, index) => (
-                <img 
+                <img
                   key={index}
-                  src={img} 
+                  src={img}
                   alt={`Thumbnail ${index + 1}`}
                   className={`thumbnail ${index === currentImageIndex ? 'active' : ''}`}
                   onClick={() => setCurrentImageIndex(index)}
@@ -191,7 +191,7 @@ const CarDetailsOverviewPage = () => {
               ))}
             </div>
           </div>
-          
+
           <div className="navigation-tabs">
             <LocalizedButton
               label="Overview"
@@ -215,14 +215,14 @@ const CarDetailsOverviewPage = () => {
               size="md"
             />
           </div>
-          
+
           <div className="tab-content">
             {activeTab === 'overview' && renderOverview()}
             {activeTab === 'features' && <FeaturesCard features={carData.features} />}
             {activeTab === 'inspection' && <InspectionReportCard inspection={carData.inspection} />}
           </div>
         </div>
-        
+
         <div className="right-column">
           <Card className="price-card">
             <LocalizedHeading heading={carData.name} level={2} className="car-title" />
@@ -253,7 +253,7 @@ const CarDetailsOverviewPage = () => {
               />
             </div>
           </Card>
-          
+
           <Card className="dealer-card">
             <LocalizedHeading heading="Dealer Information" level={3} className="card-title" />
             <div className="dealer-info">
@@ -285,7 +285,7 @@ const CarDetailsOverviewPage = () => {
               />
             </div>
           </Card>
-          
+
           <Card className="stats-card">
             <LocalizedHeading heading="Quick Stats" level={3} className="card-title" />
             <div className="stats-list">

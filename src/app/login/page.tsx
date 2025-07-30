@@ -1,15 +1,16 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import Image from 'next/image';
-import './login.scss';
-import LocalizedButton from '@/components/UIComponents/LocalizedButton/LocalizedButton';
-import LocalizedCheckbox from '@/components/UIComponents/LocalizedCheckbox/LocalizedCheckbox';
-import LocalizedInput from '@/components/UIComponents/LocalizedInput/LocalizedInput';
+import React, { useState } from "react";
+import Image from "next/image";
+import "./login.scss";
+import LocalizedButton from "@/components/UIComponents/LocalizedButton/LocalizedButton";
+import LocalizedCheckbox from "@/components/UIComponents/LocalizedCheckbox/LocalizedCheckbox";
+import LocalizedInput from "@/components/UIComponents/LocalizedInput/LocalizedInput";
+import Link from "next/link";
 
 const LoginPage = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
 
   const handleLogin = () => {
@@ -30,7 +31,9 @@ const LoginPage = () => {
           />
 
           <h1 className="login-heading">Customer Login</h1>
-          <p className="login-text">Welcome back! Please enter your credentials to continue.</p>
+          <p className="login-text">
+            Welcome back! Please enter your credentials to continue.
+          </p>
 
           <div className="login-inputs">
             <LocalizedInput
@@ -38,7 +41,7 @@ const LoginPage = () => {
               value={email}
               onChange={setEmail}
               placeholderKey="Email Address"
-              size='lg'
+              size="lg"
               type="email"
             />
 
@@ -47,7 +50,7 @@ const LoginPage = () => {
               value={password}
               onChange={setPassword}
               placeholderKey="Password"
-              size='lg'
+              size="lg"
               type="password"
             />
           </div>
@@ -60,15 +63,24 @@ const LoginPage = () => {
               labelKey="Remember Me"
             />
 
-            <a href="#" className="login-forgot">Forgot Password?</a>
+            <a href="#" className="login-forgot">
+              Forgot Password?
+            </a>
           </div>
 
           <LocalizedButton
             label="Login"
             onClick={handleLogin}
             className="login-button"
-            size='lg'
+            size="lg"
           />
+
+          <div className="signup-redirect">
+            Not a member?{" "}
+            <Link href="/signup" className="signup-link">
+              Sign up now!
+            </Link>
+          </div>
         </div>
       </div>
 

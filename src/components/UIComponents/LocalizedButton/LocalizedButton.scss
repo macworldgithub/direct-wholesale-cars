@@ -18,6 +18,23 @@ $fontXS: 0.875rem;
     border-radius: 6px;
   }
 
+  &--outlined {
+    background: transparent;
+    border: 1px solid #1800B2;
+    color: #1800B2;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background: #1800B2;
+      color: #fff;
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+
   &--filled-and-uppercase {
     color: white;
     height: 40px;

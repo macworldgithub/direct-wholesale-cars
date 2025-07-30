@@ -28,14 +28,12 @@ const Navbar = () => {
 
         {/* Desktop Links only */}
         <div className="navbar-links">
-          <Link href="/home">Home</Link>
-          <Link href="/buy">Buy</Link>
-          <Link href="/sell">Sell</Link>
-          <Link href="/valuation">Valuation</Link>
-          <Link href="/insights">Insights</Link>
+          <Link href="/">Home</Link>
+          <Link href="/cars">Cars</Link>
+          <Link href="/about">About Us</Link>
+          <Link href="/contact">Contact</Link>
         </div>
 
-        {/* Desktop Login */}
         {/* Desktop Login */}
         <div className="navbar-login">
           <Link href="/login">Login</Link>

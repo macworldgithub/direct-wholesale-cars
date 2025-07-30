@@ -1,4 +1,4 @@
-// Card/Card.tsx
+
 import React from 'react';
 import './Card.scss';
 import { CiHeart } from "react-icons/ci";

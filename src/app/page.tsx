@@ -1,5 +1,4 @@
-"use client";
-
+import HomePage from "@/components/AppComponents/HomePage/HomePage";
 import React from "react";
 import Price from "../components/UIComponents/Price/Price";
 import Card from "../components/UIComponents/Card/Card";

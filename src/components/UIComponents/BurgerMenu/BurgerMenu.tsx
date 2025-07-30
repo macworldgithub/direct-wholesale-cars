@@ -19,10 +19,9 @@ const BurgerMenu: React.FC<BurgerMenuProps> = ({ isOpen, toggle }) => {
 
       <div className={`burger-dropdown ${isOpen ? 'show' : ''}`}>
         <Link href="/" onClick={toggle}>Home</Link>
-        <Link href="/buy" onClick={toggle}>Buy</Link>
-        <Link href="/sell" onClick={toggle}>Sell</Link>
-        <Link href="/valuation" onClick={toggle}>Valuation</Link>
-        <Link href="/insights" onClick={toggle}>Insights</Link>
+        <Link href="/cars" onClick={toggle}>Cars</Link>
+        <Link href="/about" onClick={toggle}>About Us</Link>
+        <Link href="/contact" onClick={toggle}>Contact</Link>
         <Link href="/login" onClick={toggle}>Login</Link>
       </div>
     </div>

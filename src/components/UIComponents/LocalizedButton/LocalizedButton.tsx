@@ -4,12 +4,12 @@ import './LocalizedButton.scss';
 
 interface LocalizedButtonProps {
   label: string;
-  onClick: () => void;
+  onClick?: () => void;
   disabled?: boolean;
   className?: string;
   type?: 'button' | 'submit' | 'reset';
   size?: 'sm' | 'md' | 'lg' | 'xl';
-  variant?: 'filled' | 'filled-and-uppercase' | 'filled-dark-and-uppercase' | 'full' | 'category-filter' | 'transparent-bottom-rounded';
+  variant?: 'filled' | 'filled-and-uppercase' | 'filled-dark-and-uppercase' | 'full' | 'category-filter' | 'transparent-bottom-rounded' | 'outlined';
 }
 
 const sizeClassMap = {
@@ -26,6 +26,7 @@ const variantClassMap = {
   full: 'localized-button--full',
   'category-filter': 'localized-button--category-filter',
   'transparent-bottom-rounded': 'localized-button--transparent-bottom-rounded',
+  outlined: 'localized-button--outlined', // <-- new entry
 };
 
 const LocalizedButton: React.FC<LocalizedButtonProps> = ({

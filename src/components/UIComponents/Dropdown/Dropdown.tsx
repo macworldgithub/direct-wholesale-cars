@@ -1,6 +1,5 @@
-// Dropdown/Dropdown.tsx
-import React from 'react';
-import './Dropdown.scss';
+import React from "react";
+import "./Dropdown.scss";
 
 interface DropdownOption {
   label: string;
@@ -12,21 +11,39 @@ interface DropdownProps {
   value: string;
   onChange: (value: string) => void;
   className?: string;
+  size?: "sm" | "md" | "lg" | "xl";
+  label?: string;
+  required?: boolean;
 }
 
-const Dropdown: React.FC<DropdownProps> = ({ options, value, onChange, className = '' }) => {
+const Dropdown: React.FC<DropdownProps> = ({
+  options,
+  value,
+  onChange,
+  className = "",
+  size = "md",
+  label,
+  required = false,
+}) => {
   return (
-    <select
-      className={`dropdown ${className}`}
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
-    >
-      {options.map((opt) => (
-        <option key={opt.value} value={opt.value}>
-          {opt.label}
-        </option>
-      ))}
-    </select>
+    <div>
+      {label && (
+        <label className="input-label">
+          {label} {required && <span className="required">*</span>}
+        </label>
+      )}
+      <select
+        className={`dropdown input-${size} ${className}`}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+      >
+        {options.map((opt) => (
+          <option key={opt.value} value={opt.value}>
+            {opt.label}
+          </option>
+        ))}
+      </select>
+    </div>
   );
 };
 
