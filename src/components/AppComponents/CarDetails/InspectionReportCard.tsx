@@ -18,7 +18,7 @@ interface InspectionReportCardProps {
 
 const InspectionReportCard: React.FC<InspectionReportCardProps> = ({ inspection }) => (
   <div className="inspection-card-root">
-    <LocalizedHeading heading="Inspection Report" level={5} className="inspection-heading blue" />
+    {/* <LocalizedHeading heading="Inspection Report" level={5} className="inspection-heading blue" /> */}
     
     {/* Overall Condition Banner */}
     <div className="overall-condition">

@@ -1,141 +1,68 @@
-// .footer {
-//   background-color: #0a0a0a;
-//   color: #fff;
-//   padding: 60px 20px 20px;
-//   font-family: var(--font-poppins);
-
-//   .footer-container {
-//     max-width: 1280px;
-//     margin: 0 auto;
-//     display: flex;
-//     flex-wrap: wrap;
-//     justify-content: space-between;
-//     align-items: flex-start;
-//     gap: 60px;
-//     text-align: left;
-//   }
-
-//   .footer-section {
-//     flex: 1 1 280px;
-//     max-width: 320px;
-//     display: flex;
-//     flex-direction: column;
-//     align-items: flex-start;
-//     text-align: left;
-//     padding: 0;
-
-//     .navbar-logo-img {
-//       width: auto;
-//       height: auto;
-//       margin-top: -55px;
-//       display: block;
-//     }
-
-//     .footer-description {
-//       margin-top: 0;
-//       font-size: 14px;
-//       color: #ccc;
-//       line-height: 1.6;
-//     }
-
-//     .footer-heading {
-//       font-size: 18px;
-//       font-weight: 600;
-//       margin-bottom: 16px;
-//       color: #FF302D;
-//     }
-
-//     .footer-links,
-//     .footer-contact {
-//       list-style: none;
-//       padding: 0;
-//       width: 100%;
-//     }
-
-//     .footer-links li,
-//     .footer-contact li {
-//       margin-bottom: 10px;
-//     }
-
-//     .footer-links li a {
-//       color: #ccc;
-//       text-decoration: none;
-//       font-size: 14px;
-//       transition: all 0.3s ease;
-
-//       &:hover {
-//         color: #FF302D;
-//         transform: translateX(4px);
-//       }
-//     }
-
-//     .footer-contact li {
-//       display: flex;
-//       align-items: center;
-//       gap: 8px;
-//       font-size: 14px;
-//       color: #ccc;
-//       transition: color 0.3s;
-
-//       svg {
-//         color: #FF302D;
-//       }
-
-//       &:hover {
-//         color: #fff;
-//       }
-//     }
-
-//     .footer-social {
-//       margin-top: 20px;
-//       display: flex;
-//       gap: 16px;
-
-//       a {
-//         color: #ccc;
-//         font-size: 22px;
-//         transition: transform 0.3s, color 0.3s;
-
-//         &:hover {
-//           color: #1801B4;
-//           transform: scale(1.2);
-//         }
-//       }
-//     }
-//   }
-
-//   .footer-bottom {
-//     border-top: 1px solid #333;
-//     margin-top: 40px;
-//     padding-top: 20px;
-//     text-align: center;
-//     font-size: 13px;
-//     color: #aaa;
-//   }
-// }
-
 .footer {
   background-color: #0d014c; 
   color: #fff;
   padding: 70px 20px 30px;
   font-family: var(--font-poppins);
+  
+  @media (max-width: 768px) {
+    padding: 50px 15px 25px;
+  }
+  
+  @media (max-width: 480px) {
+    padding: 40px 10px 20px;
+  }
+  
+  @media (max-width: 320px) {
+    padding: 30px 8px 15px;
+  }
 
   .footer-container {
-    max-width: 1280px;
+    max-width: 1440px;
     margin: 0 auto;
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 40px;
     text-align: left;
+    
+    @media (max-width: 768px) {
+      gap: 30px;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    }
+    
+    @media (max-width: 480px) {
+      gap: 25px;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    }
+    
+    @media (max-width: 320px) {
+      gap: 20px;
+      grid-template-columns: 1fr;
+    }
   }
 
   .footer-section {
     display: flex;
     flex-direction: column;
     gap: 10px;
+    
+    @media (max-width: 480px) {
+      gap: 8px;
+    }
+    
+    @media (max-width: 320px) {
+      gap: 6px;
+    }
 
     .footer-logo {
       margin-bottom: 15px;
+      
+      @media (max-width: 480px) {
+        margin-bottom: 12px;
+      }
+      
+      @media (max-width: 320px) {
+        margin-bottom: 10px;
+      }
     }
 
     .footer-description {
@@ -143,6 +70,21 @@
       color: #c8c8c8; // Light gray text
       line-height: 1.6;
       max-width: 260px;
+      
+      @media (max-width: 768px) {
+        font-size: 13px;
+        max-width: 240px;
+      }
+      
+      @media (max-width: 480px) {
+        font-size: 12px;
+        max-width: 220px;
+      }
+      
+      @media (max-width: 320px) {
+        font-size: 11px;
+        max-width: 200px;
+      }
     }
 
     .footer-heading {
@@ -150,6 +92,21 @@
       font-weight: 600;
       margin-bottom: 10px;
       color: #ffffff;
+      
+      @media (max-width: 768px) {
+        font-size: 15px;
+        margin-bottom: 8px;
+      }
+      
+      @media (max-width: 480px) {
+        font-size: 14px;
+        margin-bottom: 6px;
+      }
+      
+      @media (max-width: 320px) {
+        font-size: 13px;
+        margin-bottom: 5px;
+      }
     }
 
     .footer-links {
@@ -159,12 +116,32 @@
       li {
         margin-bottom: 8px;
         color: #c8c8c8; // Same as quick links color
+        
+        @media (max-width: 480px) {
+          margin-bottom: 6px;
+        }
+        
+        @media (max-width: 320px) {
+          margin-bottom: 4px;
+        }
 
         a {
           color: #c8c8c8;
           text-decoration: none;
           font-size: 14px;
           transition: all 0.3s ease;
+          
+          @media (max-width: 768px) {
+            font-size: 13px;
+          }
+          
+          @media (max-width: 480px) {
+            font-size: 12px;
+          }
+          
+          @media (max-width: 320px) {
+            font-size: 11px;
+          }
 
           &:hover {
             color: #fff;
@@ -178,9 +155,29 @@
       padding: 0;
       font-size: 14px;
       color: #c8c8c8;
+      
+      @media (max-width: 768px) {
+        font-size: 13px;
+      }
+      
+      @media (max-width: 480px) {
+        font-size: 12px;
+      }
+      
+      @media (max-width: 320px) {
+        font-size: 11px;
+      }
 
       li {
         margin-bottom: 6px;
+        
+        @media (max-width: 480px) {
+          margin-bottom: 4px;
+        }
+        
+        @media (max-width: 320px) {
+          margin-bottom: 3px;
+        }
 
         a {
           color: #c8c8c8;
@@ -199,12 +196,35 @@
     text-align: center;
     font-size: 13px;
     color: #aaa;
+    
+    @media (max-width: 768px) {
+      margin-top: 25px;
+      font-size: 12px;
+    }
+    
+    @media (max-width: 480px) {
+      margin-top: 20px;
+      font-size: 11px;
+    }
+    
+    @media (max-width: 320px) {
+      margin-top: 15px;
+      font-size: 10px;
+    }
 
     .footer-divider {
       border: none;
       height: 2px;
       background: #fff; 
       margin-bottom: 15px;
+      
+      @media (max-width: 480px) {
+        margin-bottom: 12px;
+      }
+      
+      @media (max-width: 320px) {
+        margin-bottom: 10px;
+      }
     }
   }
 }
