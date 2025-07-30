@@ -23,7 +23,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
 }) => {
   return (
     <div
-      className={`search-bar ${className}`}
+      className={`search ${className}`}
       style={{ backgroundColor, borderColor }}
     >
       <SearchIcon className="search-icon" style={{ color: iconColor }} />
@@ -32,7 +32,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className="search-input"
+        className="input"
       />
     </div>
   );

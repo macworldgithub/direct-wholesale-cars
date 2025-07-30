@@ -3,6 +3,7 @@
 import Banner from "@/components/UIComponents/Banner/Banner";
 import React, { useEffect, useState } from "react";
 import SearchBar from "../SearchBar/SearchBar";
+import Hero from "../Hero/Hero";
 
 const CarsPage = () => {
   const [search, setSearch] = useState("");
@@ -27,17 +28,19 @@ const CarsPage = () => {
             <>
               <span className="red">AI-Powered </span>
               <span className="white">Vehicle Search</span>
-              <SearchBar
-                value={search}
-                onChange={setSearch}
-                className={isSticky ? "sticky" : ""}
-                iconColor="#fff"
-                backgroundColor="rgba(0, 0, 0, 0.2)"
-                borderColor="#fff"
-              />
             </>
           }
-        />
+        >
+          <SearchBar
+            value={search}
+            onChange={setSearch}
+            className={isSticky ? "sticky" : ""}
+            iconColor="#fff"
+            backgroundColor="rgba(0, 0, 0, 0.2)"
+            borderColor="#fff"
+          />
+          <Hero />
+        </Banner>
       </main>
     </div>
   );
