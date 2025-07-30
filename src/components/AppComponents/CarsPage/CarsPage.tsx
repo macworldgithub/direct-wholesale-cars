@@ -2,6 +2,7 @@
 
 import Banner from "@/components/UIComponents/Banner/Banner";
 import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import SearchBar from "../SearchBar/SearchBar";
 import Card from "../../UIComponents/Card/Card";
 import "../../../app/cars/cars.scss";
@@ -37,6 +38,7 @@ const carsData = [
 const CarsPage = () => {
   const [search, setSearch] = useState("");
   const [isSticky, setIsSticky] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     const onScroll = () => {
@@ -45,6 +47,10 @@ const CarsPage = () => {
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  const handleViewDetails = (carId: number) => {
+    router.push(`/car_Details?id=${carId}`);
+  };
 
   return (
     <div className="main-container">
@@ -92,6 +98,7 @@ const CarsPage = () => {
                 tags={car.tags}
                 image={car.image}
                 location={car.location}
+                onViewDetails={() => handleViewDetails(idx)}
               />
             ))}
           </div>
@@ -105,6 +112,7 @@ const CarsPage = () => {
                 tags={car.tags}
                 image={car.image}
                 location={car.location}
+                onViewDetails={() => handleViewDetails(idx + carsData.length)}
               />
             ))}
           </div>

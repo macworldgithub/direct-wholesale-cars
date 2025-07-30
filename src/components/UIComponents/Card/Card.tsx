@@ -1,7 +1,78 @@
 
+// import React from 'react';
+// import './Card.scss';
+// import { CiHeart } from "react-icons/ci";
+
+// interface CardProps {
+//   name?: string;
+//   description?: string;
+//   price?: string;
+//   tags?: string[];
+//   image?: string;
+//   location?: string;
+//   onViewDetails?: () => void;
+//   className?: string;
+//   children?: React.ReactNode;
+// }
+
+// const Card: React.FC<CardProps> = ({ 
+//   name, 
+//   description, 
+//   price, 
+//   tags = [], 
+//   image, 
+//   location, 
+//   onViewDetails,
+//   className = "",
+//   children 
+// }) => {
+//   // If children are provided, render as a wrapper component
+//   if (children) {
+//     return (
+//       <div className={`card ${className}`}>
+//         {children}
+//       </div>
+//     );
+//   }
+
+//   // Original card implementation for car listings
+//   return (
+//     <div className="card">
+//       <img src={image} alt={name} className="card-image" />
+//       <div className="card-content">
+//         <div className="card-title-row">
+//           <h3 className="card-title">{name}</h3>
+//           <div className="card-tags">
+//             {tags.map((tag, idx) => (
+//               <span className="card-tag" key={idx}>{tag}</span>
+//             ))}
+//           </div>
+//         </div>
+//         <div className="card-description">{description}</div>
+//         <div className="card-price-row">
+//           <span className="card-price">{price}</span>
+//           <span className="card-wholesale">Wholesale Price</span>
+//         </div>
+//         <div className="card-actions">
+//           <button className="view-details-btn" onClick={onViewDetails}>View Details</button>
+//           <button className="like-btn" aria-label="Like"><CiHeart /></button>
+       
+//         </div>
+//         <div className="card-location">{location}</div>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default Card;
+
+
+'use client'; // if you're using App Router (Next.js 13+)
+
 import React from 'react';
 import './Card.scss';
 import { CiHeart } from "react-icons/ci";
+import { useRouter } from 'next/navigation'; // ✅ Correct for Next.js
 
 interface CardProps {
   name?: string;
@@ -10,23 +81,32 @@ interface CardProps {
   tags?: string[];
   image?: string;
   location?: string;
-  onViewDetails?: () => void;
   className?: string;
   children?: React.ReactNode;
+  id?: string; // for dynamic routing
 }
 
-const Card: React.FC<CardProps> = ({ 
-  name, 
-  description, 
-  price, 
-  tags = [], 
-  image, 
-  location, 
-  onViewDetails,
+const Card: React.FC<CardProps> = ({
+  name,
+  description,
+  price,
+  tags = [],
+  image,
+  location,
   className = "",
-  children 
+  children,
+  id
 }) => {
-  // If children are provided, render as a wrapper component
+  const router = useRouter(); // ✅ useRouter instead of useNavigate
+
+  const handleViewDetails = () => {
+    if (id) {
+      router.push(`/car_Details/${id}`);
+    } else {
+      router.push('/car_Details');
+    }
+  };
+
   if (children) {
     return (
       <div className={`card ${className}`}>
@@ -35,7 +115,6 @@ const Card: React.FC<CardProps> = ({
     );
   }
 
-  // Original card implementation for car listings
   return (
     <div className="card">
       <img src={image} alt={name} className="card-image" />
@@ -54,9 +133,10 @@ const Card: React.FC<CardProps> = ({
           <span className="card-wholesale">Wholesale Price</span>
         </div>
         <div className="card-actions">
-          <button className="view-details-btn" onClick={onViewDetails}>View Details</button>
+          <button className="view-details-btn" onClick={handleViewDetails}>
+            View Details
+          </button>
           <button className="like-btn" aria-label="Like"><CiHeart /></button>
-       
         </div>
         <div className="card-location">{location}</div>
       </div>

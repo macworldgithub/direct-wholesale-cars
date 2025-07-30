@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { useRouter } from "next/navigation";
 import Price from "../components/UIComponents/Price/Price";
 import Card from "../components/UIComponents/Card/Card";
 import Ai from "../components/UIComponents/Ai/Ai";
@@ -110,6 +111,12 @@ const networkSteps = [
 ];
 
 export default function Home() {
+  const router = useRouter();
+
+  const handleViewDetails = (carId: number) => {
+    router.push(`/car_Details?id=${carId}`);
+  };
+
   return (
     <div className="main-container">
       <Banner
@@ -179,6 +186,7 @@ export default function Home() {
             tags={car.tags}
             image={car.image}
             location={car.location}
+            onViewDetails={() => handleViewDetails(idx)}
           />
         ))}
       </div>
