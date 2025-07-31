@@ -15,7 +15,8 @@ interface CardProps {
   location?: string;
   className?: string;
   children?: React.ReactNode;
-  id?: string; // for dynamic routing
+  id?: string;
+  onClick?: () => void;
 }
 
 const Card: React.FC<CardProps> = ({
@@ -27,7 +28,8 @@ const Card: React.FC<CardProps> = ({
   location,
   className = "",
   children,
-  id
+  id,
+  onClick
 }) => {
   const router = useRouter(); // ✅ useRouter instead of useNavigate
 
@@ -65,7 +67,7 @@ const Card: React.FC<CardProps> = ({
           <span className="card-wholesale">Wholesale Price</span>
         </div>
         <div className="card-actions">
-          <button className="view-details-btn" onClick={handleViewDetails}>
+          <button className="view-details-btn" onClick={onClick ?? handleViewDetails}>
             View Details
           </button>
           <button className="like-btn" aria-label="Like"><CiHeart /></button>

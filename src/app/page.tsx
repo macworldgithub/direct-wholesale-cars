@@ -185,7 +185,7 @@ export default function Home() {
             tags={car.tags}
             image={car.image}
             location={car.location}
-            onViewDetails={() => handleViewDetails(idx)}
+            onClick={() => handleViewDetails(idx)}
           />
         ))}
       </div>

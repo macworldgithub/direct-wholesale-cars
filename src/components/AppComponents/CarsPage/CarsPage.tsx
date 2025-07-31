@@ -98,7 +98,7 @@ const CarsPage = () => {
                 tags={car.tags}
                 image={car.image}
                 location={car.location}
-                onViewDetails={() => handleViewDetails(idx)}
+                onClick={() => handleViewDetails(idx)}
               />
             ))}
           </div>
@@ -112,7 +112,7 @@ const CarsPage = () => {
                 tags={car.tags}
                 image={car.image}
                 location={car.location}
-                onViewDetails={() => handleViewDetails(idx + carsData.length)}
+                onClick={() => handleViewDetails(idx + carsData.length)}
               />
             ))}
           </div>
