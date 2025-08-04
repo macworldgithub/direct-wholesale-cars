@@ -135,64 +135,76 @@
 
 .navbar-login {
   display: flex;
-  gap: 16px; // Adjust as needed
+  gap: 16px;
 
   a {
     padding: 10px 24px;
-    background-color: #1801B4;
-    color: #fff;
-    border-radius: 4px;
-    text-decoration: none;
+    border-radius: 6px;
     font-weight: 600;
     font-size: 15px;
     letter-spacing: 0.5px;
-    transition: background-color 0.3s ease, transform 0.2s ease;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  }
+
+  .auth-link {
+    background-color: #1801B4;
+    color: #fff;
+    border: 1px solid transparent;
 
     &:hover {
-      border: 1px solid #1801B4;
-      color: #1801B4;
       background-color: transparent;
+      color: #1801B4;
+      border: 1px solid #1801B4;
       transform: translateY(-1px);
     }
 
     &:active {
       transform: scale(0.98);
     }
+  }
 
-    &.signup {
+  .ride-link {
+    background-color: #000;
+    color: #fff;
+    border: 1px solid transparent;
+
+    &:hover {
       background-color: transparent;
-      border: 1px solid #1801B4;
-      color: #1801B4;
+      color: #000;
+      border: 1px solid #000;
+      transform: translateY(-1px);
+    }
 
-      &:hover {
-        background-color: #1801B4;
-        color: #fff;
-      }
+    &:active {
+      transform: scale(0.98);
     }
   }
 
   @media (max-width: 768px) {
     display: none;
   }
-  
+
   @media (max-width: 480px) {
     gap: 12px;
-    
+
     a {
       padding: 8px 20px;
       font-size: 14px;
     }
   }
-  
+
   @media (max-width: 320px) {
     gap: 8px;
-    
+
     a {
       padding: 6px 16px;
       font-size: 12px;
     }
   }
 }
+
 
 .navbar-burger {
   display: none;

@@ -36,9 +36,14 @@ const Navbar = () => {
 
         {/* Desktop Login */}
         <div className="navbar-login">
-          <Link href="/login">Login</Link>
-          <Link href="/signup" className="signup">
+          <Link href="/login" className="auth-link">
+            Login
+          </Link>
+          <Link href="/signup" className="auth-link">
             Signup
+          </Link>
+          <Link href="/add_car" className="ride-link">
+            Add a Car
           </Link>
         </div>
 

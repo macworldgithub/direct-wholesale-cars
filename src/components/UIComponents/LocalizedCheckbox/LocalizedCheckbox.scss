@@ -1,14 +1,44 @@
 .localized-checkbox {
   display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  margin-top: 1rem;
+  align-items: center;
+  background-color: transparent;
+  gap: 10px;
   font-size: 0.95rem;
   line-height: 1.5;
-}
+  font-weight: 500;
+  color: #333;
+  cursor: pointer;
+  transition: color 0.2s ease;
 
-.localized-checkbox input[type="checkbox"] {
-  margin-top: 2px;
+  input[type="checkbox"] {
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border: 2px solid #1800b2;
+    border-radius: 4px;
+    background-color: #fff;
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+
+    &:checked {
+      background-color: #1800b2;
+      border-color: #1800b2;
+    }
+
+    &:checked::after {
+      content: '';
+      position: absolute;
+      top: 1px;
+      left: 4px;
+      width: 4px;
+      height: 8px;
+      border: solid #fff;
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg);
+    }
+  }
 }
 
 .error-text {
