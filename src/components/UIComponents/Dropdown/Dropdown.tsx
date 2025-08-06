@@ -26,16 +26,17 @@ const Dropdown: React.FC<DropdownProps> = ({
   required = false,
 }) => {
   return (
-    <div>
+    <div className="dropdown-wrapper">
       {label && (
         <label className="input-label">
-          {label} {required && <span className="required">*</span>}
+          {label} {required && <span className="required-asterisk">*</span>}
         </label>
       )}
       <select
         className={`dropdown input-${size} ${className}`}
         value={value}
         onChange={(e) => onChange(e.target.value)}
+        required={required}
       >
         {options.map((opt) => (
           <option key={opt.value} value={opt.value}>
