@@ -17,6 +17,7 @@ import { AppDispatch } from "@/store/store";
 import { SignupDealer } from "@/api/auth";
 import { useRouter } from "next/navigation";
 import ImageUploader from "@/components/UIComponents/ImageCropUploader/ImageCropUploader";
+import Toast from "@/components/UIComponents/Toast/Toast";
 
 interface SignupFormData {
   firstName: string;
@@ -47,6 +48,7 @@ const businessTypeOptions = [
 
 const SignupPage = () => {
   const [step, setStep] = useState(1);
+  const [toastOpen, setToastOpen] = useState(false);
   const [showCropModal, setShowCropModal] = useState(false);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [croppedImageURL, setCroppedImageURL] = useState<string | null>(null);
@@ -124,7 +126,11 @@ const SignupPage = () => {
     }
 
     dispatch(SignupDealer(data));
-    router.push("/login");
+    setToastOpen(true);
+
+    setTimeout(() => {
+      router.push("/login");
+    }, 2000);
   };
 
   const handleNext = async () => {
@@ -192,8 +198,20 @@ const SignupPage = () => {
 
               {croppedImageURL && (
                 <div className="uploaded-image-preview">
-                  <label>Uploaded Profile Image:</label>
-                  <img src={croppedImageURL} alt="Uploaded" />
+                  <label>Profile Image:</label>
+                  <div className="image-wrapper">
+                    <img src={croppedImageURL} alt="Uploaded" />
+                    <button
+                      type="button"
+                      className="remove-image-button"
+                      onClick={() => {
+                        setCroppedImageURL(null);
+                        setImageFile(null);
+                      }}
+                    >
+                      ×
+                    </button>
+                  </div>
                 </div>
               )}
             </div>
@@ -569,7 +587,12 @@ const SignupPage = () => {
               />
             )}
           </div>
-
+          <Toast
+            open={toastOpen}
+            onClose={() => setToastOpen(false)}
+            message="Signup Successful!"
+            severity="success"
+          />
           <div className="login-redirect">
             Already have an account?{" "}
             <Link href="/login" className="login-link">

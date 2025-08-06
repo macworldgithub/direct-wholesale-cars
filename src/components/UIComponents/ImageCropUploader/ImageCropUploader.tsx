@@ -20,26 +20,28 @@ const ImageUploader = ({ imageFile, onClose, onCropComplete }: any) => {
 
   return (
     <div className="crop-modal">
-      <div className="crop-container">
-        <Cropper
-          image={
-            imageFile instanceof File || imageFile instanceof Blob
-              ? URL.createObjectURL(imageFile)
-              : undefined
-          }
-          crop={crop}
-          zoom={zoom}
-          aspect={1}
-          onCropChange={setCrop}
-          onCropComplete={(_, croppedPixels) =>
-            setCroppedAreaPixels(croppedPixels)
-          }
-          onZoomChange={setZoom}
-        />
-      </div>
-      <div className="crop-actions">
-        <button onClick={onCropDone}>Crop</button>
-        <button onClick={onClose}>Cancel</button>
+      <div className="modal-content">
+        <div className="crop-container">
+          <Cropper
+            image={
+              imageFile instanceof File || imageFile instanceof Blob
+                ? URL.createObjectURL(imageFile)
+                : undefined
+            }
+            crop={crop}
+            zoom={zoom}
+            aspect={1}
+            onCropChange={setCrop}
+            onCropComplete={(_, croppedPixels) =>
+              setCroppedAreaPixels(croppedPixels)
+            }
+            onZoomChange={setZoom}
+          />
+        </div>
+        <div className="crop-actions">
+          <button onClick={onCropDone}>Crop</button>
+          <button onClick={onClose}>Cancel</button>
+        </div>
       </div>
     </div>
   );
