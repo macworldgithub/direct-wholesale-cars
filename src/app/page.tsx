@@ -163,8 +163,7 @@ export default function Home() {
           <select className="sort-select">
             <option>Sort by Price: Low to high</option>
             <option>Sort by Price: High to low</option>
-            <option>Sort by Date: Newest first</option>
-            <option>Sort by Date: Oldest first</option>
+         
           </select>
         </div>
       </div>
