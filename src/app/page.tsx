@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Price from "../components/UIComponents/Price/Price";
 import Card from "../components/UIComponents/Card/Card";
@@ -14,6 +14,10 @@ import Banner from "@/components/UIComponents/Banner/Banner";
 import LocalizedButton from "@/components/UIComponents/LocalizedButton/LocalizedButton";
 import Hero from "@/components/AppComponents/Hero/Hero";
 import Dropdown from "@/components/UIComponents/Dropdown/Dropdown";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
+import CustomModal from "@/components/UIComponents/LocalizedModal/LocalizedModal";
+import { Typography } from "@mui/material";
 
 const carsData = [
   {
@@ -121,6 +125,23 @@ const sortOptions = [
 export default function Home() {
   const router = useRouter();
   const [sortValue, setSortValue] = useState<string>(sortOptions[0].value);
+  const [showModal, setShowModal] = useState(false);
+
+  const dealer = useSelector((state: RootState) => state.SignuinDealer.dealer);
+  console.log(dealer);
+  useEffect(() => {
+    const hasSeenModal = localStorage.getItem("hasSeenRegisterModal");
+
+    if (!dealer && !hasSeenModal) {
+      setShowModal(true);
+      localStorage.setItem("hasSeenRegisterModal", "true");
+    }
+  }, [dealer]);
+
+  const handleRegisterClick = () => {
+    router.push("/signup");
+    setShowModal(false);
+  };
 
   const handleSortChange = (value: string) => {
     setSortValue(value);
@@ -132,6 +153,20 @@ export default function Home() {
 
   return (
     <div className="main-container">
+      <CustomModal
+        open={showModal}
+        onClose={() => setShowModal(false)}
+        title="Why Register?"
+        actionButtonText="Register"
+        onActionClick={handleRegisterClick}
+      >
+        <Typography variant="body1">
+          Gated access ensures serious buyers, allows personalized
+          recommendations, and tracks transaction history. Free to register, no
+          subscription fees.
+        </Typography>
+      </CustomModal>
+
       <Banner
         className="banner-left-align"
         imageSrc="/images/home-banner.png"

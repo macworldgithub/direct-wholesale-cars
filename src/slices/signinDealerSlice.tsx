@@ -47,8 +47,11 @@ const loginDealerSlice = createSlice({
       return initialState;
     },
     restoreSession: (state, action: PayloadAction<{ token: string }>) => {
+      const dealerFromStorage = localStorage.getItem("dealerInfo");
+
       state.token = action.payload.token;
       state.isAuthenticated = true;
+      state.dealer = dealerFromStorage ? JSON.parse(dealerFromStorage) : null;
     },
   },
   extraReducers: (builder) => {
@@ -58,12 +61,16 @@ const loginDealerSlice = createSlice({
         state.error = null;
       })
       .addCase(SigninDealer.fulfilled, (state, action) => {
-        const { accessToken, accountType } = action.payload;
+        const { accessToken, accountType, signedProfileImage } = action.payload;
         state.loading = false;
         state.token = accessToken;
-        state.dealer = accountType;
+        state.dealer = {
+          ...accountType,
+          profileImage: signedProfileImage || accountType.profileImage,
+        };
         state.isAuthenticated = true;
         localStorage.setItem("authToken", accessToken);
+        localStorage.setItem("dealerInfo", JSON.stringify(state.dealer));
       })
       .addCase(SigninDealer.rejected, (state, action: PayloadAction<any>) => {
         state.loading = false;

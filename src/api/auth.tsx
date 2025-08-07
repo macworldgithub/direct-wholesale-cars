@@ -102,7 +102,7 @@ interface DealerResponse {
 }
 
 export const SigninDealer = createAsyncThunk<
-  DealerResponse,
+  DealerResponse & { signedProfileImage?: string },
   { email: string; password: string },
   { rejectValue: string }
 >("dealers/signin", async (payload, { rejectWithValue }) => {
@@ -111,7 +111,30 @@ export const SigninDealer = createAsyncThunk<
       `${BACKEND_URL}/dealers/signin`,
       payload
     );
-    return response.data;
+
+    const { accessToken, accountType } = response.data;
+
+    let signedProfileImage: string | undefined = undefined;
+
+    try {
+      const signedRes = await axios.get<{ url: string }>(
+        `${BACKEND_URL}/dealers/signed-profile-image`,
+        {
+          params: { key: accountType.profileImage },
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      signedProfileImage = signedRes.data.url;
+    } catch (signedErr) {
+      console.error("Failed to fetch signed profile image", signedErr);
+    }
+
+    return {
+      ...response.data,
+      signedProfileImage,
+    };
   } catch (error: any) {
     return rejectWithValue(
       error.response?.data?.message || "An error occurred"
