@@ -7,6 +7,7 @@ import React from "react";
 import Navbar from "@/components/AppComponents/Navbar/Navbar";
 import Footer from "@/components/AppComponents/Footer/Footer";
 import { Providers } from "./providers";
+import { LayoutClientWrapper } from "@/components/AppComponents/LayoutClientWrapper";
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -22,16 +23,18 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="en">
       <body className={`${poppins.variable} layout-body`}>
         <Providers>
           <div className="layout-wrapper">
             <Navbar />
-            <main className="layout-content">{children}</main>
+            <LayoutClientWrapper>
+              <main className="layout-content">{children}</main>
+            </LayoutClientWrapper>
             <Footer />
           </div>
         </Providers>

@@ -1,19 +1,22 @@
-// LoaderContainer/LoaderContainer.tsx
-import React from 'react';
-import './LoaderContainer.scss';
+"use client";
 
-interface LoaderContainerProps {
-  loading: boolean;
-  children: React.ReactNode;
-  spinner?: React.ReactNode;
-}
+import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
+import { Loader } from "../Loader/Loader";
 
-const LoaderContainer: React.FC<LoaderContainerProps> = ({ loading, children, spinner }) => {
-  return (
-    <div className="loader-container">
-      {loading ? spinner || <div className="default-spinner">Loading...</div> : children}
-    </div>
-  );
+export const LoaderContainer = () => {
+  const pathname = usePathname();
+  const [prevPath, setPrevPath] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (prevPath && prevPath !== pathname) {
+      setLoading(true);
+      const timeout = setTimeout(() => setLoading(false), 1000); 
+      return () => clearTimeout(timeout);
+    }
+    setPrevPath(pathname);
+  }, [pathname]);
+
+  return loading ? <Loader /> : null;
 };
-
-export default LoaderContainer;

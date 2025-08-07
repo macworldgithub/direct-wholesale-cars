@@ -1,15 +1,36 @@
-import React from 'react';
-import './Backdrop.scss';
+"use client";
+
+import React from "react";
+import { Box, useTheme } from "@mui/material";
 
 interface BackdropProps {
-  isVisible: boolean;
-  onClick: () => void;
-  className?: string;
+  active?: boolean;
+  children?: React.ReactNode;
 }
 
-const Backdrop: React.FC<BackdropProps> = ({ isVisible, onClick, className = '' }) => {
-  if (!isVisible) return null;
-  return <div className={`backdrop ${className}`} onClick={onClick} />;
-};
+export const Backdrop: React.FC<BackdropProps> = ({ active = false, children }) => {
+  const theme = useTheme();
 
-export default Backdrop;
+  if (!active) return null;
+
+  return (
+    <Box
+      sx={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        width: "100vw",
+        height: "100vh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        zIndex: theme.zIndex.modal, 
+        backdropFilter: "blur(5px)",
+        WebkitBackdropFilter: "blur(5px)",
+        backgroundColor: "rgba(128, 128, 128, 0.1)", 
+      }}
+    >
+      {children}
+    </Box>
+  );
+};

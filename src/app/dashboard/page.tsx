@@ -8,7 +8,6 @@ import {
   Typography,
   Avatar,
   CircularProgress,
-  Grid,
   Button,
 } from "@mui/material";
 import { useSelector } from "react-redux";
@@ -64,73 +63,78 @@ const Dashboard = () => {
 
             <Box
               sx={{
-                display: "flex",
-                flexWrap: "wrap",
-                gap: 3,
-                justifyContent: "space-between",
                 backgroundColor: "#fafafa",
                 borderRadius: 2,
                 p: 4,
                 boxShadow: 2,
               }}
             >
-              {[
-                { label: "First Name", value: dealer.firstName },
-                { label: "Last Name", value: dealer.lastName },
-                { label: "Email", value: dealer.email },
-                { label: "Phone", value: dealer.phone },
-                { label: "Business Name", value: dealer.businessName },
-                { label: "Business Type", value: dealer.businessType },
-                {
-                  label: "License Number",
-                  value: dealer.businessLicenseNumber,
-                },
-                { label: "City", value: dealer.city },
-                { label: "State", value: dealer.state },
-                { label: "Zip Code", value: dealer.zipCode },
-                { label: "Account Type", value: dealer.accountType },
-              ].map((item, idx) => (
-                <Box
-                  key={idx}
+              <Box display="flex" mb={4}>
+                <Button
+                  variant="contained"
                   sx={{
-                    flex: "1 1 42%",
-                    minWidth: 250,
-                    mb: 2,
+                    backgroundColor: "#1801b4",
+                    textTransform: "capitalize",
+                    fontWeight: 600,
+                    px: 4,
+                    py: 1.5,
+                    borderRadius: 2,
+                    "&:hover": {
+                      backgroundColor: "#140191",
+                    },
+                  }}
+                  onClick={() => {
+                    console.log("Update Profile clicked");
                   }}
                 >
-                  <Typography
-                    variant="subtitle2"
-                    sx={{ fontWeight: 600, color: "text.secondary", mb: 0.5 }}
-                  >
-                    {item.label}
-                  </Typography>
-                  <Typography variant="body1" sx={{ color: "text.primary" }}>
-                    {item.value || "N/A"}
-                  </Typography>
-                </Box>
-              ))}
-            </Box>
+                  update profile
+                </Button>
+              </Box>
 
-            <Box display="flex" justifyContent="center" mt={4}>
-              <Button
-                variant="contained"
+              <Box
                 sx={{
-                  backgroundColor: "#1801b4",
-                  textTransform: "capitalize",
-                  fontWeight: 600,
-                  px: 4,
-                  py: 1.5,
-                  borderRadius: 2,
-                  "&:hover": {
-                    backgroundColor: "#140191",
-                  },
-                }}
-                onClick={() => {
-                  console.log("Update Profile clicked");
+                  display: "flex",
+                  flexWrap: "wrap",
+                  gap: 3,
+                  justifyContent: "space-between",
                 }}
               >
-                update profile
-              </Button>
+                {[
+                  { label: "First Name", value: dealer.firstName },
+                  { label: "Last Name", value: dealer.lastName },
+                  { label: "Email", value: dealer.email },
+                  { label: "Phone", value: dealer.phone },
+                  { label: "Business Name", value: dealer.businessName },
+                  { label: "Business Type", value: dealer.businessType },
+                  {
+                    label: "License Number",
+                    value: dealer.businessLicenseNumber,
+                  },
+                  { label: "City", value: dealer.city },
+                  { label: "State", value: dealer.state },
+                  { label: "Zip Code", value: dealer.zipCode },
+                  { label: "Account Type", value: dealer.accountType },
+                ].map((item, idx) => (
+                  <Box
+                    key={idx}
+                    sx={{
+                      flex: "1 1 42%",
+                      minWidth: 250,
+                      mb: 2,
+                    }}
+                  >
+                    <Typography
+                      variant="subtitle2"
+                      sx={{ fontWeight: 600, color: "text.secondary", mb: 0.5 }}
+                    >
+                      {item.label}
+                    </Typography>
+                    <Typography variant="body1" sx={{ color: "text.primary" }}>
+                      {item.value || "N/A"}
+                    </Typography>
+                  </Box>
+                ))}
+              </Box>
             </Box>
           </Box>
         )}

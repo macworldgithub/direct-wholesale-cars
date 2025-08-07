@@ -6,8 +6,10 @@ import storage from "redux-persist/lib/storage";
 
 import signupDealerSlice from "@/slices/signupDealerSlice";
 import signinDealerSlice from "@/slices/signinDealerSlice";
+import loaderSlice from "@/slices/loaderSlice";
 
 const rootReducer = combineReducers({
+  loader: loaderSlice.reducer,
   SignupDealer: signupDealerSlice.reducer,
   SignuinDealer: signinDealerSlice.reducer,
 });
@@ -17,7 +19,7 @@ type RootReducerType = ReturnType<typeof rootReducer>;
 const persistConfig: PersistConfig<any> = {
   key: "direct-wholesale-cars",
   storage,
-  blacklist: ["SignupDealer", "SignuinDealer"], 
+  blacklist: ["SignupDealer", "SignuinDealer"],
 };
 
 const persistedReducer = persistReducer<RootReducerType>(
