@@ -136,7 +136,7 @@ const SignupPage = () => {
   const handleNext = async () => {
     let valid = false;
     if (step === 1) {
-      valid = await trigger(["firstName", "lastName", "email", "phone"]);
+      valid = await trigger(["firstName", "lastName", "password", "email", "phone"]);
     } else if (step === 2) {
       valid = await trigger([
         "businessName",
@@ -273,6 +273,22 @@ const SignupPage = () => {
               variant="full"
             />
             {renderError("email")}
+
+            <LocalizedInput
+              {...register("password", { required: true })}
+              className={errors.password ? "error" : ""}
+              value={watch("password")}
+              onChange={(val) =>
+                setValue("password", val, { shouldValidate: true })
+              }
+              placeholderKey="Password"
+              label="Password"
+              required
+              size="lg"
+              type="password"
+              variant="full"
+            />
+            {renderError("password")}
 
             <LocalizedInput
               {...register("phone", { required: true })}

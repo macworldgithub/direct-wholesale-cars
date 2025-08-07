@@ -1,15 +1,33 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState, AppDispatch } from "@/store/store";
+
 import BurgerMenu from "@/components/UIComponents/BurgerMenu/BurgerMenu";
+import ProfileDropdownMenu from "../ProfileDropdownMenu/ProfileDropdownMenu";
+
 import "./Navbar.scss";
+import { restoreSession } from "@/slices/signinDealerSlice";
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const dispatch = useDispatch<AppDispatch>();
+
+  const { isAuthenticated } = useSelector(
+    (state: RootState) => state.SignuinDealer
+  );
 
   const toggleMenu = () => setMenuOpen((prev) => !prev);
+
+  useEffect(() => {
+    const token = localStorage.getItem("authToken");
+    if (token) {
+      dispatch(restoreSession({ token }));
+    }
+  }, [dispatch]);
 
   return (
     <nav className="navbar">
@@ -26,7 +44,6 @@ const Navbar = () => {
           </Link>
         </div>
 
-        {/* Desktop Links only */}
         <div className="navbar-links">
           <Link href="/">Home</Link>
           <Link href="/cars">Cars</Link>
@@ -34,20 +51,24 @@ const Navbar = () => {
           <Link href="/contact">Contact</Link>
         </div>
 
-        {/* Desktop Login */}
         <div className="navbar-login">
-          <Link href="/login" className="auth-link">
-            Login
-          </Link>
-          <Link href="/signup" className="auth-link">
-            Signup
-          </Link>
-          <Link href="/add_car" className="ride-link">
-            Add a Car
-          </Link>
+          {isAuthenticated ? (
+            <ProfileDropdownMenu />
+          ) : (
+            <>
+              <Link href="/login" className="auth-link">
+                Login
+              </Link>
+              <Link href="/signup" className="auth-link">
+                Signup
+              </Link>
+              <Link href="/add_car" className="ride-link">
+                Add a Car
+              </Link>
+            </>
+          )}
         </div>
 
-        {/* Burger icon + dropdown */}
         <div className="navbar-burger">
           <BurgerMenu isOpen={menuOpen} toggle={toggleMenu} />
         </div>

@@ -20,7 +20,8 @@ export interface SignupDealerData {
   zipCode?: string;
   accountType?: string;
   dealerType?: string;
-
+  agreeTerms?: boolean;
+  receiveUpdates?: boolean;
   profileImage?: File | null;
 }
 
@@ -47,7 +48,14 @@ export const SignupDealer = createAsyncThunk(
       formData.append("state", data.state ?? "");
       formData.append("zipCode", data.zipCode ?? "");
       formData.append("accountType", data.accountType ?? "dealer");
-      formData.append("dealerType", "company");
+      formData.append(
+        "receiveUpdates",
+        data.receiveUpdates ?? false ? "true" : "false"
+      );
+      formData.append(
+        "agreeTerms",
+        data.agreeTerms ?? false ? "true" : "false"
+      );
 
       if (data.profileImage && data.profileImage instanceof File) {
         formData.append("profileImage", data.profileImage);
@@ -67,3 +75,46 @@ export const SignupDealer = createAsyncThunk(
     }
   }
 );
+
+interface DealerResponse {
+  accessToken: string;
+  accountType: {
+    _id: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    phone: string;
+    businessName: string;
+    businessType: string;
+    businessLicenseNumber: string;
+    address: string;
+    city: string;
+    state: string;
+    zipCode: string;
+    accountType: string;
+    profileImage: string;
+    receiveUpdates: boolean;
+    agreeTerms: boolean;
+    createdAt: string;
+    updatedAt: string;
+    __v: number;
+  };
+}
+
+export const SigninDealer = createAsyncThunk<
+  DealerResponse,
+  { email: string; password: string },
+  { rejectValue: string }
+>("dealers/signin", async (payload, { rejectWithValue }) => {
+  try {
+    const response = await axios.post<DealerResponse>(
+      `${BACKEND_URL}/dealers/signin`,
+      payload
+    );
+    return response.data;
+  } catch (error: any) {
+    return rejectWithValue(
+      error.response?.data?.message || "An error occurred"
+    );
+  }
+});
