@@ -12,6 +12,7 @@ interface LocalizedInputProps {
   type?: string;
   size?: "sm" | "md" | "lg" | "xl";
   variant?: "default" | "full";
+  disabled?: boolean;
 }
 
 const LocalizedInput = forwardRef<HTMLInputElement, LocalizedInputProps>(
@@ -27,6 +28,7 @@ const LocalizedInput = forwardRef<HTMLInputElement, LocalizedInputProps>(
       type = "text",
       size = "md",
       variant = "default",
+      disabled = false
     },
     ref
   ) => {
@@ -50,6 +52,7 @@ const LocalizedInput = forwardRef<HTMLInputElement, LocalizedInputProps>(
           placeholder={placeholderKey || ""}
           className={`localized-input ${sizeClass} ${variantClass} ${className}`}
           required={required}
+          disabled={disabled}
         />
       </div>
     );
