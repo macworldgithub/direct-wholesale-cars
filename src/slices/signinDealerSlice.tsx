@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { SigninDealer } from "@/api/auth";
+import { SigninDealer, UpdateDealer } from "@/api/auth";
 
 interface Dealer {
   _id: string;
@@ -76,6 +76,24 @@ const loginDealerSlice = createSlice({
         state.loading = false;
         state.error = action.payload || "Login failed";
         state.isAuthenticated = false;
+      })
+      .addCase(UpdateDealer.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(UpdateDealer.fulfilled, (state, action) => {
+        const { account, signedProfileImage } = action.payload;
+        state.loading = false;
+        state.dealer = {
+          ...account,
+          profileImage: signedProfileImage || account.profileImage,
+        };
+        // token remains the same
+        localStorage.setItem("dealerInfo", JSON.stringify(state.dealer));
+      })
+      .addCase(UpdateDealer.rejected, (state, action: PayloadAction<any>) => {
+        state.loading = false;
+        state.error = action.payload || "Account update failed";
       });
   },
 });

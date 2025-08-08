@@ -45,8 +45,6 @@ const CarAuctionForm: React.FC = () => {
     control,
     setValue,
     watch,
-    formState: { errors },
-    reset,
   } = useForm<FormData>({
     defaultValues: {
       condition: "Used",
@@ -159,7 +157,7 @@ const CarAuctionForm: React.FC = () => {
       dispatch(showLoader());
 
       const payload = {
-        title: `${data.make} ${data.model} for Sale`,
+        title: data.title,
         price: Number(data.price),
         make: data.make,
         model: data.model,

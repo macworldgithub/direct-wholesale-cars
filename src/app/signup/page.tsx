@@ -12,9 +12,9 @@ import LocalizedButton from "@/components/UIComponents/LocalizedButton/Localized
 import Dropdown from "@/components/UIComponents/Dropdown/Dropdown";
 import LocalizedHeading from "@/components/UIComponents/LocalizedHeading/LocalizedHeading";
 
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "@/store/store";
-import { SignupDealer } from "@/api/auth";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/store/store";
+import { SignupDealer, UpdateDealer } from "@/api/auth";
 import { useRouter } from "next/navigation";
 import ImageUploader from "@/components/UIComponents/ImageCropUploader/ImageCropUploader";
 import Toast from "@/components/UIComponents/Toast/Toast";
@@ -56,6 +56,8 @@ const SignupPage = () => {
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
 
+  const dealer = useSelector((state: RootState) => state.SignuinDealer.dealer);
+
   const {
     register,
     handleSubmit,
@@ -64,27 +66,45 @@ const SignupPage = () => {
     trigger,
     formState: { errors },
   } = useForm<SignupFormData>({
-    defaultValues: {
-      firstName: "",
-      lastName: "",
-      email: "",
-      phone: "",
-      password: "",
-      businessName: "",
-      businessType: "",
-      businessLicenseNumber: "",
-      address: "",
-      city: "",
-      state: "",
-      zipCode: "",
-      accountType: "dealer",
-      receiveUpdates: false,
-      agreeTerms: false,
-      profileImage: null,
-    },
+    defaultValues: dealer
+      ? {
+          firstName: dealer.firstName,
+          lastName: dealer.lastName,
+          email: dealer.email,
+          phone: dealer.phone,
+          password: "",
+          businessName: dealer.businessName,
+          businessType: dealer.businessType,
+          businessLicenseNumber: dealer.businessLicenseNumber,
+          address: dealer.address,
+          city: dealer.city,
+          state: dealer.state,
+          zipCode: dealer.zipCode,
+          accountType: dealer.accountType as "dealer" | "buyer",
+          receiveUpdates: dealer.receiveUpdates,
+          agreeTerms: dealer.agreeTerms,
+          profileImage: null,
+        }
+      : {
+          firstName: "",
+          lastName: "",
+          email: "",
+          phone: "",
+          password: "",
+          businessName: "",
+          businessType: "",
+          businessLicenseNumber: "",
+          address: "",
+          city: "",
+          state: "",
+          zipCode: "",
+          accountType: "dealer",
+          receiveUpdates: false,
+          agreeTerms: false,
+          profileImage: null,
+        },
     mode: "onTouched",
   });
-
   const dataURLtoFile = (dataUrl: string, filename: string): File => {
     const arr = dataUrl.split(",");
     const mimeMatch = arr[0].match(/:(.*?);/);
@@ -125,18 +145,38 @@ const SignupPage = () => {
       return;
     }
 
-    dispatch(SignupDealer(data));
-    setToastOpen(true);
+    const formData = new FormData();
+    Object.entries(data).forEach(([key, value]) => {
+      if (value !== null && value !== undefined && value !== "") {
+        formData.append(key, value as any);
+      }
+    });
 
-    setTimeout(() => {
-      router.push("/login");
-    }, 2000);
+    if (dealer) {
+      dispatch(UpdateDealer({ accountId: dealer._id, data: formData }));
+      setToastOpen(true);
+      setTimeout(() => {
+        router.push("/dashboard");
+      }, 2000);
+    } else {
+      dispatch(SignupDealer(data));
+      setToastOpen(true);
+      setTimeout(() => {
+        router.push("/login");
+      }, 2000);
+    }
   };
 
   const handleNext = async () => {
     let valid = false;
     if (step === 1) {
-      valid = await trigger(["firstName", "lastName", "password", "email", "phone"]);
+      valid = await trigger([
+        "firstName",
+        "lastName",
+        "password",
+        "email",
+        "phone",
+      ]);
     } else if (step === 2) {
       valid = await trigger([
         "businessName",
@@ -149,7 +189,11 @@ const SignupPage = () => {
       ]);
     }
 
-    if (valid) setStep((prev) => prev + 1);
+    if (valid) {
+      setTimeout(() => {
+        setStep((prev) => prev + 1);
+      }, 0);
+    }
   };
 
   const handlePrev = () => setStep((prev) => Math.max(prev - 1, 1));
@@ -596,17 +640,19 @@ const SignupPage = () => {
               />
             ) : (
               <LocalizedButton
-                label="Sign Up"
+                label={dealer ? "Update Account" : "Sign Up"}
                 type="submit"
                 size="lg"
-                className="signup-button"
+                className={dealer ? "update-button" : "signup-button"}
               />
             )}
           </div>
           <Toast
             open={toastOpen}
             onClose={() => setToastOpen(false)}
-            message="Signup Successful!"
+            message={
+              dealer ? "Account updated successfully!" : "Signup Successful!"
+            }
             severity="success"
           />
           <div className="login-redirect">

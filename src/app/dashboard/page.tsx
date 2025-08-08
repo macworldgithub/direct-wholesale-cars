@@ -13,8 +13,10 @@ import {
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import CarAuctionForm from "../add_car/page";
+import { useRouter } from "next/navigation";
 
 const Dashboard = () => {
+  const router = useRouter();
   const [selectedTab, setSelectedTab] = useState(0);
   const dealer = useSelector((state: RootState) => state.SignuinDealer.dealer);
 
@@ -84,7 +86,7 @@ const Dashboard = () => {
                     },
                   }}
                   onClick={() => {
-                    console.log("Update Profile clicked");
+                    router.push("/signup");
                   }}
                 >
                   update profile

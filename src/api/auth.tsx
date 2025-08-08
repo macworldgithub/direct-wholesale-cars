@@ -141,3 +141,79 @@ export const SigninDealer = createAsyncThunk<
     );
   }
 });
+
+interface UpdateDealerResponse {
+  message: string;
+  account: {
+    _id: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    phone: string;
+    businessName: string;
+    businessType: string;
+    businessLicenseNumber: string;
+    address: string;
+    city: string;
+    state: string;
+    zipCode: string;
+    accountType: string;
+    profileImage: string;
+    receiveUpdates: boolean;
+    agreeTerms: boolean;
+    createdAt: string;
+    updatedAt: string;
+    __v: number;
+  };
+}
+
+export const UpdateDealer = createAsyncThunk<
+  UpdateDealerResponse & { signedProfileImage?: string },
+  { accountId: string; data: FormData },
+  { rejectValue: string }
+>("dealers/update", async ({ accountId, data }, { rejectWithValue }) => {
+  try {
+    const token = localStorage.getItem("authToken");
+    if (!token) throw new Error("Unauthorized");
+
+    const response = await axios.put<UpdateDealerResponse>(
+      `${BACKEND_URL}/dealers/${accountId}`,
+      data,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+
+    const { account } = response.data;
+
+    let signedProfileImage: string | undefined;
+    if (account.profileImage) {
+      try {
+        const signedRes = await axios.get<{ url: string }>(
+          `${BACKEND_URL}/dealers/signed-profile-image`,
+          {
+            params: { key: account.profileImage },
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        signedProfileImage = signedRes.data.url;
+      } catch (err) {
+        console.error("Failed to fetch signed profile image", err);
+      }
+    }
+
+    return {
+      ...response.data,
+      signedProfileImage,
+    };
+  } catch (error: any) {
+    return rejectWithValue(
+      error.response?.data?.message || "Failed to update account"
+    );
+  }
+});
