@@ -139,31 +139,49 @@ const SignupPage = () => {
     setImageFile(null);
   };
 
-  const onSubmit = (data: SignupFormData) => {
-    if (!data.agreeTerms) {
-      alert("You must agree to Terms of Service and Privacy Policy.");
-      return;
+  const onSubmit = (formValues: any) => {
+    let payload: any;
+
+    const hasFile =
+      formValues.profileImage &&
+      formValues.profileImage instanceof File &&
+      formValues.profileImage.name;
+
+    if (hasFile) {
+      const formData = new FormData();
+      Object.entries(formValues).forEach(([key, value]) => {
+        if (value !== null && value !== undefined && value !== "") {
+          formData.append(key, value as any);
+        }
+      });
+      payload = formData;
+    } else {
+      payload = {};
+      Object.entries(formValues).forEach(([key, value]) => {
+        if (value !== null && value !== undefined && value !== "") {
+          payload[key] = value;
+        }
+      });
     }
 
-    const formData = new FormData();
-    Object.entries(data).forEach(([key, value]) => {
-      if (value !== null && value !== undefined && value !== "") {
-        formData.append(key, value as any);
-      }
-    });
-
-    if (dealer) {
-      dispatch(UpdateDealer({ accountId: dealer._id, data: formData }));
-      setToastOpen(true);
-      setTimeout(() => {
-        router.push("/dashboard");
-      }, 2000);
+    if (dealer?._id) {
+      dispatch(UpdateDealer({ accountId: dealer._id, data: payload }))
+        .unwrap()
+        .then(() => {
+          setToastOpen(true);
+          setTimeout(() => {
+            router.push("/dashboard");
+          }, 2000);
+        });
     } else {
-      dispatch(SignupDealer(data));
-      setToastOpen(true);
-      setTimeout(() => {
-        router.push("/login");
-      }, 2000);
+      dispatch(SignupDealer(payload))
+        .unwrap()
+        .then(() => {
+          setToastOpen(true);
+          setTimeout(() => {
+            router.push("/login");
+          }, 2000);
+        });
     }
   };
 

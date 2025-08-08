@@ -169,12 +169,14 @@ interface UpdateDealerResponse {
 
 export const UpdateDealer = createAsyncThunk<
   UpdateDealerResponse & { signedProfileImage?: string },
-  { accountId: string; data: FormData },
+  { accountId: string; data: any },
   { rejectValue: string }
 >("dealers/update", async ({ accountId, data }, { rejectWithValue }) => {
   try {
     const token = localStorage.getItem("authToken");
     if (!token) throw new Error("Unauthorized");
+
+    const isFileUpload = data instanceof FormData;
 
     const response = await axios.put<UpdateDealerResponse>(
       `${BACKEND_URL}/dealers/${accountId}`,
@@ -182,7 +184,9 @@ export const UpdateDealer = createAsyncThunk<
       {
         headers: {
           Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
+          ...(isFileUpload
+            ? { "Content-Type": "multipart/form-data" }
+            : { "Content-Type": "application/json" }),
         },
       }
     );

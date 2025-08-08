@@ -15,44 +15,54 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/store/store";
 import { City, State } from "country-state-city";
 import Toast from "@/components/UIComponents/Toast/Toast";
-import { useRouter } from "next/navigation";
-import { hideLoader, showLoader } from "@/slices/loaderSlice";
+import { showLoader } from "@/slices/loaderSlice";
 
 interface FormData {
-  title: string;
-  make: string;
-  model: string;
-  year: string;
-  mileage: string;
+  title?: string;
   price: string;
-  condition: string;
-  transmission: string;
-  fuelType: string;
-  description: string;
-
-  street: string;
-  city: string;
-  state: string;
+  make?: string;
+  model?: string;
+  buildDate?: string;
+  odometer?: string;
+  condition?: "New" | "Used" | "Certified Pre-Owned";
+  transmission?: string;
+  driveType?: string;
+  cyls?: string;
+  seats?: string;
+  fuelType?: "P" | "D" | "E" | "H";
+  images?: string[];
+  description?: string;
+  street?: string;
+  city?: string;
+  state?: string;
   zipCode?: string;
   country?: string;
-
+  branch?:
+    | "W - WS VIC"
+    | "W - WS QLD"
+    | "W - WS SA"
+    | "C - Corporate Buying"
+    | "D - DG1911"
+    | "W - WS Retail VIC";
+  stockNumber?: string;
+  bayNumber?: string;
+  regoNumber?: string;
+  vin?: string;
+  engineNumber?: string;
+  chassisNumber?: string;
+  businessType?: "B2B" | "B2C";
   imageKeys: string[];
 }
 
 const CarAuctionForm: React.FC = () => {
-  const {
-    handleSubmit,
-    control,
-    setValue,
-    watch,
-  } = useForm<FormData>({
+  const { handleSubmit, control, setValue, watch, reset } = useForm<FormData>({
     defaultValues: {
       condition: "Used",
       country: "Australia",
+      businessType: "B2C",
       imageKeys: [],
     },
   });
-  const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
   const dealer = useSelector((state: RootState) => state.SignuinDealer.dealer);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -154,18 +164,19 @@ const CarAuctionForm: React.FC = () => {
     }
 
     try {
-      dispatch(showLoader());
-
       const payload = {
         title: data.title,
         price: Number(data.price),
         make: data.make,
         model: data.model,
-        year: Number(data.year),
-        mileage: data.mileage ? Number(data.mileage) : undefined,
+        buildDate: data.buildDate,
+        odometer: data.odometer ? Number(data.odometer) : undefined,
         condition: data.condition,
         transmission: data.transmission || undefined,
-        fuelType: data.fuelType || undefined,
+        driveType: data.driveType || undefined,
+        cyls: data.cyls ? Number(data.cyls) : undefined,
+        seats: data.seats ? Number(data.seats) : undefined,
+        fuelType: data.fuelType,
         images: imageKeys,
         description: data.description || "",
         dealer: dealer._id,
@@ -174,28 +185,33 @@ const CarAuctionForm: React.FC = () => {
         state: data.state,
         zipCode: data.zipCode || undefined,
         country: "Australia",
+        branch: data.branch,
+        stockNumber: data.stockNumber,
+        bayNumber: data.bayNumber,
+        regoNumber: data.regoNumber,
+        vin: data.vin,
+        engineNumber: data.engineNumber,
+        chassisNumber: data.chassisNumber,
+        businessType: "B2C",
       };
 
       await createCarAd(payload);
-
+      reset();
       setToastOpen(true);
-
       setTimeout(() => {
-        router.push("/dashboard");
+        dispatch(showLoader());
+        window.location.reload();
       }, 1500);
     } catch (error) {
       console.error("Error creating ad:", error);
-    } finally {
-      dispatch(hideLoader());
     }
   };
 
-  // Dropdown options
   const fuelOptions = [
-    { label: "Petrol", value: "Petrol" },
-    { label: "Diesel", value: "Diesel" },
-    { label: "Electric", value: "Electric" },
-    { label: "Hybrid", value: "Hybrid" },
+    { label: "Petrol", value: "P" },
+    { label: "Diesel", value: "D" },
+    { label: "Electric", value: "E" },
+    { label: "Hybrid", value: "H" },
   ];
 
   const conditionOptions = [
@@ -204,10 +220,18 @@ const CarAuctionForm: React.FC = () => {
     { label: "Certified Pre-Owned", value: "Certified Pre-Owned" },
   ];
 
-  const transmissionOptions = [
-    { label: "Automatic", value: "Automatic" },
-    { label: "Manual", value: "Manual" },
-    { label: "CVT", value: "CVT" },
+  const businessTypeOptions = [
+    { label: "B2B", value: "B2B" },
+    { label: "B2C", value: "B2C" },
+  ];
+
+  const branchOptions = [
+    { label: "W - WS VIC", value: "W - WS VIC" },
+    { label: "W - WS QLD", value: "W - WS QLD" },
+    { label: "W - WS SA", value: "W - WS SA" },
+    { label: "C - Corporate Buying", value: "C - Corporate Buying" },
+    { label: "D - DG1911", value: "D - DG1911" },
+    { label: "W - WS Retail VIC", value: "W - WS Retail VIC" },
   ];
 
   return (
@@ -217,40 +241,8 @@ const CarAuctionForm: React.FC = () => {
       <Controller
         name="title"
         control={control}
-        rules={{ required: true }}
         render={({ field }) => (
-          <LocalizedInput {...field} label="Title" required />
-        )}
-      />
-      <Controller
-        name="make"
-        control={control}
-        rules={{ required: true }}
-        render={({ field }) => (
-          <LocalizedInput {...field} label="Make" required />
-        )}
-      />
-      <Controller
-        name="model"
-        control={control}
-        rules={{ required: true }}
-        render={({ field }) => (
-          <LocalizedInput {...field} label="Model" required />
-        )}
-      />
-      <Controller
-        name="year"
-        control={control}
-        rules={{ required: true }}
-        render={({ field }) => (
-          <LocalizedInput {...field} label="Year" type="number" required />
-        )}
-      />
-      <Controller
-        name="mileage"
-        control={control}
-        render={({ field }) => (
-          <LocalizedInput {...field} label="Mileage (km)" />
+          <LocalizedInput {...field} label="Title" value={field.value ?? ""} />
         )}
       />
       <Controller
@@ -258,7 +250,45 @@ const CarAuctionForm: React.FC = () => {
         control={control}
         rules={{ required: true }}
         render={({ field }) => (
-          <LocalizedInput {...field} label="Price" required />
+          <LocalizedInput {...field} label="Price" required type="number" />
+        )}
+      />
+      <Controller
+        name="make"
+        control={control}
+        render={({ field }) => (
+          <LocalizedInput {...field} label="Make" value={field.value ?? ""} />
+        )}
+      />
+      <Controller
+        name="model"
+        control={control}
+        render={({ field }) => (
+          <LocalizedInput {...field} label="Model" value={field.value ?? ""} />
+        )}
+      />
+      <Controller
+        name="buildDate"
+        control={control}
+        render={({ field }) => (
+          <LocalizedInput
+            {...field}
+            label="Build Date"
+            placeholderKey="YYYY-MM"
+            value={field.value ?? ""}
+          />
+        )}
+      />
+      <Controller
+        name="odometer"
+        control={control}
+        render={({ field }) => (
+          <LocalizedInput
+            {...field}
+            label="Odometer"
+            type="number"
+            value={field.value ?? ""}
+          />
         )}
       />
       <Controller
@@ -269,7 +299,7 @@ const CarAuctionForm: React.FC = () => {
             {...field}
             label="Condition"
             options={conditionOptions}
-            required
+            value={field.value ?? ""}
           />
         )}
       />
@@ -277,10 +307,45 @@ const CarAuctionForm: React.FC = () => {
         name="transmission"
         control={control}
         render={({ field }) => (
-          <Dropdown
+          <LocalizedInput
             {...field}
             label="Transmission"
-            options={transmissionOptions}
+            value={field.value ?? ""}
+          />
+        )}
+      />
+      <Controller
+        name="driveType"
+        control={control}
+        render={({ field }) => (
+          <LocalizedInput
+            {...field}
+            label="Drive Type"
+            value={field.value ?? ""}
+          />
+        )}
+      />
+      <Controller
+        name="cyls"
+        control={control}
+        render={({ field }) => (
+          <LocalizedInput
+            {...field}
+            label="Cylinders"
+            type="number"
+            value={field.value ?? ""}
+          />
+        )}
+      />
+      <Controller
+        name="seats"
+        control={control}
+        render={({ field }) => (
+          <LocalizedInput
+            {...field}
+            label="Seats"
+            type="number"
+            value={field.value ?? ""}
           />
         )}
       />
@@ -288,32 +353,124 @@ const CarAuctionForm: React.FC = () => {
         name="fuelType"
         control={control}
         render={({ field }) => (
-          <Dropdown {...field} label="Fuel Type" options={fuelOptions} />
+          <Dropdown
+            {...field}
+            label="Fuel Type"
+            options={fuelOptions}
+            value={field.value ?? ""}
+          />
         )}
       />
+      <Controller
+        name="branch"
+        control={control}
+        render={({ field }) => (
+          <Dropdown
+            {...field}
+            label="Branch"
+            options={branchOptions}
+            value={field.value ?? ""}
+          />
+        )}
+      />
+      <Controller
+        name="stockNumber"
+        control={control}
+        render={({ field }) => (
+          <LocalizedInput
+            {...field}
+            label="Stock #"
+            value={field.value ?? ""}
+          />
+        )}
+      />
+      <Controller
+        name="bayNumber"
+        control={control}
+        render={({ field }) => (
+          <LocalizedInput {...field} label="Bay #" value={field.value ?? ""} />
+        )}
+      />
+      <Controller
+        name="regoNumber"
+        control={control}
+        render={({ field }) => (
+          <LocalizedInput {...field} label="Rego #" value={field.value ?? ""} />
+        )}
+      />
+      <Controller
+        name="vin"
+        control={control}
+        render={({ field }) => (
+          <LocalizedInput {...field} label="VIN" value={field.value ?? ""} />
+        )}
+      />
+      <Controller
+        name="engineNumber"
+        control={control}
+        render={({ field }) => (
+          <LocalizedInput
+            {...field}
+            label="Engine #"
+            value={field.value ?? ""}
+          />
+        )}
+      />
+      <Controller
+        name="chassisNumber"
+        control={control}
+        render={({ field }) => (
+          <LocalizedInput
+            {...field}
+            label="Chassis #"
+            value={field.value ?? ""}
+          />
+        )}
+      />
+      <Controller
+        name="businessType"
+        control={control}
+        render={({ field }) => (
+          <Dropdown
+            {...field}
+            label="Business Type"
+            value="B2C"
+            options={businessTypeOptions}
+            disabled
+          />
+        )}
+      />
+
       <LocalizedHeading heading="Address" level={6} />
       <Controller
         name="street"
         control={control}
-        rules={{ required: true }}
         render={({ field }) => (
-          <LocalizedInput {...field} label="Street" required />
+          <LocalizedInput {...field} label="Street" value={field.value ?? ""} />
         )}
       />
       <Controller
         name="state"
         control={control}
-        rules={{ required: true }}
         render={({ field }) => (
-          <Dropdown {...field} label="State" options={stateOptions} required />
+          <Dropdown
+            {...field}
+            label="State"
+            options={stateOptions}
+            value={field.value ?? ""}
+          />
         )}
       />
       <Controller
         name="city"
         control={control}
-        rules={{ required: true }}
         render={({ field }) => (
-          <Dropdown {...field} label="City" options={cityOptions} required />
+          <Dropdown
+            {...field}
+            label="City"
+            options={cityOptions}
+            value={field.value ?? ""}
+          />
         )}
       />
       <Controller
@@ -345,6 +502,7 @@ const CarAuctionForm: React.FC = () => {
         render={({ field }) => (
           <LocalizedTextArea
             {...field}
+            value={field.value ?? ""}
             placeholderKey="Describe the vehicle condition, history, etc."
           />
         )}

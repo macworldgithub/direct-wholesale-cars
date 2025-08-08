@@ -22,25 +22,41 @@ export const getPresignedUrl = async (
   return response.data;
 };
 
-
 interface CreateCarAdRequest {
-  title: string;
+  title?: string;
   price: number;
-  make: string;
-  model: string;
-  year: number;
-  mileage?: number;
-  condition: string;
+  make?: string;
+  model?: string;
+  buildDate?: string; 
+  odometer?: number;
+  condition?: "New" | "Used" | "Certified Pre-Owned";
   transmission?: string;
-  fuelType?: string;
-  images: string[];
+  driveType?: string;
+  cyls?: number;
+  seats?: number;
+  fuelType?: "P" | "D" | "E" | "H";
+  images?: string[];
   description?: string;
   dealer: string;
-  street: string;
-  city: string;
-  state: string;
+  street?: string;
+  city?: string;
+  state?: string;
   zipCode?: string;
-  country: string;
+  country?: string;
+  branch?:
+    | "W - WS VIC"
+    | "W - WS QLD"
+    | "W - WS SA"
+    | "C - Corporate Buying"
+    | "D - DG1911"
+    | "W - WS Retail VIC";
+  stockNumber?: string;
+  bayNumber?: string;
+  regoNumber?: string;
+  vin?: string;
+  engineNumber?: string;
+  chassisNumber?: string;
+  businessType?: string;
 }
 
 export const createCarAd = async (data: CreateCarAdRequest) => {
