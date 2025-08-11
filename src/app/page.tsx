@@ -14,37 +14,11 @@ import Banner from "@/components/UIComponents/Banner/Banner";
 import LocalizedButton from "@/components/UIComponents/LocalizedButton/LocalizedButton";
 import Hero from "@/components/AppComponents/Hero/Hero";
 import Dropdown from "@/components/UIComponents/Dropdown/Dropdown";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store/store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/store/store";
 import CustomModal from "@/components/UIComponents/LocalizedModal/LocalizedModal";
 import { Typography } from "@mui/material";
-
-const carsData = [
-  {
-    name: "2023 Toyota Camry LE",
-    description: "25,420 miles · Automatic · FWD",
-    price: "$22,500",
-    tags: ["Certified"],
-    image: "/images/cars.png",
-    location: "Atlanta, GA · Premium Auto Dealer",
-  },
-  {
-    name: "2023 Toyota Camry LE",
-    description: "25,420 miles · Automatic · FWD",
-    price: "$35,900",
-    tags: ["Featured"],
-    image: "/images/cars.png",
-    location: "Atlanta, GA · Premium Auto Dealer",
-  },
-  {
-    name: "2023 Toyota Camry LE",
-    description: "25,420 miles · Automatic · FWD",
-    price: "$28,750",
-    tags: ["New"],
-    image: "/images/cars.png",
-    location: "Atlanta, GA · Premium Auto Dealer",
-  },
-];
+import { fetchAllCarAds } from "@/api/cars";
 
 const features = [
   {
@@ -124,11 +98,18 @@ const sortOptions = [
 
 export default function Home() {
   const router = useRouter();
+  const dispatch = useDispatch<AppDispatch>();
   const [sortValue, setSortValue] = useState<string>(sortOptions[0].value);
   const [showModal, setShowModal] = useState(false);
 
   const dealer = useSelector((state: RootState) => state.SignuinDealer.dealer);
-  console.log(dealer);
+  const ads = useSelector((state: RootState) => state.carAds.ads);
+  console.log(ads);
+
+  useEffect(() => {
+    dispatch(fetchAllCarAds());
+  }, [dispatch]);
+
   useEffect(() => {
     const hasSeenModal = localStorage.getItem("hasSeenRegisterModal");
 
@@ -147,7 +128,7 @@ export default function Home() {
     setSortValue(value);
   };
 
-  const handleViewDetails = (carId: number) => {
+  const handleViewDetails = (carId: string) => {
     router.push(`/car_Details?id=${carId}`);
   };
 
@@ -205,7 +186,9 @@ export default function Home() {
       <Price />
 
       <div className="results-header">
-        <div className="results-count">6 Vehicles Found</div>
+        <div className="results-count">
+          {ads.length} {ads.length === 1 ? "Vehicle" : "Vehicles"} Found
+        </div>
         <div className="sort-dropdown">
           <Dropdown
             options={sortOptions}
@@ -222,16 +205,24 @@ export default function Home() {
         </div>
       </div>
       <div className="cards-wrapper">
-        {carsData.map((car, idx) => (
+        {ads.map((car) => (
           <Card
-            key={idx}
-            name={car.name}
-            description={car.description}
-            price={car.price}
-            tags={car.tags}
-            image={car.image}
-            location={car.location}
-            onClick={() => handleViewDetails(idx)}
+            key={car._id}
+            id={car._id}
+            name={car.title || `${car.make ?? ""} ${car.model ?? ""}`.trim()}
+            description={`${car.odometer?.toLocaleString() ?? 0} miles · ${
+              car.transmission || "Unknown"
+            } · ${car.driveType || "N/A"}`}
+            price={`$${car.price.toLocaleString()}`}
+            tags={car.condition ? [car.condition] : []}
+            image={car.images?.length ? car.images[0] : ""}
+            location={`${car.city ?? ""}, ${car.state ?? ""} · ${
+              car.businessType || "B2C"
+            }`}
+            fuelType={car.fuelType}
+            cyls={car.cyls}
+            seats={car.seats}
+            onClick={() => handleViewDetails(car._id)}
           />
         ))}
       </div>

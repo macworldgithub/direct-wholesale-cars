@@ -1,73 +1,30 @@
 // src/api/auth/api.ts
 import { BACKEND_URL } from "@/config/server";
-import { RootState } from "@/store/store";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-export interface SignupDealerData {
-  firstName?: string;
-  lastName?: string;
-  email?: string;
-  password?: string;
-  phone?: string;
-
-  businessName?: string;
-  businessType?: string;
-  businessLicenseNumber?: string;
-  address?: string;
-  city?: string;
-  state?: string;
-  zipCode?: string;
-  accountType?: string;
-  dealerType?: string;
-  agreeTerms?: boolean;
-  receiveUpdates?: boolean;
-  profileImage?: File | null;
-}
-
 export const SignupDealer = createAsyncThunk(
   "dealers/signup",
-  async (data: SignupDealerData, { rejectWithValue }) => {
+  async (data: FormData | Record<string, any>, { rejectWithValue }) => {
     try {
-      const formData = new FormData();
+      const isFormData = data instanceof FormData;
 
-      formData.append("firstName", data.firstName ?? "");
-      formData.append("lastName", data.lastName ?? "");
-      formData.append("email", data.email ?? "");
-      formData.append("password", data.password ?? "");
-      formData.append("phone", data.phone ?? "");
+      const response = await axios.post(`${BACKEND_URL}/dealers/signup`, data, {
+        headers: isFormData
+          ? { "Content-Type": "multipart/form-data" }
+          : { "Content-Type": "application/json" },
+      });
 
-      formData.append("businessName", data.businessName ?? "");
-      formData.append("businessType", data.businessType ?? "");
-      formData.append(
-        "businessLicenseNumber",
-        data.businessLicenseNumber ?? ""
-      );
-      formData.append("address", data.address ?? "");
-      formData.append("city", data.city ?? "");
-      formData.append("state", data.state ?? "");
-      formData.append("zipCode", data.zipCode ?? "");
-      formData.append("accountType", data.accountType ?? "dealer");
-      formData.append(
-        "receiveUpdates",
-        data.receiveUpdates ?? false ? "true" : "false"
-      );
-      formData.append(
-        "agreeTerms",
-        data.agreeTerms ?? false ? "true" : "false"
-      );
-
-      if (data.profileImage && data.profileImage instanceof File) {
-        formData.append("profileImage", data.profileImage);
+      try {
+        await sendWelcomeEmail(
+          isFormData ? (data.get("email") as string) : (data.email as string),
+          "Welcome to Direct Wholesale Cars",
+          (isFormData ? (data.get("firstName") as string) : data.firstName) ||
+            "Dealer"
+        );
+      } catch (emailErr) {
+        console.error("Signup succeeded, but email sending failed", emailErr);
       }
-
-      const response = await axios.post(
-        `${BACKEND_URL}/dealers/signup`,
-        formData,
-        {
-          headers: { "Content-Type": "multipart/form-data" },
-        }
-      );
 
       return response.data;
     } catch (error: any) {
@@ -221,3 +178,19 @@ export const UpdateDealer = createAsyncThunk<
     );
   }
 });
+
+const sendWelcomeEmail = async (
+  to: string,
+  subject: string,
+  username: string
+) => {
+  await axios.post(
+    `${BACKEND_URL}/email/send-template`,
+    { to, subject, username },
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+};
