@@ -1,10 +1,9 @@
-// LocalizedTable/LocalizedTable.tsx
 import React from 'react';
 import './LocalizedTable.scss';
 
 interface Column {
   key: string;
-  header: string; // ✅ updated from 'label' to 'header'
+  header: string;
 }
 
 interface LocalizedTableProps {
@@ -19,32 +18,36 @@ const LocalizedTable: React.FC<LocalizedTableProps> = ({
   emptyMessage = 'No data available'
 }) => {
   return (
-    <table className="localized-table">
-      <thead>
-        <tr>
-          {columns.map((col) => (
-            <th key={col.key}>{col.header}</th>
-          ))}
-        </tr>
-      </thead>
-      <tbody>
-        {data.length === 0 ? (
+    <div className="localized-table-wrapper">
+      <table className="localized-table">
+        <thead>
           <tr>
-            <td colSpan={columns.length} className="empty">
-              {emptyMessage}
-            </td>
+            {columns.map((col) => (
+              <th key={col.key}>{col.header}</th>
+            ))}
           </tr>
-        ) : (
-          data.map((row, idx) => (
-            <tr key={idx}>
-              {columns.map((col) => (
-                <td key={col.key}>{row[col.key]}</td>
-              ))}
+        </thead>
+        <tbody>
+          {data.length === 0 ? (
+            <tr>
+              <td colSpan={columns.length} className="empty">
+                {emptyMessage}
+              </td>
             </tr>
-          ))
-        )}
-      </tbody>
-    </table>
+          ) : (
+            data.map((row, idx) => (
+              <tr key={idx}>
+                {columns.map((col) => (
+                  <td key={col.key} data-label={col.header}>
+                    {row[col.key]}
+                  </td>
+                ))}
+              </tr>
+            ))
+          )}
+        </tbody>
+      </table>
+    </div>
   );
 };
 
