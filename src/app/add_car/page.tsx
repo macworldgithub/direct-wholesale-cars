@@ -9,13 +9,20 @@ import LocalizedHeading from "@/components/UIComponents/LocalizedHeading/Localiz
 import LocalizedInput from "@/components/UIComponents/LocalizedInput/LocalizedInput";
 import LocalizedTextArea from "@/components/UIComponents/LocalizedTextArea/LocalizedTextArea";
 import Dropdown from "@/components/UIComponents/Dropdown/Dropdown";
-import { createCarAd, getPresignedUrl } from "@/api/cars";
+import {
+  createCarAd,
+  fetchCarAdById,
+  getPresignedUrl,
+  updateCarAd,
+} from "@/api/cars";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/store/store";
 import { City, State } from "country-state-city";
 import Toast from "@/components/UIComponents/Toast/Toast";
 import { showLoader } from "@/slices/loaderSlice";
+import { useSearchParams } from "next/navigation";
+import { clearSelectedAd } from "@/slices/carAdsSlice";
 
 interface FormData {
   title?: string;
@@ -64,7 +71,45 @@ const CarAuctionForm: React.FC = () => {
     },
   });
   const dispatch = useDispatch<AppDispatch>();
+  const searchParams = useSearchParams();
+  const adId = searchParams?.get("id") || undefined;
+  console.log(adId, "adId from search params");
+
   const dealer = useSelector((state: RootState) => state.SignuinDealer.dealer);
+  const selectedAd = useSelector((state: RootState) => state.carAds.selectedAd);
+  console.log(selectedAd);
+  const isEditMode = Boolean(adId);
+  console.log(isEditMode, "isEditMode");
+
+  useEffect(() => {
+    if (adId) {
+      dispatch(fetchCarAdById(adId));
+    } else {
+      dispatch(clearSelectedAd());
+    }
+  }, [adId, dispatch]);
+
+  useEffect(() => {
+    if (isEditMode && selectedAd) {
+      reset({
+        ...selectedAd,
+        price: selectedAd.price.toString(),
+        odometer: selectedAd.odometer?.toString(),
+        cyls: selectedAd.cyls?.toString(),
+        seats: selectedAd.seats?.toString(),
+        imageKeys: selectedAd.images || [],
+        branch: selectedAd.branch as
+          | "W - WS VIC"
+          | "W - WS QLD"
+          | "W - WS SA"
+          | "C - Corporate Buying"
+          | "D - DG1911"
+          | "W - WS Retail VIC"
+          | undefined,
+      });
+    }
+  }, [selectedAd, isEditMode, reset]);
+
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const [imageKeys, setImageKeys] = useState<string[]>([]);
@@ -157,45 +202,72 @@ const CarAuctionForm: React.FC = () => {
     }
   }, [selectedState, setValue]);
 
+  useEffect(() => {
+    if (selectedAd && adId) {
+      reset({
+        ...selectedAd,
+        price: selectedAd.price.toString(),
+        odometer: selectedAd.odometer?.toString(),
+        cyls: selectedAd.cyls?.toString(),
+        seats: selectedAd.seats?.toString(),
+        // imageKeys: selectedAd.images || [],
+        branch: selectedAd.branch as
+          | "W - WS VIC"
+          | "W - WS QLD"
+          | "W - WS SA"
+          | "C - Corporate Buying"
+          | "D - DG1911"
+          | "W - WS Retail VIC"
+          | undefined,
+      });
+      setImagePreviews(selectedAd.images || []);
+      setImageKeys(selectedAd.images || []);
+    }
+  }, [selectedAd, adId, reset]);
+
   const onSubmit = async (data: FormData) => {
     if (!dealer?._id) {
       console.error("Dealer not logged in");
       return;
     }
 
-    try {
-      const payload = {
-        title: data.title,
-        price: Number(data.price),
-        make: data.make,
-        model: data.model,
-        buildDate: data.buildDate,
-        odometer: data.odometer ? Number(data.odometer) : undefined,
-        condition: data.condition,
-        transmission: data.transmission || undefined,
-        driveType: data.driveType || undefined,
-        cyls: data.cyls ? Number(data.cyls) : undefined,
-        seats: data.seats ? Number(data.seats) : undefined,
-        fuelType: data.fuelType,
-        images: imageKeys,
-        description: data.description || "",
-        dealer: dealer._id,
-        street: data.street,
-        city: data.city,
-        state: data.state,
-        zipCode: data.zipCode || undefined,
-        country: "Australia",
-        branch: data.branch,
-        stockNumber: data.stockNumber,
-        bayNumber: data.bayNumber,
-        regoNumber: data.regoNumber,
-        vin: data.vin,
-        engineNumber: data.engineNumber,
-        chassisNumber: data.chassisNumber,
-        businessType: "B2C",
-      };
+    const payload = {
+      title: data.title,
+      price: Number(data.price),
+      make: data.make,
+      model: data.model,
+      buildDate: data.buildDate,
+      odometer: data.odometer ? Number(data.odometer) : undefined,
+      condition: data.condition,
+      transmission: data.transmission || undefined,
+      driveType: data.driveType || undefined,
+      cyls: data.cyls ? Number(data.cyls) : undefined,
+      seats: data.seats ? Number(data.seats) : undefined,
+      fuelType: data.fuelType,
+      images: imageKeys, 
+      description: data.description || "",
+      dealer: dealer._id,
+      street: data.street,
+      city: data.city,
+      state: data.state,
+      zipCode: data.zipCode || undefined,
+      country: "Australia",
+      branch: data.branch,
+      stockNumber: data.stockNumber,
+      bayNumber: data.bayNumber,
+      regoNumber: data.regoNumber,
+      vin: data.vin,
+      engineNumber: data.engineNumber,
+      chassisNumber: data.chassisNumber,
+      businessType: "B2C",
+    };
 
-      await createCarAd(payload);
+    try {
+      if (adId) {
+        await dispatch(updateCarAd({ id: adId, data: payload }));
+      } else {
+        await dispatch(createCarAd(payload));
+      }
       reset();
       setToastOpen(true);
       setTimeout(() => {
@@ -203,7 +275,7 @@ const CarAuctionForm: React.FC = () => {
         window.location.reload();
       }, 1500);
     } catch (error) {
-      console.error("Error creating ad:", error);
+      console.error("Error submitting ad:", error);
     }
   };
 
@@ -236,8 +308,6 @@ const CarAuctionForm: React.FC = () => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="car-auction-form">
-      <LocalizedHeading heading="Add a Car" level={5} />
-      {/* Form Fields */}
       <Controller
         name="title"
         control={control}
@@ -507,14 +577,12 @@ const CarAuctionForm: React.FC = () => {
           />
         )}
       />
-      {/* Upload Button */}
       <LocalizedButton
         label="Upload Images"
         onClick={() => fileInputRef.current?.click()}
         size="sm"
         className="upload-image-button"
       />
-      {/* Hidden Input */}
       <input
         type="file"
         accept="image/*"
@@ -545,15 +613,20 @@ const CarAuctionForm: React.FC = () => {
       )}
       <LocalizedButton
         type="submit"
-        label="Submit Listing"
+        label={isEditMode ? "Update Listing" : "Submit Listing"}
         variant="filled"
         size="sm"
         className="submit-button"
       />
+
       <Toast
         open={toastOpen}
         onClose={() => setToastOpen(false)}
-        message="Car ad created successfully!"
+        message={
+          isEditMode
+            ? "Car ad updated successfully!"
+            : "Car ad created successfully!"
+        }
         severity="success"
       />
     </form>

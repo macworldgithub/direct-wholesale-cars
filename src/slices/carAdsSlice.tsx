@@ -1,4 +1,9 @@
-import { fetchAllCarAds, fetchCarAdById } from "@/api/cars";
+import {
+  createCarAd,
+  fetchAllCarAds,
+  fetchCarAdById,
+  updateCarAd,
+} from "@/api/cars";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface CarAd {
@@ -30,6 +35,43 @@ export interface CarAd {
   engineNumber?: string;
   chassisNumber?: string;
   businessType?: "B2B" | "B2C";
+}
+
+export interface CreateCarAdRequest {
+  title?: string;
+  price: number;
+  make?: string;
+  model?: string;
+  buildDate?: string;
+  odometer?: number;
+  condition?: "New" | "Used" | "Certified Pre-Owned";
+  transmission?: string;
+  driveType?: string;
+  cyls?: number;
+  seats?: number;
+  fuelType?: "P" | "D" | "E" | "H";
+  images?: string[];
+  description?: string;
+  dealer: string;
+  street?: string;
+  city?: string;
+  state?: string;
+  zipCode?: string;
+  country?: string;
+  branch?:
+    | "W - WS VIC"
+    | "W - WS QLD"
+    | "W - WS SA"
+    | "C - Corporate Buying"
+    | "D - DG1911"
+    | "W - WS Retail VIC";
+  stockNumber?: string;
+  bayNumber?: string;
+  regoNumber?: string;
+  vin?: string;
+  engineNumber?: string;
+  chassisNumber?: string;
+  businessType?: string;
 }
 
 interface CarAdsState {
@@ -86,6 +128,37 @@ const carAdsSlice = createSlice({
       .addCase(fetchCarAdById.rejected, (state, action: PayloadAction<any>) => {
         state.loading = false;
         state.error = action.payload || "Failed to fetch car ad";
+      })
+      .addCase(createCarAd.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(createCarAd.fulfilled, (state, action: PayloadAction<CarAd>) => {
+        state.loading = false;
+        state.ads.push(action.payload);
+        state.selectedAd = action.payload;
+      })
+      .addCase(createCarAd.rejected, (state, action: PayloadAction<any>) => {
+        state.loading = false;
+        state.error = action.payload || "Failed to create car ad";
+      })
+      .addCase(updateCarAd.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateCarAd.fulfilled, (state, action: PayloadAction<CarAd>) => {
+        state.loading = false;
+        const idx = state.ads.findIndex((ad) => ad._id === action.payload._id);
+        if (idx !== -1) {
+          state.ads[idx] = action.payload;
+        } else {
+          state.ads.push(action.payload);
+        }
+        state.selectedAd = action.payload;
+      })
+      .addCase(updateCarAd.rejected, (state, action: PayloadAction<any>) => {
+        state.loading = false;
+        state.error = action.payload || "Failed to update car ad";
       });
   },
 });

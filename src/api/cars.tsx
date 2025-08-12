@@ -60,10 +60,24 @@ interface CreateCarAdRequest {
   businessType?: string;
 }
 
-export const createCarAd = async (data: CreateCarAdRequest) => {
-  const response = await axios.post(`${BACKEND_URL}/ads`, data);
-  return response.data;
-};
+export const createCarAd = createAsyncThunk<CarAd, CreateCarAdRequest>(
+  "carAds/createCarAd",
+  async (data, { rejectWithValue }) => {
+    try {
+      const response = await axios.post(`${BACKEND_URL}/ads`, data);
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to create car ad"
+      );
+    }
+  }
+);
+
+export interface UpdateCarAdRequest {
+  id: string;
+  data: CreateCarAdRequest;
+}
 
 interface CarAd {
   _id: string;
@@ -122,6 +136,23 @@ export const fetchCarAdById = createAsyncThunk<
   } catch (error: any) {
     return rejectWithValue(
       error.response?.data?.message || "Failed to fetch car ad details"
+    );
+  }
+});
+
+export const updateCarAd = createAsyncThunk<
+  CarAd,
+  { id: string; data: CreateCarAdRequest }
+>("carAds/updateCarAd", async ({ id, data }, { rejectWithValue }) => {
+  try {
+    const response = await axios.put(
+      `${BACKEND_URL}/ads/update-car-ad/${id}`,
+      data
+    );
+    return response.data;
+  } catch (error: any) {
+    return rejectWithValue(
+      error.response?.data?.message || "Failed to update car ad"
     );
   }
 });

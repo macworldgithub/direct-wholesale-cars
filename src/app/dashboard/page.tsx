@@ -14,6 +14,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import CarAuctionForm from "../add_car/page";
 import { useRouter } from "next/navigation";
+import CarListing from "@/components/AppComponents/CarListing/CarListing";
 
 const Dashboard = () => {
   const router = useRouter();
@@ -49,7 +50,8 @@ const Dashboard = () => {
         }}
       >
         <Tab label="Profile" />
-        <Tab label="Add a Car" />
+        {dealer?.accountType === "dealer" && <Tab label="Add a Car" />}
+        {dealer?.accountType === "dealer" && <Tab label="Car Listing" />}
       </Tabs>
 
       <Box sx={{ mt: 4 }}>
@@ -72,25 +74,27 @@ const Dashboard = () => {
               }}
             >
               <Box display="flex" mb={4}>
-                <Button
-                  variant="contained"
-                  sx={{
-                    backgroundColor: "#1801b4",
-                    textTransform: "capitalize",
-                    fontWeight: 600,
-                    px: 4,
-                    py: 1.5,
-                    borderRadius: 2,
-                    "&:hover": {
-                      backgroundColor: "#140191",
-                    },
-                  }}
-                  onClick={() => {
-                    router.push("/signup");
-                  }}
-                >
-                  update profile
-                </Button>
+                {dealer.accountType === "dealer" && (
+                  <Button
+                    variant="contained"
+                    sx={{
+                      backgroundColor: "#1801b4",
+                      textTransform: "capitalize",
+                      fontWeight: 600,
+                      px: 4,
+                      py: 1.5,
+                      borderRadius: 2,
+                      "&:hover": {
+                        backgroundColor: "#140191",
+                      },
+                    }}
+                    onClick={() => {
+                      router.push("/signup");
+                    }}
+                  >
+                    update profile
+                  </Button>
+                )}
               </Box>
 
               <Box
@@ -144,6 +148,11 @@ const Dashboard = () => {
         {selectedTab === 1 && (
           <Suspense fallback={<CircularProgress />}>
             <CarAuctionForm />
+          </Suspense>
+        )}
+        {selectedTab === 2 && (
+          <Suspense fallback={<CircularProgress />}>
+            <CarListing />
           </Suspense>
         )}
       </Box>
