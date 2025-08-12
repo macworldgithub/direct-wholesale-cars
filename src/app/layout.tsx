@@ -28,10 +28,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-            <head>
-        <link rel="stylesheet" href="https://dws-frontend-psi.vercel.app/car-chat-widget.css" />
-        <script src="https://dws-frontend-psi.vercel.app/car-chat-widget.iife.js" defer />
-      </head>
+  
       <body className={`${poppins.variable} layout-body`}>
         <Providers>
           <div className="layout-wrapper">
