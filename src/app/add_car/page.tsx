@@ -231,6 +231,17 @@ const CarAuctionForm: React.FC = () => {
       return;
     }
 
+    const cleanImageKeys = imageKeys.map((url) => {
+      try {
+        const parsedUrl = new URL(url);
+        return parsedUrl.pathname.startsWith("/")
+          ? parsedUrl.pathname.slice(1)
+          : parsedUrl.pathname;
+      } catch {
+        return url;
+      }
+    });
+
     const payload = {
       title: data.title,
       price: Number(data.price),
@@ -244,7 +255,7 @@ const CarAuctionForm: React.FC = () => {
       cyls: data.cyls ? Number(data.cyls) : undefined,
       seats: data.seats ? Number(data.seats) : undefined,
       fuelType: data.fuelType,
-      images: imageKeys, 
+      images: cleanImageKeys,
       description: data.description || "",
       dealer: dealer._id,
       street: data.street,
@@ -613,7 +624,7 @@ const CarAuctionForm: React.FC = () => {
       )}
       <LocalizedButton
         type="submit"
-        label={isEditMode ? "Update Listing" : "Submit Listing"}
+        label={isEditMode ? "Update Car Ad" : "Create Car Ad"}
         variant="filled"
         size="sm"
         className="submit-button"
