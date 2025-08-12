@@ -94,8 +94,8 @@ export default function Footer() {
           <Image
             src="/images/logo1.png"
             alt="Direct Wholesale Cars"
-            width={180}
-            height={60}
+            width={220}
+            height={100}
             className="footer-logo"
           />
           <p className="footer-description">
