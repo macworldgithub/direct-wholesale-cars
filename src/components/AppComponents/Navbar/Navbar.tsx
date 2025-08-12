@@ -62,9 +62,6 @@ const Navbar = () => {
               <Link href="/signup" className="auth-link">
                 Signup
               </Link>
-              <Link href="/add_car" className="ride-link">
-                Add a Car
-              </Link>
             </>
           )}
         </div>
