@@ -1,5 +1,6 @@
 import {
   createCarAd,
+  deleteCarAd,
   fetchAllCarAds,
   fetchCarAdById,
   updateCarAd,
@@ -159,6 +160,24 @@ const carAdsSlice = createSlice({
       .addCase(updateCarAd.rejected, (state, action: PayloadAction<any>) => {
         state.loading = false;
         state.error = action.payload || "Failed to update car ad";
+      })
+      .addCase(deleteCarAd.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(
+        deleteCarAd.fulfilled,
+        (state, action: PayloadAction<string>) => {
+          state.loading = false;
+          state.ads = state.ads.filter((ad) => ad._id !== action.payload);
+          if (state.selectedAd?._id === action.payload) {
+            state.selectedAd = null;
+          }
+        }
+      )
+      .addCase(deleteCarAd.rejected, (state, action: PayloadAction<any>) => {
+        state.loading = false;
+        state.error = action.payload || "Failed to delete car ad";
       });
   },
 });

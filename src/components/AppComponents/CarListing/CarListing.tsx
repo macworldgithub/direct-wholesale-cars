@@ -5,12 +5,14 @@ import { useDispatch, useSelector } from "react-redux";
 import LocalizedTable from "../../UIComponents/LocalizedTable/LocalizedTable";
 import Pagination from "../../UIComponents/Pagination/Pagination";
 import { AppDispatch, RootState } from "@/store/store";
-import { fetchAllCarAds } from "@/api/cars";
+import { fetchAllCarAds, deleteCarAd } from "@/api/cars"; // <-- import delete
 import Link from "next/link";
+import LocalizedButton from "@/components/UIComponents/LocalizedButton/LocalizedButton";
 
 const CarListing: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const ads = useSelector((state: RootState) => state.carAds.ads);
+  const loading = useSelector((state: RootState) => state.carAds.loading);
 
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
@@ -18,6 +20,12 @@ const CarListing: React.FC = () => {
   useEffect(() => {
     dispatch(fetchAllCarAds());
   }, [dispatch]);
+
+  const handleDelete = (id: string) => {
+    if (confirm("Are you sure you want to delete this car ad?")) {
+      dispatch(deleteCarAd(id));
+    }
+  };
 
   const columns = [
     { key: "title", header: "Title" },
@@ -30,15 +38,13 @@ const CarListing: React.FC = () => {
     { key: "price", header: "Price" },
     { key: "city", header: "City" },
     { key: "state", header: "State" },
-    { key: "update", header: "Update" }, // <-- new column
+    { key: "update", header: "Update" },
+    { key: "delete", header: "Delete" },
   ];
 
   const tableData = ads.map((car) => ({
     title: (
-      <Link
-        href={`/car_Details?id=${car?._id}`}
-        style={{ color: "#1800B2" }}
-      >
+      <Link href={`/car_Details?id=${car?._id}`} style={{ color: "#1800B2" }}>
         {car.title || `${car.make ?? ""} ${car.model ?? ""}`}
       </Link>
     ),
@@ -52,12 +58,19 @@ const CarListing: React.FC = () => {
     city: car.city || "—",
     state: car.state || "—",
     update: (
-      <Link
-        href={`/add_car?id=${car?._id}`}
-        style={{ color: "#0070f3", textDecoration: "underline", cursor: "pointer" }}
-      >
-        Update
-      </Link>
+      <LocalizedButton
+        onClick={() => (window.location.href = `/add_car?id=${car?._id}`)}
+        size="sm"
+        label="Update"
+      />  
+    ),
+    delete: (
+      <LocalizedButton
+        onClick={() => handleDelete(car._id)}
+        disabled={loading}
+        size="sm"
+        label="Delete"
+      />
     ),
   }));
 

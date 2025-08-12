@@ -156,3 +156,18 @@ export const updateCarAd = createAsyncThunk<
     );
   }
 });
+
+export const deleteCarAd = createAsyncThunk<
+  string,
+  string,
+  { rejectValue: string }
+>("carAds/deleteCarAd", async (id, { rejectWithValue }) => {
+  try {
+    await axios.delete(`${BACKEND_URL}/ads/delete-car-ad/${id}`);
+    return id;
+  } catch (error: any) {
+    return rejectWithValue(
+      error.response?.data?.message || "Failed to delete car ad"
+    );
+  }
+});

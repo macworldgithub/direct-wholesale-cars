@@ -12,33 +12,6 @@ import { AppDispatch, RootState } from "@/store/store";
 import { fetchAllCarAds } from "@/api/cars";
 import Dropdown from "@/components/UIComponents/Dropdown/Dropdown";
 
-const carsData = [
-  {
-    name: "2023 Toyota Camry LE",
-    description: "25,420 miles · Automatic · FWD",
-    price: "$22,500",
-    tags: ["Certified"],
-    image: "/images/cars.png",
-    location: "Atlanta, GA · Premium Auto Dealer",
-  },
-  {
-    name: "2023 Toyota Camry LE",
-    description: "25,420 miles · Automatic · FWD",
-    price: "$35,900",
-    tags: ["Featured"],
-    image: "/images/cars.png",
-    location: "Atlanta, GA · Premium Auto Dealer",
-  },
-  {
-    name: "2023 Toyota Camry LE",
-    description: "25,420 miles · Automatic · FWD",
-    price: "$28,750",
-    tags: ["New"],
-    image: "/images/cars.png",
-    location: "Atlanta, GA · Premium Auto Dealer",
-  },
-];
-
 const sortOptions = [
   { label: "Sort by Price: Low to high", value: "price_low_to_high" },
   { label: "Sort by Price: High to low", value: "price_high_to_low" },
@@ -47,7 +20,6 @@ const sortOptions = [
 ];
 
 const CarsPage = () => {
-  const dealer = useSelector((state: RootState) => state.SignuinDealer.dealer);
   const ads = useSelector((state: RootState) => state.carAds.ads);
 
   const [sortValue, setSortValue] = useState<string>(sortOptions[0].value);
