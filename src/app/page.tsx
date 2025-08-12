@@ -60,7 +60,7 @@ const features = [
   {
     icon: (
       <img
-        src="/images/verified person.png"
+        src="/images/verified-person.png"
         alt="Verified Dealers"
         style={{ width: 36, height: 36 }}
       />

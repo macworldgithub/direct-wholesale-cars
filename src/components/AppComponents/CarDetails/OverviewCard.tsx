@@ -35,7 +35,7 @@ const OverviewCard: React.FC<{ carData: CarData }> = ({ carData }) => {
       <div className="metrics-row">
         <div className="metric">
           <img src="/images/calender.png" alt="Year" className="metric-icon" />
-          <div className="metric-value blue">
+          <div className="meFtric-value blue">
             {displayValue(carData.buildDate?.split('-')[0])}
           </div>
           <div className="metric-label">Year</div>
