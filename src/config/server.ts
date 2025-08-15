@@ -6,5 +6,5 @@ const curr_env: "Prod" | "DEV" = "DEV";
 
 //   //@ts-ignore
 // curr_env === "DEV" ? development : production;
-// export const BACKEND_URL = "https://api.directwholesalecars.com.au";
-export const BACKEND_URL = "http://localhost:5000";
+export const BACKEND_URL = "https://api.directwholesalecars.com.au";
+// export const BACKEND_URL = "http://localhost:5000";
