@@ -4,75 +4,46 @@ import {
   fetchAllCarAds,
   fetchCarAdById,
   updateCarAd,
+  CarsApiResponse,
 } from "@/api/cars";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface CarAd {
   _id: string;
-  title?: string;
-  price: number;
-  make?: string;
-  model?: string;
-  buildDate?: string;
-  odometer?: number;
-  condition?: "New" | "Used" | "Certified Pre-Owned";
-  transmission?: string;
-  driveType?: string;
-  cyls?: number;
-  seats?: number;
-  fuelType?: "P" | "D" | "E" | "H";
-  images?: string[];
-  description?: string;
-  street?: string;
-  city?: string;
-  state?: string;
-  zipCode?: string;
-  country?: string;
-  branch?: string;
-  stockNumber?: string;
-  bayNumber?: string;
-  regoNumber?: string;
-  vin?: string;
-  engineNumber?: string;
-  chassisNumber?: string;
-  businessType?: "B2B" | "B2C";
+  wholesaler: string;
+  branch: string;
+  stock: string;
+  bayNumber: string;
+  description: string;
+  odometer: number;
+  buildDate: string;
+  vin: string;
+  driveType: string;
+  fuelType: string;
+  seats: number;
+  regoDue: string;
+  asking: number;
+  available: boolean;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
 }
 
 export interface CreateCarAdRequest {
-  title?: string;
-  price: number;
-  make?: string;
-  model?: string;
-  buildDate?: string;
-  odometer?: number;
-  condition?: "New" | "Used" | "Certified Pre-Owned";
-  transmission?: string;
-  driveType?: string;
-  cyls?: number;
-  seats?: number;
-  fuelType?: "P" | "D" | "E" | "H";
-  images?: string[];
-  description?: string;
-  dealer: string;
-  street?: string;
-  city?: string;
-  state?: string;
-  zipCode?: string;
-  country?: string;
-  branch?:
-    | "W - WS VIC"
-    | "W - WS QLD"
-    | "W - WS SA"
-    | "C - Corporate Buying"
-    | "D - DG1911"
-    | "W - WS Retail VIC";
-  stockNumber?: string;
-  bayNumber?: string;
-  regoNumber?: string;
-  vin?: string;
-  engineNumber?: string;
-  chassisNumber?: string;
-  businessType?: string;
+  wholesaler: string;
+  branch: string;
+  stock: string;
+  bayNumber: string;
+  description: string;
+  odometer: number;
+  buildDate: string;
+  vin: string;
+  driveType: string;
+  fuelType: string;
+  seats: number;
+  regoDue: string;
+  asking: number;
+  available: boolean;
 }
 
 interface CarAdsState {
@@ -80,6 +51,12 @@ interface CarAdsState {
   selectedAd: CarAd | null;
   loading: boolean;
   error: string | null;
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+  };
 }
 
 const initialState: CarAdsState = {
@@ -87,6 +64,12 @@ const initialState: CarAdsState = {
   selectedAd: null,
   loading: false,
   error: null,
+  pagination: {
+    page: 1,
+    limit: 20,
+    total: 0,
+    totalPages: 1,
+  },
 };
 
 const carAdsSlice = createSlice({
@@ -105,9 +88,15 @@ const carAdsSlice = createSlice({
       })
       .addCase(
         fetchAllCarAds.fulfilled,
-        (state, action: PayloadAction<CarAd[]>) => {
+        (state, action: PayloadAction<CarsApiResponse>) => {
           state.loading = false;
-          state.ads = action.payload;
+          state.ads = action.payload.data;
+          state.pagination = {
+            page: action.payload.page,
+            limit: action.payload.limit,
+            total: action.payload.total,
+            totalPages: action.payload.totalPages,
+          };
         }
       )
       .addCase(fetchAllCarAds.rejected, (state, action: PayloadAction<any>) => {

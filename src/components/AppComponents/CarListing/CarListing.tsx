@@ -28,35 +28,51 @@ const CarListing: React.FC = () => {
   };
 
   const columns = [
-    { key: "title", header: "Title" },
-    { key: "make", header: "Make" },
-    { key: "model", header: "Model" },
+    { key: "stock", header: "Stock" },
+    { key: "vin", header: "VIN" },
+    { key: "branch", header: "Branch" },
+    { key: "bayNumber", header: "Bay" },
+    { key: "description", header: "Description" },
     { key: "odometer", header: "Odometer" },
-    { key: "condition", header: "Condition" },
-    { key: "transmission", header: "Transmission" },
-    { key: "fuelType", header: "Fuel" },
-    { key: "price", header: "Price" },
-    { key: "city", header: "City" },
-    { key: "state", header: "State" },
+    { key: "buildDate", header: "Build Date" },
+    { key: "driveType", header: "Drive Type" },
+    { key: "fuelType", header: "Fuel Type" },
+    { key: "seats", header: "Seats" },
+    { key: "regoDue", header: "Rego Due" },
+    { key: "asking", header: "Asking Price" },
+    { key: "available", header: "Status" },
     { key: "update", header: "Update" },
     { key: "delete", header: "Delete" },
   ];
 
   const tableData = ads.map((car) => ({
-    title: (
+    stock: (
       <Link href={`/car_Details?id=${car?._id}`} style={{ color: "#1800B2" }}>
-        {car.title || `${car.make ?? ""} ${car.model ?? ""}`}
+        {car.stock}
       </Link>
     ),
-    make: car.make || "—",
-    model: car.model || "—",
-    odometer: car.odometer || "—",
-    condition: car.condition || "—",
-    transmission: car.transmission || "—",
+    vin: car.vin || "—",
+    branch: car.branch || "—",
+    bayNumber: car.bayNumber || "—",
+    description: car.description || "—",
+    odometer: car.odometer ? `${car.odometer.toLocaleString()} miles` : "—",
+    buildDate: car.buildDate || "—",
+    driveType: car.driveType || "—",
     fuelType: car.fuelType || "—",
-    price: car.price ? `$${car.price.toLocaleString()}` : "—",
-    city: car.city || "—",
-    state: car.state || "—",
+    seats: car.seats || "—",
+    regoDue: car.regoDue || "—",
+    asking: car.asking ? `$${car.asking.toLocaleString()}` : "—",
+    available: (
+      <span style={{ 
+        padding: '4px 8px', 
+        borderRadius: '12px', 
+        fontSize: '12px',
+        backgroundColor: car.available ? '#d1fae5' : '#fee2e2',
+        color: car.available ? '#065f46' : '#991b1b'
+      }}>
+        {car.available ? 'Available' : 'Unavailable'}
+      </span>
+    ),
     update: (
       <LocalizedButton
         onClick={() => (window.location.href = `/add_car?id=${car?._id}`)}
