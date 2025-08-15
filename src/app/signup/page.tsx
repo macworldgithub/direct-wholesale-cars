@@ -57,10 +57,10 @@ const SignupPage = () => {
           name: dealer.name,
           email: dealer.email,
           password: "",
-          businessRegistrationNumber: dealer.businessRegistrationNumber,
-          phone: dealer.phone,
-          contactPerson: dealer.contactPerson,
-          address: dealer.address,
+          // businessRegistrationNumber: dealer.businessRegistrationNumber,
+          // phone: dealer.phone,
+          // contactPerson: dealer.contactPerson,
+          // address: dealer.address,
           // profileImage: null,
         }
       : {

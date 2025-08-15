@@ -10,24 +10,36 @@ import BurgerMenu from "@/components/UIComponents/BurgerMenu/BurgerMenu";
 import ProfileDropdownMenu from "../ProfileDropdownMenu/ProfileDropdownMenu";
 
 import "./Navbar.scss";
-import { restoreSession } from "@/slices/signinDealerSlice";
+import { restoreSession as restoreDealerSession } from "@/slices/signinDealerSlice";
+import { restoreSession as restoreWholesalerSession } from "@/slices/signinWholesalerSlice";
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
 
-  const { isAuthenticated } = useSelector(
+  // Check both dealer and wholesaler authentication
+  const { isAuthenticated: isDealerAuth } = useSelector(
     (state: RootState) => state.SignuinDealer
+  );
+  const { isAuthenticated: isWholesalerAuth } = useSelector(
+    (state: RootState) => state.SigninWholesaler
   );
 
   const toggleMenu = () => setMenuOpen((prev) => !prev);
 
   useEffect(() => {
-    const token = localStorage.getItem("authToken");
-    if (token) {
-      dispatch(restoreSession({ token }));
+    const dealerToken = localStorage.getItem("dealerAuthToken");
+    if (dealerToken) {
+      dispatch(restoreDealerSession({ token: dealerToken }));
+    }
+
+    const wholesalerToken = localStorage.getItem("wholesalerAuthToken");
+    if (wholesalerToken) {
+      dispatch(restoreWholesalerSession({ token: wholesalerToken }));
     }
   }, [dispatch]);
+
+  const isAuthenticated = isDealerAuth || isWholesalerAuth;
 
   return (
     <nav className="navbar">

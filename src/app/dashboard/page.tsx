@@ -19,7 +19,12 @@ import CarListing from "@/components/AppComponents/CarListing/CarListing";
 const Dashboard = () => {
   const router = useRouter();
   const [selectedTab, setSelectedTab] = useState(0);
-  const dealer = useSelector((state: RootState) => state.SignuinDealer.dealer);
+
+  // Unified: get logged-in user from either dealer or wholesaler slice
+  const user = useSelector(
+    (state: RootState) =>
+      state.SignuinDealer?.dealer || state.SigninWholesaler?.wholesaler
+  );
 
   const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
     setSelectedTab(newValue);
@@ -50,16 +55,16 @@ const Dashboard = () => {
         }}
       >
         <Tab label="Profile" />
-        {dealer?.accountType === "dealer" && <Tab label="Add a Car" />}
-        {dealer?.accountType === "dealer" && <Tab label="Car Listing" />}
+        {user?.role === "dealer" && <Tab label="Add a Car" />}
+        {user?.role === "dealer" && <Tab label="Car Listing" />}
       </Tabs>
 
       <Box sx={{ mt: 4 }}>
-        {selectedTab === 0 && dealer && (
+        {selectedTab === 0 && user && (
           <Box sx={{ maxWidth: 900, mx: "auto", p: 4 }}>
             <Box display="flex" justifyContent="center" mb={5}>
               <Avatar
-                src={dealer.profileImage}
+                src="images/default-avatar.png"
                 alt="Profile"
                 sx={{ width: 120, height: 120, boxShadow: 3 }}
               />
@@ -74,7 +79,7 @@ const Dashboard = () => {
               }}
             >
               <Box display="flex" mb={4}>
-                {dealer.accountType === "dealer" && (
+                {user.role === "dealer" && (
                   <Button
                     variant="contained"
                     sx={{
@@ -106,20 +111,12 @@ const Dashboard = () => {
                 }}
               >
                 {[
-                  { label: "First Name", value: dealer.firstName },
-                  { label: "Last Name", value: dealer.lastName },
-                  { label: "Email", value: dealer.email },
-                  { label: "Phone", value: dealer.phone },
-                  { label: "Business Name", value: dealer.businessName },
-                  { label: "Business Type", value: dealer.businessType },
-                  {
-                    label: "License Number",
-                    value: dealer.businessLicenseNumber,
-                  },
-                  { label: "City", value: dealer.city },
-                  { label: "State", value: dealer.state },
-                  { label: "Zip Code", value: dealer.zipCode },
-                  { label: "Account Type", value: dealer.accountType },
+                  { label: "Name", value: user.name },
+                  { label: "Email", value: user.email },
+                  // { label: "Phone", value: user.phone },
+                  // { label: "Business Registration Number", value: user.businessRegistrationNumber },
+                  // { label: "Contact Person", value: user.contactPerson },
+                  // { label: "Address", value: user.address },
                 ].map((item, idx) => (
                   <Box
                     key={idx}
@@ -131,7 +128,11 @@ const Dashboard = () => {
                   >
                     <Typography
                       variant="subtitle2"
-                      sx={{ fontWeight: 600, color: "text.secondary", mb: 0.5 }}
+                      sx={{
+                        fontWeight: 600,
+                        color: "text.secondary",
+                        mb: 0.5,
+                      }}
                     >
                       {item.label}
                     </Typography>
@@ -145,12 +146,12 @@ const Dashboard = () => {
           </Box>
         )}
 
-        {selectedTab === 1 && (
+        {selectedTab === 1 && user?.role === "dealer" && (
           <Suspense fallback={<CircularProgress />}>
             <CarAuctionForm />
           </Suspense>
         )}
-        {selectedTab === 2 && (
+        {selectedTab === 2 && user?.role === "dealer" && (
           <Suspense fallback={<CircularProgress />}>
             <CarListing />
           </Suspense>

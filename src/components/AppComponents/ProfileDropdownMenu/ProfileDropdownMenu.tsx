@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import {
@@ -14,7 +14,8 @@ import {
   Box,
 } from "@mui/material";
 import { AppDispatch, RootState } from "@/store/store";
-import { logout } from "@/slices/signinDealerSlice";
+import { logout as dealerLogout } from "@/slices/signinDealerSlice";
+import { logout as wholesalerLogout } from "@/slices/signinWholesalerSlice";
 
 const ProfileDropdownMenu = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -23,13 +24,19 @@ const ProfileDropdownMenu = () => {
   const open = Boolean(anchorEl);
 
   const dealer = useSelector((state: RootState) => state.SignuinDealer.dealer);
+  const wholesaler = useSelector(
+    (state: RootState) => state.SigninWholesaler.wholesaler
+  );
+  console.log(wholesaler, "wholesaler");
+  const user = dealer || wholesaler;
+  const userType = dealer ? "dealer" : wholesaler ? "wholesaler" : null;
 
-  const profileImageSrc = React.useMemo(() => {
-    if (dealer?.profileImage?.startsWith("http")) {
-      return dealer.profileImage;
-    }
+  const profileImageSrc = useMemo(() => {
+    // if (user?.profileImage?.startsWith("http")) {
+    //   return user.profileImage;
+    // }
     return "/images/default-avatar.png";
-  }, [dealer]);
+  }, [user]);
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -40,7 +47,11 @@ const ProfileDropdownMenu = () => {
   };
 
   const handleLogout = () => {
-    dispatch(logout());
+    if (userType === "dealer") {
+      dispatch(dealerLogout());
+    } else if (userType === "wholesaler") {
+      dispatch(wholesalerLogout());
+    }
     handleMenuClose();
     router.push("/login");
   };
@@ -55,7 +66,7 @@ const ProfileDropdownMenu = () => {
       <Tooltip title="Profile">
         <IconButton onClick={handleMenuOpen} size="medium">
           <Avatar
-            alt={dealer?.firstName || "User"}
+            alt={user?.name || "User"}
             src={profileImageSrc}
             sx={{ width: 65, height: 65 }}
           />
@@ -80,16 +91,16 @@ const ProfileDropdownMenu = () => {
       >
         <Box display="flex" alignItems="center" px={1.5} py={1}>
           <Avatar
-            alt={dealer?.firstName || "User"}
+            alt={user?.name || "User"}
             src={profileImageSrc}
             sx={{ width: 56, height: 56, mr: 1.5 }}
           />
           <Box>
             <Typography variant="subtitle1" fontWeight={600}>
-              {dealer?.firstName} {dealer?.lastName}
+              {user?.name}
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              {dealer?.email}
+              {user?.email}
             </Typography>
           </Box>
         </Box>

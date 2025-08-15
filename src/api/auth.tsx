@@ -68,22 +68,14 @@ export const SignupWholesaler = createAsyncThunk(
 );
 
 interface Response {
-  accessToken: string;
-  accountType: {
-    _id: string;
+  access_token: string;
+  role: "dealer" | "wholesaler";
+  user: {
+    id: string;
     name: string;
     email: string;
-    password: string;
-    businessRegistrationNumber: string;
-    phone: string;
-    contactPerson?: string;
-    address?: string;
-    // profileImage?: string;
-    createdAt: string;
-    updatedAt: string;
   };
 }
-
 export const SigninDealer = createAsyncThunk<
   // Response & { signedProfileImage?: string },
   Response,
