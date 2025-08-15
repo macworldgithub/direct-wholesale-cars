@@ -3,11 +3,11 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Controller, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/store/store";
-import { SigninDealer } from "@/api/auth";
+import { SigninDealer, SigninWholesaler } from "@/api/auth";
 
 import "./login.scss";
 import LocalizedButton from "@/components/UIComponents/LocalizedButton/LocalizedButton";
@@ -22,6 +22,9 @@ type LoginFormData = {
 const LoginPage = () => {
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+
   const [toastOpen, setToastOpen] = useState(false);
 
   const { loading, error } = useSelector(
@@ -49,10 +52,27 @@ const LoginPage = () => {
   }, [setValue]);
 
   const onSubmit = async (data: LoginFormData) => {
-    const result = await dispatch(
-      SigninDealer({ email: data.email, password: data.password })
-    );
-    if (SigninDealer.fulfilled.match(result)) {
+    const accountRole = searchParams?.get("role");
+    if (!accountRole) {
+      alert("Please select an account type from the options above.");
+      return;
+    }
+
+    let result;
+    if (accountRole === "dealer") {
+      result = await dispatch(
+        SigninDealer({ email: data.email, password: data.password })
+      );
+    } else if (accountRole === "wholesaler") {
+      result = await dispatch(
+        SigninWholesaler({ email: data.email, password: data.password })
+      );
+    }
+
+    if (
+      (accountRole === "dealer" && SigninDealer.fulfilled.match(result)) ||
+      (accountRole === "wholesaler" && SigninWholesaler.fulfilled.match(result))
+    ) {
       setToastOpen(true);
       setTimeout(() => {
         router.push("/");
@@ -120,6 +140,36 @@ const LoginPage = () => {
               )}
             />
 
+            {/* Account type selector */}
+            <div className="account-options">
+              {(["dealer", "wholesaler"] as const).map((type) => {
+                const isSelected = searchParams?.get("role") === type;
+                return (
+                  <div
+                    key={type}
+                    className={`account-option ${
+                      isSelected ? "selected" : ""
+                    }`}
+                    onClick={() => {
+                      const params = new URLSearchParams(
+                        searchParams?.toString()
+                      );
+                      params.set("role", type);
+                      router.replace(`${pathname}?${params.toString()}`);
+                    }}
+                  >
+                    <input
+                      type="radio"
+                      name="role"
+                      checked={isSelected}
+                      onChange={() => {}}
+                    />
+                    <span>{type === "dealer" ? "Dealer" : "Wholesaler"}</span>
+                  </div>
+                );
+              })}
+            </div>
+
             <div className="login-options">
               <a href="#" className="login-forgot">
                 Forgot Password?
@@ -142,7 +192,7 @@ const LoginPage = () => {
             message="Signup Successful!"
             severity="success"
           />
-          
+
           <div className="signup-redirect">
             Not a member?{" "}
             <Link href="/signup" className="signup-link">

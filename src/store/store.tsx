@@ -8,10 +8,12 @@ import signupDealerSlice from "@/slices/signupDealerSlice";
 import signinDealerSlice from "@/slices/signinDealerSlice";
 import loaderSlice from "@/slices/loaderSlice";
 import carAdsSlice from "@/slices/carAdsSlice";
+import signupWholeSalerSlice from "@/slices/signupWholesalerSlice";
 
 const rootReducer = combineReducers({
   loader: loaderSlice.reducer,
   SignupDealer: signupDealerSlice.reducer,
+  SignupWholesaler: signupWholeSalerSlice.reducer,
   SignuinDealer: signinDealerSlice.reducer,
   carAds: carAdsSlice.reducer,
 });
@@ -21,7 +23,7 @@ type RootReducerType = ReturnType<typeof rootReducer>;
 const persistConfig: PersistConfig<any> = {
   key: "direct-wholesale-cars",
   storage,
-  blacklist: ["SignupDealer", "SignuinDealer", "carAds"], 
+  blacklist: ["SignupDealer", "SignupWholesaler", "SignuinDealer", "carAds"], 
 };
 
 const persistedReducer = persistReducer<RootReducerType>(

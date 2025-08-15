@@ -9,7 +9,7 @@ export const SignupDealer = createAsyncThunk(
     try {
       const isFormData = data instanceof FormData;
 
-      const response = await axios.post(`${BACKEND_URL}/dealers/signup`, data, {
+      const response = await axios.post(`${BACKEND_URL}/auth/signup/dealer`, data, {
         headers: isFormData
           ? { "Content-Type": "multipart/form-data" }
           : { "Content-Type": "application/json" },
@@ -33,64 +33,129 @@ export const SignupDealer = createAsyncThunk(
   }
 );
 
-interface DealerResponse {
+export const SignupWholesaler = createAsyncThunk(
+  "signup/wholesaler",
+  async (data: FormData | Record<string, any>, { rejectWithValue }) => {
+    try {
+      const isFormData = data instanceof FormData;
+
+      const response = await axios.post(
+        `${BACKEND_URL}/auth/signup/wholesaler`,
+        data,
+        {
+          headers: isFormData
+            ? { "Content-Type": "multipart/form-data" }
+            : { "Content-Type": "application/json" },
+        }
+      );
+
+      try {
+        await sendWelcomeEmail(
+          isFormData ? (data.get("email") as string) : (data.email as string),
+          "Welcome to Direct Wholesale Cars",
+          (isFormData ? (data.get("firstName") as string) : data.firstName) ||
+            "Wholesaler"
+        );
+      } catch (emailErr) {
+        console.error("Signup succeeded, but email sending failed", emailErr);
+      }
+
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message || "Signup failed");
+    }
+  }
+);
+
+interface Response {
   accessToken: string;
   accountType: {
     _id: string;
-    firstName: string;
-    lastName: string;
+    name: string;
     email: string;
+    password: string;
+    businessRegistrationNumber: string;
     phone: string;
-    businessName: string;
-    businessType: string;
-    businessLicenseNumber: string;
-    address: string;
-    city: string;
-    state: string;
-    zipCode: string;
-    accountType: string;
-    profileImage: string;
-    receiveUpdates: boolean;
-    agreeTerms: boolean;
+    contactPerson?: string;
+    address?: string;
+    // profileImage?: string;
     createdAt: string;
     updatedAt: string;
-    __v: number;
   };
 }
 
 export const SigninDealer = createAsyncThunk<
-  DealerResponse & { signedProfileImage?: string },
+  // Response & { signedProfileImage?: string },
+  Response,
   { email: string; password: string },
   { rejectValue: string }
->("dealers/signin", async (payload, { rejectWithValue }) => {
+>("login/dealer", async (payload, { rejectWithValue }) => {
   try {
-    const response = await axios.post<DealerResponse>(
-      `${BACKEND_URL}/dealers/signin`,
+    const response = await axios.post<Response>(
+      `${BACKEND_URL}/auth/login/dealer`,
       payload
     );
 
-    const { accessToken, accountType } = response.data;
+    // const { accessToken, accountType } = response.data;
 
-    let signedProfileImage: string | undefined = undefined;
+    // let signedProfileImage: string | undefined = undefined;
 
-    try {
-      const signedRes = await axios.get<{ url: string }>(
-        `${BACKEND_URL}/dealers/signed-profile-image`,
-        {
-          params: { key: accountType.profileImage },
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-      signedProfileImage = signedRes.data.url;
-    } catch (signedErr) {
-      console.error("Failed to fetch signed profile image", signedErr);
-    }
+    // try {
+    //   const signedRes = await axios.get<{ url: string }>(
+    //     `${BACKEND_URL}/dealers/signed-profile-image`,
+    //     {
+    //       params: { key: accountType.profileImage },
+    //       headers: {
+    //         Authorization: `Bearer ${accessToken}`,
+    //       },
+    //     }
+    //   );
+    //   signedProfileImage = signedRes.data.url;
+    // } catch (signedErr) {
+    //   console.error("Failed to fetch signed profile image", signedErr);
+    // }
 
     return {
       ...response.data,
-      signedProfileImage,
+      // signedProfileImage,
+    };
+  } catch (error: any) {
+    return rejectWithValue(
+      error.response?.data?.message || "An error occurred"
+    );
+  }
+});
+
+export const SigninWholesaler = createAsyncThunk<
+  // Response & { signedProfileImage?: string },
+  Response,
+  { email: string; password: string },
+  { rejectValue: string }
+>("login/wholesaler", async (payload, { rejectWithValue }) => {
+  try {
+    const response = await axios.post<Response>(
+      `${BACKEND_URL}/auth/login/wholesaler`,
+      payload
+    );
+
+    // const { accessToken, accountType } = response.data;
+    // let signedProfileImage: string | undefined;
+
+    // try {
+    //   const signedRes = await axios.get<{ url: string }>(
+    //     `${BACKEND_URL}/wholesalers/signed-profile-image`,
+    //     {
+    //       params: { key: accountType.profileImage },
+    //       headers: { Authorization: `Bearer ${accessToken}` },
+    //     }
+    //   );
+    //   signedProfileImage = signedRes.data.url;
+    // } catch (err) {
+    //   console.error("Failed to fetch signed profile image", err);
+    // }
+
+    return { ...response.data, 
+    //  signedProfileImage 
     };
   } catch (error: any) {
     return rejectWithValue(

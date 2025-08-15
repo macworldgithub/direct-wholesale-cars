@@ -9,7 +9,7 @@ export interface SignupState {
   phone: string;
   contactPerson?: string;
   address?: string;
-  // profileImage?: File | null;
+  //   profileImage?: File | null;
 }
 
 const initialState: SignupState = {
@@ -20,11 +20,11 @@ const initialState: SignupState = {
   phone: "",
   contactPerson: "",
   address: "",
-  // profileImage: null,
+  //   profileImage: null,
 };
 
-const signupDealerSlice = createSlice({
-  name: "SignupDealer",
+const signupWholeSalerSlice = createSlice({
+  name: "SignupWholeSaler",
   initialState,
   reducers: {
     updateSignupField: (
@@ -44,6 +44,6 @@ export const {
   updateSignupField,
   // setProfileImage,
   resetSignup,
-} = signupDealerSlice.actions;
+} = signupWholeSalerSlice.actions;
 
-export default signupDealerSlice;
+export default signupWholeSalerSlice;

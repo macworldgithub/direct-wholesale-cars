@@ -3,21 +3,13 @@ import { SigninDealer, UpdateDealer } from "@/api/auth";
 
 interface Dealer {
   _id: string;
-  firstName: string;
-  lastName: string;
+  name: string;
   email: string;
+  businessRegistrationNumber: string;
   phone: string;
-  businessName: string;
-  businessType: string;
-  businessLicenseNumber: string;
-  address: string;
-  city: string;
-  state: string;
-  zipCode: string;
-  accountType: string;
-  profileImage: string;
-  receiveUpdates: boolean;
-  agreeTerms: boolean;
+  contactPerson?: string;
+  address?: string;
+  // profileImage?: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -61,12 +53,12 @@ const loginDealerSlice = createSlice({
         state.error = null;
       })
       .addCase(SigninDealer.fulfilled, (state, action) => {
-        const { accessToken, accountType, signedProfileImage } = action.payload;
+        const { accessToken, accountType /*, signedProfileImage */ } = action.payload;
         state.loading = false;
         state.token = accessToken;
         state.dealer = {
           ...accountType,
-          profileImage: signedProfileImage || accountType.profileImage,
+          // profileImage: signedProfileImage || accountType.profileImage,
         };
         state.isAuthenticated = true;
         localStorage.setItem("authToken", accessToken);
@@ -77,24 +69,23 @@ const loginDealerSlice = createSlice({
         state.error = action.payload || "Login failed";
         state.isAuthenticated = false;
       })
-      .addCase(UpdateDealer.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(UpdateDealer.fulfilled, (state, action) => {
-        const { account, signedProfileImage } = action.payload;
-        state.loading = false;
-        state.dealer = {
-          ...account,
-          profileImage: signedProfileImage || account.profileImage,
-        };
-        // token remains the same
-        localStorage.setItem("dealerInfo", JSON.stringify(state.dealer));
-      })
-      .addCase(UpdateDealer.rejected, (state, action: PayloadAction<any>) => {
-        state.loading = false;
-        state.error = action.payload || "Account update failed";
-      });
+      // .addCase(UpdateDealer.pending, (state) => {
+      //   state.loading = true;
+      //   state.error = null;
+      // })
+      // .addCase(UpdateDealer.fulfilled, (state, action) => {
+      //   const { account /*, signedProfileImage */ } = action.payload;
+      //   state.loading = false;
+      //   state.dealer = {
+      //     ...account,
+      //     // profileImage: signedProfileImage || account.profileImage,
+      //   };
+      //   localStorage.setItem("dealerInfo", JSON.stringify(state.dealer));
+      // })
+      // .addCase(UpdateDealer.rejected, (state, action: PayloadAction<any>) => {
+      //   state.loading = false;
+      //   state.error = action.payload || "Account update failed";
+      // });
   },
 });
 

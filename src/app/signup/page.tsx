@@ -14,37 +14,20 @@ import LocalizedHeading from "@/components/UIComponents/LocalizedHeading/Localiz
 
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/store/store";
-import { SignupDealer, UpdateDealer } from "@/api/auth";
-import { useRouter } from "next/navigation";
+import { SignupDealer, SignupWholesaler, UpdateDealer } from "@/api/auth";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import ImageUploader from "@/components/UIComponents/ImageCropUploader/ImageCropUploader";
 import Toast from "@/components/UIComponents/Toast/Toast";
 
 interface SignupFormData {
-  firstName: string;
-  lastName: string;
-  phone: string;
+  name: string;
   email: string;
   password: string;
-  businessName: string;
-  businessType: string;
-  businessLicenseNumber: string;
+  businessRegistrationNumber: string;
+  phone: string;
+  contactPerson: string;
   address: string;
-  city: string;
-  state: string;
-  zipCode: string;
-  accountType: "dealer" | "buyer";
-  receiveUpdates: boolean;
-  agreeTerms: boolean;
-  profileImage?: File | null;
 }
-
-const businessTypeOptions = [
-  { label: "Select Business Type", value: "" },
-  { label: "Sole Proprietorship", value: "sole" },
-  { label: "LLC", value: "llc" },
-  { label: "Corporation", value: "corporation" },
-  { label: "Partnership", value: "partnership" },
-];
 
 const SignupPage = () => {
   const [step, setStep] = useState(1);
@@ -53,8 +36,11 @@ const SignupPage = () => {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [croppedImageURL, setCroppedImageURL] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
 
   const dealer = useSelector((state: RootState) => state.SignuinDealer.dealer);
 
@@ -68,101 +54,111 @@ const SignupPage = () => {
   } = useForm<SignupFormData>({
     defaultValues: dealer
       ? {
-          firstName: dealer.firstName,
-          lastName: dealer.lastName,
+          name: dealer.name,
           email: dealer.email,
-          phone: dealer.phone,
           password: "",
-          businessName: dealer.businessName,
-          businessType: dealer.businessType,
-          businessLicenseNumber: dealer.businessLicenseNumber,
+          businessRegistrationNumber: dealer.businessRegistrationNumber,
+          phone: dealer.phone,
+          contactPerson: dealer.contactPerson,
           address: dealer.address,
-          city: dealer.city,
-          state: dealer.state,
-          zipCode: dealer.zipCode,
-          accountType: dealer.accountType as "dealer" | "buyer",
-          receiveUpdates: dealer.receiveUpdates,
-          agreeTerms: dealer.agreeTerms,
-          profileImage: null,
+          // profileImage: null,
         }
       : {
-          firstName: "",
-          lastName: "",
+          name: "",
           email: "",
-          phone: "",
           password: "",
-          businessName: "",
-          businessType: "",
-          businessLicenseNumber: "",
+          businessRegistrationNumber: "",
+          phone: "",
+          contactPerson: "",
           address: "",
-          city: "",
-          state: "",
-          zipCode: "",
-          accountType: "dealer",
-          receiveUpdates: false,
-          agreeTerms: false,
-          profileImage: null,
+          // profileImage: null,
         },
     mode: "onTouched",
   });
-  const dataURLtoFile = (dataUrl: string, filename: string): File => {
-    const arr = dataUrl.split(",");
-    const mimeMatch = arr[0].match(/:(.*?);/);
-    const mime = mimeMatch ? mimeMatch[1] : "";
-    const bstr = atob(arr[1]);
-    let n = bstr.length;
-    const u8arr = new Uint8Array(n);
-    while (n--) {
-      u8arr[n] = bstr.charCodeAt(n);
+
+  const handleAccountRoleChange = (role: "dealer" | "wholesaler") => {
+    const params = new URLSearchParams(searchParams?.toString());
+    params.set("role", role);
+
+    router.replace(`${pathname}?${params.toString()}`);
+  };
+
+  // const dataURLtoFile = (dataUrl: string, filename: string): File => {
+  //   const arr = dataUrl.split(",");
+  //   const mimeMatch = arr[0].match(/:(.*?);/);
+  //   const mime = mimeMatch ? mimeMatch[1] : "";
+  //   const bstr = atob(arr[1]);
+  //   let n = bstr.length;
+  //   const u8arr = new Uint8Array(n);
+  //   while (n--) {
+  //     u8arr[n] = bstr.charCodeAt(n);
+  //   }
+  //   return new File([u8arr], filename, { type: mime });
+  // };
+
+  // const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const file = e.target.files?.[0];
+  //   if (file) {
+  //     setImageFile(file);
+  //     setShowCropModal(true);
+  //   }
+  // };
+
+  // const handleCrop = (croppedBase64: string) => {
+  //   const file = dataURLtoFile(croppedBase64, "profile.jpg");
+  //   setValue("profileImage", file, { shouldValidate: true });
+  //   setCroppedImageURL(croppedBase64);
+  //   setImageFile(null);
+  //   setShowCropModal(false);
+  // };
+
+  // const handleClose = () => {
+  //   setShowCropModal(false);
+  //   setImageFile(null);
+  // };
+
+  const onSubmit = (formValues: SignupFormData) => {
+    const accountRole = searchParams?.get("role") as
+      | "dealer"
+      | "wholesaler"
+      | null;
+
+    if (!accountRole) {
+      alert("Please select an account type");
+      return;
     }
-    return new File([u8arr], filename, { type: mime });
-  };
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setImageFile(file);
-      setShowCropModal(true);
-    }
-  };
+    let payload: any = {
+      name: formValues.name,
+      email: formValues.email,
+      password: formValues.password,
+      businessRegistrationNumber: formValues.businessRegistrationNumber,
+      phone: formValues.phone,
+      contactPerson: formValues.contactPerson,
+      address: formValues.address,
+    };
 
-  const handleCrop = (croppedBase64: string) => {
-    const file = dataURLtoFile(croppedBase64, "profile.jpg");
-    setValue("profileImage", file, { shouldValidate: true });
-    setCroppedImageURL(croppedBase64);
-    setImageFile(null);
-    setShowCropModal(false);
-  };
+    // const hasFile =
+    //   formValues.profileImage &&
+    //   formValues.profileImage instanceof File &&
+    //   formValues.profileImage.name;
 
-  const handleClose = () => {
-    setShowCropModal(false);
-    setImageFile(null);
-  };
-
-  const onSubmit = (formValues: any) => {
-    let payload: any;
-
-    const hasFile =
-      formValues.profileImage &&
-      formValues.profileImage instanceof File &&
-      formValues.profileImage.name;
-
-    if (hasFile) {
-      const formData = new FormData();
-      Object.entries(formValues).forEach(([key, value]) => {
-        if (value !== null && value !== undefined && value !== "") {
-          formData.append(key, value as any);
-        }
-      });
-      payload = formData;
-    } else {
-      payload = {};
-      Object.entries(formValues).forEach(([key, value]) => {
-        if (value !== null && value !== undefined && value !== "") {
-          payload[key] = value;
-        }
-      });
-    }
+    // if (hasFile) {
+    //   const formData = new FormData();
+    //   Object.entries(formValues).forEach(([key, value]) => {
+    //     if (value !== null && value !== undefined && value !== "") {
+    //       formData.append(key, value as any);
+    //     }
+    //   });
+    //   payload = formData;
+    // } else {
+    //   payload = {};
+    //   Object.entries(formValues).forEach(([key, value]) => {
+    //     if (value !== null && value !== undefined && value !== "") {
+    //       payload[key] = value;
+    //     }
+    //   });
+    // }
 
     if (dealer?._id) {
       dispatch(UpdateDealer({ accountId: dealer._id, data: payload }))
@@ -174,36 +170,37 @@ const SignupPage = () => {
           }, 2000);
         });
     } else {
-      dispatch(SignupDealer(payload))
-        .unwrap()
-        .then(() => {
-          setToastOpen(true);
-          setTimeout(() => {
-            router.push("/login");
-          }, 2000);
-        });
+      if (accountRole === "dealer") {
+        dispatch(SignupDealer(payload))
+          .unwrap()
+          .then(() => {
+            setToastOpen(true);
+            setTimeout(() => {
+              router.push("/login");
+            }, 2000);
+          });
+      } else if (accountRole === "wholesaler") {
+        dispatch(SignupWholesaler(payload))
+          .unwrap()
+          .then(() => {
+            setToastOpen(true);
+            setTimeout(() => {
+              router.push("/login");
+            }, 2000);
+          });
+      }
     }
   };
 
   const handleNext = async () => {
     let valid = false;
     if (step === 1) {
-      valid = await trigger([
-        "firstName",
-        "lastName",
-        "password",
-        "email",
-        "phone",
-      ]);
+      valid = await trigger(["name", "email", "password", "phone"]);
     } else if (step === 2) {
       valid = await trigger([
-        "businessName",
-        "businessType",
-        "businessLicenseNumber",
+        "businessRegistrationNumber",
+        "contactPerson",
         "address",
-        "city",
-        "state",
-        "zipCode",
       ]);
     }
 
@@ -234,7 +231,7 @@ const SignupPage = () => {
       case 1:
         return (
           <div className="signup-inputs">
-            <div className="profile-image-upload">
+            {/* <div className="profile-image-upload">
               {showCropModal && imageFile && (
                 <ImageUploader
                   imageFile={imageFile}
@@ -276,43 +273,23 @@ const SignupPage = () => {
                   </div>
                 </div>
               )}
-            </div>
+            </div> */}
 
-            <div className="name-row">
-              <div className="input-wrapper">
-                <LocalizedInput
-                  {...register("firstName", { required: true })}
-                  className={errors.firstName ? "error" : ""}
-                  value={watch("firstName")}
-                  onChange={(val) =>
-                    setValue("firstName", val, { shouldValidate: true })
-                  }
-                  placeholderKey="First Name"
-                  label="First Name"
-                  required
-                  type="text"
-                  size="lg"
-                />
-                {renderError("firstName")}
-              </div>
-
-              <div className="input-wrapper">
-                <LocalizedInput
-                  {...register("lastName", { required: true })}
-                  className={errors.lastName ? "error" : ""}
-                  value={watch("lastName")}
-                  onChange={(val) =>
-                    setValue("lastName", val, { shouldValidate: true })
-                  }
-                  placeholderKey="Last Name"
-                  label="Last Name"
-                  required
-                  type="text"
-                  size="lg"
-                />
-                {renderError("lastName")}
-              </div>
-            </div>
+            <LocalizedInput
+              {...register("name", { required: true })}
+              className={errors.name ? "error" : ""}
+              value={watch("name")}
+              onChange={(val) =>
+                setValue("name", val, { shouldValidate: true })
+              }
+              placeholderKey="Name"
+              label="Name"
+              required
+              type="text"
+              size="lg"
+              variant="full"
+            />
+            {renderError("name")}
 
             <LocalizedInput
               {...register("email", {
@@ -374,54 +351,38 @@ const SignupPage = () => {
         return (
           <div className="signup-inputs">
             <LocalizedInput
-              {...register("businessName", { required: true })}
-              value={watch("businessName")}
+              {...register("businessRegistrationNumber", { required: true })}
+              value={watch("businessRegistrationNumber")}
               onChange={(val) =>
-                setValue("businessName", val, { shouldValidate: true })
+                setValue("businessRegistrationNumber", val, {
+                  shouldValidate: true,
+                })
               }
-              placeholderKey="Business Name"
-              label="Business Name"
+              placeholderKey="Business Registeration Number"
+              label="Business Registeration Number"
               required={true}
               size="lg"
               type="text"
               variant="full"
             />
-            {renderError("businessName")}
+            {renderError("businessRegistrationNumber")}
 
-            <div className="row two-cols">
-              <div className="input-wrapper">
-                <Dropdown
-                  options={businessTypeOptions}
-                  value={watch("businessType")}
-                  onChange={(val) =>
-                    setValue("businessType", val, { shouldValidate: true })
-                  }
-                  className="businessType"
-                  size="lg"
-                  label="Business Type"
-                  required={true}
-                />
-                {renderError("businessType")}
-              </div>
-
-              <div className="input-wrapper">
-                <LocalizedInput
-                  {...register("businessLicenseNumber", { required: true })}
-                  value={watch("businessLicenseNumber")}
-                  onChange={(val) =>
-                    setValue("businessLicenseNumber", val, {
-                      shouldValidate: true,
-                    })
-                  }
-                  placeholderKey="Dealer License Number"
-                  label="License Number"
-                  required={true}
-                  size="lg"
-                  type="number"
-                />
-                {renderError("businessLicenseNumber")}
-              </div>
-            </div>
+            <LocalizedInput
+              {...register("contactPerson", { required: true })}
+              value={watch("contactPerson")}
+              onChange={(val) =>
+                setValue("contactPerson", val, {
+                  shouldValidate: true,
+                })
+              }
+              placeholderKey="Contact Person"
+              label="Contact Person"
+              required={true}
+              size="lg"
+              type="text"
+              variant="full"
+            />
+            {renderError("contactPerson")}
 
             <LocalizedInput
               {...register("address", { required: true })}
@@ -437,56 +398,6 @@ const SignupPage = () => {
               variant="full"
             />
             {renderError("address")}
-
-            <div className="row three-cols">
-              <div className="input-wrapper">
-                <LocalizedInput
-                  {...register("city", { required: true })}
-                  value={watch("city")}
-                  onChange={(val) =>
-                    setValue("city", val, { shouldValidate: true })
-                  }
-                  placeholderKey="City"
-                  label="City"
-                  required={true}
-                  size="lg"
-                  type="text"
-                />
-                {renderError("city")}
-              </div>
-
-              <div className="input-wrapper">
-                <LocalizedInput
-                  {...register("state", { required: true })}
-                  value={watch("state")}
-                  onChange={(val) =>
-                    setValue("state", val, { shouldValidate: true })
-                  }
-                  placeholderKey="State"
-                  label="State"
-                  required={true}
-                  size="lg"
-                  type="text"
-                />
-                {renderError("state")}
-              </div>
-
-              <div className="input-wrapper">
-                <LocalizedInput
-                  {...register("zipCode", { required: true })}
-                  value={watch("zipCode")}
-                  onChange={(val) =>
-                    setValue("zipCode", val, { shouldValidate: true })
-                  }
-                  placeholderKey="Zip Code"
-                  label="Zip Code"
-                  required={true}
-                  size="lg"
-                  type="number"
-                />
-                {renderError("zipCode")}
-              </div>
-            </div>
           </div>
         );
 
@@ -521,35 +432,52 @@ const SignupPage = () => {
                 level={6}
               />
               <div className="account-options">
-                {(["dealer", "buyer"] as const).map((type) => (
-                  <div
-                    key={type}
-                    className={`account-option ${
-                      watch("accountType") === type ? "selected" : ""
-                    }`}
-                    onClick={() => setValue("accountType", type)}
-                  >
-                    <input
-                      type="radio"
-                      name="accountType"
-                      value={type}
-                      checked={watch("accountType") === type}
-                      onChange={() => setValue("accountType", type)}
-                    />
-                    <div>
-                      <h3>
-                        {type === "dealer" ? "Dealer Account" : "Buyer Account"}
-                      </h3>
-                      <p>
-                        {type === "dealer"
-                          ? "Buy and sell vehicles"
-                          : "Purchase vehicles only"}
-                      </p>
+                {(["dealer", "wholesaler"] as const).map((type) => {
+                  const selected = searchParams?.get("role") === type;
+
+                  return (
+                    <div
+                      key={type}
+                      className={`account-option ${selected ? "selected" : ""}`}
+                      onClick={() => {
+                        const params = new URLSearchParams(
+                          searchParams?.toString()
+                        );
+                        params.set("role", type);
+                        router.replace(`${pathname}?${params.toString()}`);
+                      }}
+                    >
+                      <input
+                        type="radio"
+                        name="accountRole"
+                        value={type}
+                        checked={selected}
+                        onChange={() => {
+                          const params = new URLSearchParams(
+                            searchParams?.toString()
+                          );
+                          params.set("role", type);
+                          router.replace(`${pathname}?${params.toString()}`);
+                        }}
+                      />
+                      <div>
+                        <h3>
+                          {type === "dealer"
+                            ? "Dealer Account"
+                            : "Wholesaler Account"}
+                        </h3>
+                        <p>
+                          {type === "dealer"
+                            ? "Buy and sell vehicles"
+                            : "Purchase vehicles only"}
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
-              <div className="account-checkboxes">
+
+              {/* <div className="account-checkboxes">
                 <LocalizedCheckbox
                   name="receiveUpdates"
                   checked={watch("receiveUpdates")}
@@ -591,7 +519,7 @@ const SignupPage = () => {
                     You must agree to continue.
                   </span>
                 )}
-              </div>
+              </div> */}
             </div>
           </div>
         );
