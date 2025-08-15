@@ -176,16 +176,16 @@ export default function Home() {
           />
         }
       />
-      <div className="hero-wrapper">
+      {/* <div className="hero-wrapper">
         <div className="hero-background" />
-        {/* <div className="hero-overlay">
+        <div className="hero-overlay">
           <Hero />
-        </div> */}
-      </div>
+        </div>
+      </div> */}
 
       <Price />
 
-      <div className="results-header">
+      {/* <div className="results-header">
         <div className="results-count">
           {ads.length} {ads.length === 1 ? "Vehicle" : "Vehicles"} Found
         </div>
@@ -225,7 +225,7 @@ export default function Home() {
             onClick={() => handleViewDetails(car._id)}
           />
         ))}
-      </div>
+      </div> */}
       <div className="featured-heading-wrapper">
         <h2 className="featured-heading">Why Choose DirectWholesaleCars?</h2>
         <div className="featured-subheading">
@@ -254,7 +254,6 @@ export default function Home() {
     </div>
   );
 }
-
 // "use client";
 
 // import React, { useEffect, useState, ChangeEvent } from "react";
