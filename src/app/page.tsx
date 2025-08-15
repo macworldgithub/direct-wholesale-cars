@@ -198,12 +198,12 @@ export default function Home() {
         }
       />
 
-      <div className="hero-wrapper">
+      {/* <div className="hero-wrapper">
         <div className="hero-background" />
         <div className="hero-overlay">
           <Hero />
         </div>
-      </div>
+      </div> */}
 
       <Price />
 
