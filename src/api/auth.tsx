@@ -84,7 +84,7 @@ export const SigninDealer = createAsyncThunk<
 >("login/dealer", async (payload, { rejectWithValue }) => {
   try {
     const response = await axios.post<Response>(
-      `${BACKEND_URL}/auth/login/dealer`,
+      `${BACKEND_URL}/auth//dealer`,
       payload
     );
 
@@ -123,7 +123,7 @@ export const SigninWholesaler = createAsyncThunk<
   Response,
   { email: string; password: string },
   { rejectValue: string }
->("login/wholesaler", async (payload, { rejectWithValue }) => {
+>("/wholesaler", async (payload, { rejectWithValue }) => {
   try {
     const response = await axios.post<Response>(
       `${BACKEND_URL}/auth/login/wholesaler`,

@@ -59,6 +59,7 @@ const Navbar = () => {
         <div className="navbar-links">
           <Link href="/">Home</Link>
           <Link href="/cars">Cars</Link>
+          <Link href="/add_car_list">Add Cars</Link>
           <Link href="/about">About Us</Link>
           <Link href="/contact">Contact</Link>
         </div>

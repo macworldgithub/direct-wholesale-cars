@@ -59,7 +59,11 @@ interface CreateCarAdRequest {
   chassisNumber?: string;
   businessType?: string;
 }
-
+interface UploadExcelResponse {
+  status: "created" | "updated" | "error";
+  vin: string;
+  error?: string;
+}
 export const createCarAd = createAsyncThunk<CarAd, CreateCarAdRequest>(
   "carAds/createCarAd",
   async (data, { rejectWithValue }) => {
@@ -73,6 +77,31 @@ export const createCarAd = createAsyncThunk<CarAd, CreateCarAdRequest>(
     }
   }
 );
+
+export const uploadExcel = createAsyncThunk<
+  UploadExcelResponse[],
+  { wholesalerId: string; file: File },
+  { rejectValue: string }
+>("carAds/uploadExcel", async ({ wholesalerId, file }, { rejectWithValue }) => {
+  try {
+    const formData = new FormData();
+    formData.append("file", file);
+    const response = await axios.post<UploadExcelResponse[]>(
+      `${BACKEND_URL}/cars/${wholesalerId}/upload-excel`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+    return response.data;
+  } catch (error: any) {
+    return rejectWithValue(
+      error.response?.data?.message || "Failed to upload Excel file"
+    );
+  }
+});
 
 export interface UpdateCarAdRequest {
   id: string;
