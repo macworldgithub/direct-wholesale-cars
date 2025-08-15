@@ -23,7 +23,7 @@ interface SignupFormData {
   name: string;
   email: string;
   password: string;
-  businessRegistrationNumber: string;
+  dealerLicenseNumber: string;
   phone: string;
   contactPerson: string;
   address: string;
@@ -67,7 +67,7 @@ const SignupPage = () => {
           name: "",
           email: "",
           password: "",
-          businessRegistrationNumber: "",
+          dealerLicenseNumber: "",
           phone: "",
           contactPerson: "",
           address: "",
@@ -132,7 +132,7 @@ const SignupPage = () => {
       name: formValues.name,
       email: formValues.email,
       password: formValues.password,
-      businessRegistrationNumber: formValues.businessRegistrationNumber,
+      dealerLicenseNumber: formValues.dealerLicenseNumber,
       phone: formValues.phone,
       contactPerson: formValues.contactPerson,
       address: formValues.address,
@@ -198,7 +198,7 @@ const SignupPage = () => {
       valid = await trigger(["name", "email", "password", "phone"]);
     } else if (step === 2) {
       valid = await trigger([
-        "businessRegistrationNumber",
+        "dealerLicenseNumber",
         "contactPerson",
         "address",
       ]);
@@ -351,21 +351,21 @@ const SignupPage = () => {
         return (
           <div className="signup-inputs">
             <LocalizedInput
-              {...register("businessRegistrationNumber", { required: true })}
-              value={watch("businessRegistrationNumber")}
+              {...register("dealerLicenseNumber", { required: true })}
+              value={watch("dealerLicenseNumber")}
               onChange={(val) =>
-                setValue("businessRegistrationNumber", val, {
+                setValue("dealerLicenseNumber", val, {
                   shouldValidate: true,
                 })
               }
-              placeholderKey="Business Registeration Number"
-              label="Business Registeration Number"
+              placeholderKey="Dealer License Number"
+              label="Dealer License Number"
               required={true}
               size="lg"
               type="text"
               variant="full"
             />
-            {renderError("businessRegistrationNumber")}
+            {renderError("dealerLicenseNumber")}
 
             <LocalizedInput
               {...register("contactPerson", { required: true })}
