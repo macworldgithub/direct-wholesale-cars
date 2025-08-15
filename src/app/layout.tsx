@@ -6,6 +6,7 @@ import React from "react";
 
 import Navbar from "@/components/AppComponents/Navbar/Navbar";
 import Footer from "@/components/AppComponents/Footer/Footer";
+import { Providers } from "./providers";
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -27,11 +28,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${poppins.variable} layout-body`}>
-        <div className="layout-wrapper">
-          <Navbar />
-          <main className="layout-content">{children}</main>
-          <Footer />
-        </div>
+        <Providers>
+          <div className="layout-wrapper">
+            <Navbar />
+            <main className="layout-content">{children}</main>
+            <Footer />
+          </div>
+        </Providers>
       </body>
     </html>
   );

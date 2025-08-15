@@ -1,7 +1,23 @@
 .localized-textarea {
-  padding: 0.5rem;
-  border: 1px solid #bbb;
-  border-radius: 4px;
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
   font-size: 1rem;
+  font-family: var(--font-poppins);
+  background-color: #fff;
+  color: #333;
   resize: vertical;
+  min-height: 120px;
+  transition: border-color 0.2s ease;
+
+  &:focus {
+    border-color: #1800b2;
+    outline: none;
+  }
+
+  &::placeholder {
+    color: #999;
+    font-size: 0.95rem;
+  }
 }

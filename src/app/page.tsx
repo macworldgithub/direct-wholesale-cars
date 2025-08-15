@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Price from "../components/UIComponents/Price/Price";
 import Card from "../components/UIComponents/Card/Card";
@@ -13,6 +13,7 @@ import ContactForm from "@/components/UIComponents/ContactForm/ContactForm";
 import Banner from "@/components/UIComponents/Banner/Banner";
 import LocalizedButton from "@/components/UIComponents/LocalizedButton/LocalizedButton";
 import Hero from "@/components/AppComponents/Hero/Hero";
+import Dropdown from "@/components/UIComponents/Dropdown/Dropdown";
 
 const carsData = [
   {
@@ -110,8 +111,20 @@ const networkSteps = [
   },
 ];
 
+const sortOptions = [
+  { label: "Sort by Price: Low to high", value: "price_low_to_high" },
+  { label: "Sort by Price: High to low", value: "price_high_to_low" },
+  { label: "Sort by Date: Newest first", value: "date_new" },
+  { label: "Sort by Date: Oldest first", value: "date_old" },
+];
+
 export default function Home() {
   const router = useRouter();
+  const [sortValue, setSortValue] = useState<string>(sortOptions[0].value);
+
+  const handleSortChange = (value: string) => {
+    setSortValue(value);
+  };
 
   const handleViewDetails = (carId: number) => {
     router.push(`/car_Details?id=${carId}`);
@@ -147,27 +160,26 @@ export default function Home() {
           />
         }
       />
-     <div className="hero-wrapper">
-  <div className="hero-background" />
-  <div className="hero-overlay">
-    <Hero />
-  </div>
-</div>
-
+      <div className="hero-wrapper">
+        <div className="hero-background" />
+        <div className="hero-overlay">
+          <Hero />
+        </div>
+      </div>
 
       <Price />
-      
+
       <div className="results-header">
         <div className="results-count">6 Vehicles Found</div>
         <div className="sort-dropdown">
-          <select className="sort-select">
-            <option>Sort by Price: Low to high</option>
-            <option>Sort by Price: High to low</option>
-         
-          </select>
+          <Dropdown
+            options={sortOptions}
+            value={sortValue}
+            onChange={handleSortChange}
+          />
         </div>
       </div>
-      
+
       <div className="featured-heading-wrapper">
         <h2 className="featured-heading">Featured Inventory</h2>
         <div className="featured-subheading">
@@ -213,8 +225,6 @@ export default function Home() {
         <ContactInfo />
         <ContactForm />
       </div>
-
-
     </div>
   );
 }

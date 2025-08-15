@@ -13,6 +13,13 @@
   }
 }
 
+.localized-input:-webkit-autofill {
+  background-color: white !important;
+  -webkit-box-shadow: 0 0 0 1000px white inset !important;
+  -webkit-text-fill-color: black !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
 .input-label {
   display: block;
   margin-bottom: 6px;
@@ -23,6 +30,11 @@
 .required {
   color: red;
   margin-left: 2px;
+}
+
+.required-asterisk {
+  color: red;
+  margin-left: 0.2em;
 }
 
 .input-sm {
