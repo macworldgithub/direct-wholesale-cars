@@ -14,6 +14,7 @@ interface DropdownProps {
   size?: "sm" | "md" | "lg" | "xl";
   label?: string;
   required?: boolean;
+  disabled?: boolean;
 }
 
 const Dropdown: React.FC<DropdownProps> = ({
@@ -24,6 +25,7 @@ const Dropdown: React.FC<DropdownProps> = ({
   size = "md",
   label,
   required = false,
+  disabled = false,
 }) => {
   return (
     <div className="dropdown-wrapper">
@@ -37,6 +39,7 @@ const Dropdown: React.FC<DropdownProps> = ({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         required={required}
+        disabled={disabled}
       >
         {options.map((opt) => (
           <option key={opt.value} value={opt.value}>

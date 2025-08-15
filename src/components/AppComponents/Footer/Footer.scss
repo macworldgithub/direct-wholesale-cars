@@ -1,17 +1,17 @@
 .footer {
-  background-color: #0d014c; 
+  background-color: #0d014c;
   color: #fff;
   padding: 70px 20px 30px;
   font-family: var(--font-poppins);
-  
+
   @media (max-width: 768px) {
     padding: 50px 15px 25px;
   }
-  
+
   @media (max-width: 480px) {
     padding: 40px 10px 20px;
   }
-  
+
   @media (max-width: 320px) {
     padding: 30px 8px 15px;
   }
@@ -23,20 +23,21 @@
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 40px;
     text-align: left;
-    
+
     @media (max-width: 768px) {
-      gap: 30px;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      display: flex; 
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 50px;
     }
-    
+
     @media (max-width: 480px) {
-      gap: 25px;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
     }
-    
+
     @media (max-width: 320px) {
-      gap: 20px;
-      grid-template-columns: 1fr;
+      gap: 10px;
     }
   }
 
@@ -44,22 +45,22 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
-    
+
     @media (max-width: 480px) {
       gap: 8px;
     }
-    
+
     @media (max-width: 320px) {
       gap: 6px;
     }
 
     .footer-logo {
       margin-bottom: 15px;
-      
+
       @media (max-width: 480px) {
         margin-bottom: 12px;
       }
-      
+
       @media (max-width: 320px) {
         margin-bottom: 10px;
       }
@@ -70,17 +71,17 @@
       color: #c8c8c8; // Light gray text
       line-height: 1.6;
       max-width: 260px;
-      
+
       @media (max-width: 768px) {
         font-size: 13px;
         max-width: 240px;
       }
-      
+
       @media (max-width: 480px) {
         font-size: 12px;
         max-width: 220px;
       }
-      
+
       @media (max-width: 320px) {
         font-size: 11px;
         max-width: 200px;
@@ -92,17 +93,17 @@
       font-weight: 600;
       margin-bottom: 10px;
       color: #ffffff;
-      
+
       @media (max-width: 768px) {
         font-size: 15px;
         margin-bottom: 8px;
       }
-      
+
       @media (max-width: 480px) {
         font-size: 14px;
         margin-bottom: 6px;
       }
-      
+
       @media (max-width: 320px) {
         font-size: 13px;
         margin-bottom: 5px;
@@ -116,11 +117,11 @@
       li {
         margin-bottom: 8px;
         color: #c8c8c8; // Same as quick links color
-        
+
         @media (max-width: 480px) {
           margin-bottom: 6px;
         }
-        
+
         @media (max-width: 320px) {
           margin-bottom: 4px;
         }
@@ -130,15 +131,15 @@
           text-decoration: none;
           font-size: 14px;
           transition: all 0.3s ease;
-          
+
           @media (max-width: 768px) {
             font-size: 13px;
           }
-          
+
           @media (max-width: 480px) {
             font-size: 12px;
           }
-          
+
           @media (max-width: 320px) {
             font-size: 11px;
           }
@@ -155,26 +156,26 @@
       padding: 0;
       font-size: 14px;
       color: #c8c8c8;
-      
+
       @media (max-width: 768px) {
         font-size: 13px;
       }
-      
+
       @media (max-width: 480px) {
         font-size: 12px;
       }
-      
+
       @media (max-width: 320px) {
         font-size: 11px;
       }
 
       li {
         margin-bottom: 6px;
-        
+
         @media (max-width: 480px) {
           margin-bottom: 4px;
         }
-        
+
         @media (max-width: 320px) {
           margin-bottom: 3px;
         }
@@ -196,17 +197,17 @@
     text-align: center;
     font-size: 13px;
     color: #aaa;
-    
+
     @media (max-width: 768px) {
       margin-top: 25px;
       font-size: 12px;
     }
-    
+
     @media (max-width: 480px) {
       margin-top: 20px;
       font-size: 11px;
     }
-    
+
     @media (max-width: 320px) {
       margin-top: 15px;
       font-size: 10px;
@@ -215,13 +216,13 @@
     .footer-divider {
       border: none;
       height: 2px;
-      background: #fff; 
+      background: #fff;
       margin-bottom: 15px;
-      
+
       @media (max-width: 480px) {
         margin-bottom: 12px;
       }
-      
+
       @media (max-width: 320px) {
         margin-bottom: 10px;
       }

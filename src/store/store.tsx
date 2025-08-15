@@ -5,9 +5,19 @@ import { persistReducer, persistStore, PersistConfig } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 
 import signupDealerSlice from "@/slices/signupDealerSlice";
+import signinDealerSlice from "@/slices/signinDealerSlice";
+import loaderSlice from "@/slices/loaderSlice";
+import carAdsSlice from "@/slices/carAdsSlice";
+import signupWholeSalerSlice from "@/slices/signupWholesalerSlice";
+import signinWholeSalerSlice from "@/slices/signinWholesalerSlice";
 
 const rootReducer = combineReducers({
+  loader: loaderSlice.reducer,
   SignupDealer: signupDealerSlice.reducer,
+  SignupWholesaler: signupWholeSalerSlice.reducer,
+  SignuinDealer: signinDealerSlice.reducer,
+  SigninWholesaler: signinWholeSalerSlice.reducer,
+  carAds: carAdsSlice.reducer,
 });
 
 type RootReducerType = ReturnType<typeof rootReducer>;
@@ -15,7 +25,7 @@ type RootReducerType = ReturnType<typeof rootReducer>;
 const persistConfig: PersistConfig<any> = {
   key: "direct-wholesale-cars",
   storage,
-  blacklist: ["SignupDealer"], // ✅ Prevent persisting non-serializable `File`
+  blacklist: ["SignupDealer", "SignupWholesaler", "SignuinDealer", "SigninWholesaler", "carAds"], 
 };
 
 const persistedReducer = persistReducer<RootReducerType>(

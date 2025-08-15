@@ -3,7 +3,7 @@ import React from "react";
 import "./LocalizedButton.scss";
 
 interface LocalizedButtonProps {
-  label: string;
+  label: React.ReactNode;
   onClick?: () => void;
   disabled?: boolean;
   className?: string;

@@ -16,7 +16,7 @@ const ContactInfo = () => {
         <div className="contact-item">
           <div className="contact-icon">
             <Image
-              src="/images/Phone .png"
+              src="/images/phone.png"
               alt="Phone"
               width={24}
               height={24}
@@ -46,7 +46,7 @@ const ContactInfo = () => {
         <div className="contact-item">
           <div className="contact-icon">
             <Image
-              src="/images/Location .png"
+              src="/images/location.png"
               alt="Location"
               width={24}
               height={24}
