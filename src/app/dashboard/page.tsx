@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
-import CarAuctionForm from "../add_car/page";
+// import CarAuctionForm from "../add_car/page";
 import { useRouter } from "next/navigation";
 import CarListing from "@/components/AppComponents/CarListing/CarListing";
 
@@ -148,7 +148,7 @@ const Dashboard = () => {
 
         {selectedTab === 1 && user?.role === "dealer" && (
           <Suspense fallback={<CircularProgress />}>
-            <CarAuctionForm />
+            {/* <CarAuctionForm /> */}
           </Suspense>
         )}
         {selectedTab === 2 && user?.role === "dealer" && (
