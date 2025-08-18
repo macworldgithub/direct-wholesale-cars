@@ -4,6 +4,7 @@ import {
   fetchAllCarAds,
   fetchCarAdById,
   updateCarAd,
+  fetchCarsWithFilters,
   CarsApiResponse,
 } from "@/api/cars";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
@@ -102,6 +103,29 @@ const carAdsSlice = createSlice({
       .addCase(fetchAllCarAds.rejected, (state, action: PayloadAction<any>) => {
         state.loading = false;
         state.error = action.payload || "Failed to fetch car ads";
+      })
+
+      // Add fetchCarsWithFilters cases
+      .addCase(fetchCarsWithFilters.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(
+        fetchCarsWithFilters.fulfilled,
+        (state, action: PayloadAction<CarsApiResponse>) => {
+          state.loading = false;
+          state.ads = action.payload.data;
+          state.pagination = {
+            page: action.payload.page,
+            limit: action.payload.limit,
+            total: action.payload.total,
+            totalPages: action.payload.totalPages,
+          };
+        }
+      )
+      .addCase(fetchCarsWithFilters.rejected, (state, action: PayloadAction<any>) => {
+        state.loading = false;
+        state.error = action.payload || "Failed to fetch car ads with filters";
       })
 
       .addCase(fetchCarAdById.pending, (state) => {

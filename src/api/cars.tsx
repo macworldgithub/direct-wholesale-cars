@@ -132,6 +132,50 @@ export const fetchAllCarAds = createAsyncThunk<
   }
 });
 
+export interface CarsFilterParams {
+  search?: string;
+  vin?: string;
+  stock?: string;
+  branch?: string;
+  odometer?: string;
+  bayNumber?: string;
+  page?: string;
+  limit?: string;
+  wholesalerId?: string;
+}
+
+export const fetchCarsWithFilters = createAsyncThunk<
+  CarsApiResponse,
+  CarsFilterParams,
+  { rejectValue: string }
+>("ads/fetchWithFilters", async (params, { rejectWithValue }) => {
+  try {
+    // Build query parameters
+    const queryParams = new URLSearchParams();
+    
+    // Add non-empty parameters
+    Object.entries(params).forEach(([key, value]) => {
+      if (value && value.trim() !== "") {
+        let cleanValue = value.trim();
+        
+        // Clean odometer value - remove commas, spaces, and "miles"
+        if (key === 'odometer') {
+          cleanValue = cleanValue.replace(/[,\s]/g, '').replace(/miles?/gi, '');
+        }
+        
+        queryParams.append(key, cleanValue);
+      }
+    });
+
+    const response = await axios.get<CarsApiResponse>(`${BACKEND_URL}/cars?${queryParams.toString()}`);
+    return response.data;
+  } catch (error: any) {
+    return rejectWithValue(
+      error.response?.data?.message || "Failed to fetch car ads with filters"
+    );
+  }
+});
+
 export const fetchCarAdById = createAsyncThunk<
   CarAd,
   string,
