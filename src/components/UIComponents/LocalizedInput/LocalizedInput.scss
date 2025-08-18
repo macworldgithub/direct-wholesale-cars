@@ -4,7 +4,6 @@
   font-size: 1rem;
   background-color: white;
   color: black;
-  width: 100%;
   transition: border-color 0.2s;
 
   &:focus {
@@ -37,30 +36,32 @@
   margin-left: 0.2em;
 }
 
+/* Size variants with actual widths */
 .input-sm {
   padding: 6px 10px;
   font-size: 14px;
-  max-width: 200px;
+  width: 200px;
 }
 
 .input-md {
   padding: 10px 14px;
   font-size: 16px;
-  max-width: 300px;
+  width: 300px;
 }
 
 .input-lg {
   padding: 12px 18px;
   font-size: 18px;
-  max-width: 400px;
+  width: 400px;
 }
 
 .input-xl {
   padding: 14px 20px;
   font-size: 20px;
-  max-width: 500px;
+  width: 600px;
 }
 
+/* Full width option */
 .input-full {
-  max-width: 100% !important;
+  width: 100% !important;
 }

@@ -1,6 +1,8 @@
 /* eslint-disable react/display-name */
+
 import React, { forwardRef } from "react";
 import "./LocalizedInput.scss";
+import clsx from "clsx";
 
 interface LocalizedInputProps {
   name: string;
@@ -11,9 +13,10 @@ interface LocalizedInputProps {
   required?: boolean;
   className?: string;
   type?: string;
-  size?: "sm" | "md" | "lg" | "xl";
-  variant?: "default" | "full";
+  size?: "sm" | "md" | "lg" | "xl" | "full";
+  variant?: "full";
   disabled?: boolean;
+  onKeyDown?: React.KeyboardEventHandler<HTMLInputElement>;
 }
 
 const LocalizedInput = forwardRef<HTMLInputElement, LocalizedInputProps>(
@@ -28,13 +31,12 @@ const LocalizedInput = forwardRef<HTMLInputElement, LocalizedInputProps>(
       className = "",
       type = "text",
       size = "md",
-      variant = "default",
-      disabled = false
+      variant,
+      disabled = false,
+      onKeyDown,
     },
     ref
   ) => {
-    const sizeClass = `input-${size}`;
-    const variantClass = variant === "full" ? "input-full" : "";
 
     return (
       <div className="localized-input-wrapper">
@@ -50,8 +52,14 @@ const LocalizedInput = forwardRef<HTMLInputElement, LocalizedInputProps>(
           id={name}
           value={value}
           onChange={(e) => onChange(e.target.value)}
+          onKeyDown={onKeyDown}
           placeholder={placeholderKey || ""}
-          className={`localized-input ${sizeClass} ${variantClass} ${className}`}
+          className={clsx(
+            "localized-input",
+            size && `input-${size}`,
+            variant && `input-${variant}`,
+            className
+          )}
           required={required}
           disabled={disabled}
         />

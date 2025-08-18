@@ -60,6 +60,11 @@ const ProfileDropdownMenu = () => {
     handleMenuClose();
     router.push("/dashboard");
   };
+  
+  const goToChatScreen = () => {
+    handleMenuClose();
+    router.push("/chat");
+  };
 
   return (
     <>
@@ -109,6 +114,7 @@ const ProfileDropdownMenu = () => {
 
         {/* Actions */}
         <MenuItem onClick={goToDashboard}>Dashboard</MenuItem>
+        <MenuItem onClick={goToChatScreen}>Chat Screen</MenuItem>
         <MenuItem onClick={handleLogout}>Logout</MenuItem>
       </Menu>
     </>
