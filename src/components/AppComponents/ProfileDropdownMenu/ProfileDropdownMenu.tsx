@@ -63,7 +63,7 @@ const ProfileDropdownMenu = () => {
   
   const goToChatScreen = () => {
     handleMenuClose();
-    router.push("/chat");
+    router.push("/chatbot");
   };
 
   return (
