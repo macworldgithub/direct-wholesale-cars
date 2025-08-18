@@ -19,8 +19,9 @@ const sortOptions = [
 ];
 
 const CarsPage = () => {
-  const { ads, pagination, loading } = useSelector((state: RootState) => state.carAds);
-
+  const { ads, pagination, loading } = useSelector(
+    (state: RootState) => state.carAds
+  );
   const [sortValue, setSortValue] = useState<string>(sortOptions[0].value);
   const [search, setSearch] = useState("");
   const [isSticky, setIsSticky] = useState(false);
@@ -55,20 +56,25 @@ const CarsPage = () => {
       case "price_high_to_low":
         return b.asking - a.asking;
       case "date_new":
-        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+        return (
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
       case "date_old":
-        return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+        return (
+          new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+        );
       default:
         return 0;
     }
   });
 
   // Filter ads based on search
-  const filteredAds = sortedAds.filter(car => 
-    car.stock.toLowerCase().includes(search.toLowerCase()) ||
-    car.vin.toLowerCase().includes(search.toLowerCase()) ||
-    car.branch.toLowerCase().includes(search.toLowerCase()) ||
-    car.description.toLowerCase().includes(search.toLowerCase())
+  const filteredAds = sortedAds.filter(
+    (car) =>
+      car.stock.toLowerCase().includes(search.toLowerCase()) ||
+      car.vin.toLowerCase().includes(search.toLowerCase()) ||
+      car.branch.toLowerCase().includes(search.toLowerCase()) ||
+      car.description.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
@@ -98,7 +104,8 @@ const CarsPage = () => {
 
         <div className="results-header">
           <div className="results-count">
-            {pagination.total} {pagination.total === 1 ? "Vehicle" : "Vehicles"} Found
+            {pagination.total} {pagination.total === 1 ? "Vehicle" : "Vehicles"}{" "}
+            Found
           </div>
           <div className="sort-dropdown">
             <Dropdown
@@ -143,31 +150,54 @@ const CarsPage = () => {
                     <td className="branch-cell">{car.branch}</td>
                     <td className="bay-cell">{car.bayNumber}</td>
                     <td className="description-cell">{car.description}</td>
-                    <td className="odometer-cell">{car.odometer.toLocaleString()} miles</td>
+                    <td className="odometer-cell">
+                      {car.odometer.toLocaleString()} miles
+                    </td>
                     <td className="build-date-cell">{car.buildDate}</td>
                     <td className="drive-type-cell">{car.driveType}</td>
                     <td className="fuel-type-cell">{car.fuelType}</td>
                     <td className="seats-cell">{car.seats}</td>
                     <td className="rego-due-cell">{car.regoDue}</td>
-                    <td className="price-cell">${car.asking.toLocaleString()}</td>
+                    <td className="price-cell">
+                      ${car.asking.toLocaleString()}
+                    </td>
                     <td className="status-cell">
-                      <span className={`status-badge ${car.available ? 'available' : 'unavailable'}`}>
-                        {car.available ? 'Available' : 'Unavailable'}
+                      <span
+                        className={`status-badge ${
+                          car.available ? "available" : "unavailable"
+                        }`}
+                      >
+                        {car.available ? "Available" : "Unavailable"}
                       </span>
                     </td>
                     <td className="actions-cell">
-                      <button 
+                      <button
                         className="view-details-btn"
                         onClick={() => handleViewDetails(car._id)}
                       >
                         View Details
+                      </button>
+                      <button
+                        className="message-btn"
+                        onClick={() => {
+                          window.dispatchEvent(
+                            new CustomEvent("openChat", {
+                              detail: {
+                                receiverId: car.wholesaler,
+                                name: car.branch,
+                              },
+                            })
+                          );
+                        }}
+                      >
+                        Message Seller
                       </button>
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
-            
+
             {filteredAds.length === 0 && !loading && (
               <div className="no-results">
                 <p>No vehicles found matching your search criteria.</p>

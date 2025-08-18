@@ -27,7 +27,6 @@ const ProfileDropdownMenu = () => {
   const wholesaler = useSelector(
     (state: RootState) => state.SigninWholesaler.wholesaler
   );
-  console.log(wholesaler, "wholesaler");
   const user = dealer || wholesaler;
   const userType = dealer ? "dealer" : wholesaler ? "wholesaler" : null;
 
