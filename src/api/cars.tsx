@@ -32,8 +32,11 @@ export interface CreateCarAdRequest {
   odometer: number;
   buildDate: string;
   vin: string;
+  engineNumber?: string;
+  chassisNumber?: string;
   driveType: string;
   fuelType: string;
+  cylinders?: number;
   seats: number;
   regoDue: string;
   asking: number;
@@ -87,6 +90,35 @@ export interface UpdateCarAdRequest {
   id: string;
   data: CreateCarAdRequest;
 }
+
+// API: POST /cars/{wholesalerId}
+export interface CreateCarForWholesalerRequest {
+  wholesalerId: string;
+  body: Omit<CreateCarAdRequest, "wholesaler">;
+}
+
+export interface CreateCarForWholesalerResponse {
+  message: string;
+  car: CarAd;
+}
+
+export const createCarForWholesaler = createAsyncThunk<
+  CreateCarForWholesalerResponse,
+  CreateCarForWholesalerRequest,
+  { rejectValue: string }
+>("cars/createForWholesaler", async ({ wholesalerId, body }, { rejectWithValue }) => {
+  try {
+    const response = await axios.post<CreateCarForWholesalerResponse>(
+      `${BACKEND_URL}/cars/${wholesalerId}`,
+      body
+    );
+    return response.data;
+  } catch (error: any) {
+    return rejectWithValue(
+      error.response?.data?.message || "Failed to create car for wholesaler"
+    );
+  }
+});
 
 interface CarAd {
   _id: string;

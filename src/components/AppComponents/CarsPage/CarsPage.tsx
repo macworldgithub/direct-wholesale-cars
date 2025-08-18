@@ -1,3 +1,5 @@
+
+
 "use client";
 
 import Banner from "@/components/UIComponents/Banner/Banner";
@@ -9,6 +11,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/store/store";
 import { fetchAllCarAds } from "@/api/cars";
 import Dropdown from "@/components/UIComponents/Dropdown/Dropdown";
+// import { Pagination } from "@mui/material";
+import Pagination from "../../UIComponents/Pagination/Pagination";
 
 const sortOptions = [
   { label: "Sort by Price: Low to high", value: "price_low_to_high" },
@@ -118,7 +122,7 @@ const CarsPage = () => {
                   <th>Drive Type</th>
                   <th>Fuel Type</th>
                   <th>Seats</th>
-                  <th>Rego Due</th>
+
                   <th>Asking Price</th>
                   <th>Status</th>
                   <th>Actions</th>
@@ -139,7 +143,7 @@ const CarsPage = () => {
                     <td className="drive-type-cell">{car.driveType}</td>
                     <td className="fuel-type-cell">{car.fuelType}</td>
                     <td className="seats-cell">{car.seats}</td>
-                    <td className="rego-due-cell">{car.regoDue}</td>
+
                     <td className="price-cell">
                       ${car.asking.toLocaleString()}
                     </td>
@@ -152,12 +156,45 @@ const CarsPage = () => {
                         {car.available ? "Available" : "Unavailable"}
                       </span>
                     </td>
-                    <td className="actions-cell">
+                    <td
+                      className="actions-cell"
+                      style={{
+                        display: "flex",
+                        gap: "8px",
+                        alignItems: "center",
+                      }}
+                    >
                       <button
                         className="view-details-btn"
+                        style={{
+                          background: "#1800B2",
+                          color: "#fff",
+                          border: "none",
+                          borderRadius: "4px",
+                          padding: "6px 16px",
+                          fontWeight: 500,
+                          cursor: "pointer",
+                          transition: "background 0.2s",
+                        }}
                         onClick={() => handleViewDetails(car._id)}
                       >
                         View Details
+                      </button>
+                      <button
+                        className="delete-btn"
+                        style={{
+                          background: "#fff",
+                          color: "#d32f2f",
+                          border: "1px solid #d32f2f",
+                          borderRadius: "4px",
+                          padding: "6px 16px",
+                          fontWeight: 500,
+                          cursor: "pointer",
+                          transition: "background 0.2s, color 0.2s",
+                        }}
+                        type="button"
+                      >
+                        Delete
                       </button>
                     </td>
                   </tr>
@@ -173,6 +210,13 @@ const CarsPage = () => {
           </div>
         )}
       </main>
+
+      {/* <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={setCurrentPage}
+      /> */}
+      {/* <Pagination /> */}
     </div>
   );
 };
