@@ -1,9 +1,10 @@
+
+
 "use client";
 
 import Banner from "@/components/UIComponents/Banner/Banner";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import SearchBar from "../SearchBar/SearchBar";
 import "../../../app/cars/cars.scss";
 import Hero from "../Hero/Hero";
 import { useDispatch, useSelector } from "react-redux";
@@ -11,6 +12,8 @@ import { AppDispatch, RootState } from "@/store/store";
 import { fetchAllCarAds } from "@/api/cars";
 import Dropdown from "@/components/UIComponents/Dropdown/Dropdown";
 import { CarAd } from "@/slices/carAdsSlice";
+// import { Pagination } from "@mui/material";
+import Pagination from "../../UIComponents/Pagination/Pagination";
 
 const sortOptions = [
   { label: "Sort by Price: Low to high", value: "price_low_to_high" },
@@ -25,7 +28,6 @@ const CarsPage = () => {
   );
   console.log(ads)
   const [sortValue, setSortValue] = useState<string>(sortOptions[0].value);
-  const [search, setSearch] = useState("");
   const [isSticky, setIsSticky] = useState(false);
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
@@ -73,13 +75,13 @@ const CarsPage = () => {
   });
 
   // Filter ads based on search
-  const filteredAds = sortedAds.filter(
-    (car) =>
-      car.stock.toLowerCase().includes(search.toLowerCase()) ||
-      car.vin.toLowerCase().includes(search.toLowerCase()) ||
-      car.branch.toLowerCase().includes(search.toLowerCase()) ||
-      car.description.toLowerCase().includes(search.toLowerCase())
-  );
+  // const filteredAds = sortedAds.filter(
+  //   (car) =>
+  //     car.stock.toLowerCase().includes(search.toLowerCase()) ||
+  //     car.vin.toLowerCase().includes(search.toLowerCase()) ||
+  //     car.branch.toLowerCase().includes(search.toLowerCase()) ||
+  //     car.description.toLowerCase().includes(search.toLowerCase())
+  // );
 
   return (
     <div className="main-container">
@@ -95,14 +97,6 @@ const CarsPage = () => {
             </>
           }
         >
-          <SearchBar
-            value={search}
-            onChange={setSearch}
-            className={isSticky ? "sticky" : ""}
-            iconColor="#fff"
-            backgroundColor="rgba(0, 0, 0, 0.2)"
-            borderColor="#fff"
-          />
           <Hero />
         </Banner>
 
@@ -140,14 +134,14 @@ const CarsPage = () => {
                   <th>Drive Type</th>
                   <th>Fuel Type</th>
                   <th>Seats</th>
-                  <th>Rego Due</th>
+
                   <th>Asking Price</th>
                   <th>Status</th>
                   <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {filteredAds.map((car) => (
+                {sortedAds.map((car) => (
                   <tr key={car._id} className="car-row">
                     <td className="stock-cell">{car.stock}</td>
                     <td className="vin-cell">{car.vin}</td>
@@ -161,21 +155,39 @@ const CarsPage = () => {
                     <td className="drive-type-cell">{car.driveType}</td>
                     <td className="fuel-type-cell">{car.fuelType}</td>
                     <td className="seats-cell">{car.seats}</td>
-                    <td className="rego-due-cell">{car.regoDue}</td>
+
                     <td className="price-cell">
                       ${car.asking}
                     </td>
                     <td className="status-cell">
                       <span
-                        className={`status-badge ${car.available ? "available" : "unavailable"
-                          }`}
+                        className={`status-badge ${
+                          car.available ? "available" : "unavailable"
+                        }`}
                       >
                         {car.available ? "Available" : "Unavailable"}
                       </span>
                     </td>
-                    <td className="actions-cell">
+                    <td
+                      className="actions-cell"
+                      style={{
+                        display: "flex",
+                        gap: "8px",
+                        alignItems: "center",
+                      }}
+                    >
                       <button
                         className="view-details-btn"
+                        style={{
+                          background: "#1800B2",
+                          color: "#fff",
+                          border: "none",
+                          borderRadius: "4px",
+                          padding: "6px 16px",
+                          fontWeight: 500,
+                          cursor: "pointer",
+                          transition: "background 0.2s",
+                        }}
                         onClick={() => handleViewDetails(car)}
                       >
                         View Details
@@ -194,6 +206,20 @@ const CarsPage = () => {
                         }}
                       >
                         Message Seller
+                        {/* className="delete-btn"
+                        style={{
+                          background: "#fff",
+                          color: "#d32f2f",
+                          border: "1px solid #d32f2f",
+                          borderRadius: "4px",
+                          padding: "6px 16px",
+                          fontWeight: 500,
+                          cursor: "pointer",
+                          transition: "background 0.2s, color 0.2s",
+                        }}
+                        type="button"
+                      >
+                        Delete */}
                       </button>
                     </td>
                   </tr>
@@ -201,7 +227,7 @@ const CarsPage = () => {
               </tbody>
             </table>
 
-            {filteredAds.length === 0 && !loading && (
+            {sortedAds.length === 0 && !loading && (
               <div className="no-results">
                 <p>No vehicles found matching your search criteria.</p>
               </div>
@@ -209,6 +235,13 @@ const CarsPage = () => {
           </div>
         )}
       </main>
+
+      {/* <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={setCurrentPage}
+      /> */}
+      {/* <Pagination /> */}
     </div>
   );
 };

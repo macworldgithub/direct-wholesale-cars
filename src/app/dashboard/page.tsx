@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
-// import CarAuctionForm from "../add_car/page";
+import CarAuctionForm from "../add_car/page";
 import { useRouter } from "next/navigation";
 import CarListing from "@/components/AppComponents/CarListing/CarListing";
 
@@ -55,7 +55,7 @@ const Dashboard = () => {
         }}
       >
         <Tab label="Profile" />
-        {user?.role === "dealer" && <Tab label="Add a Car" />}
+        {user?.role === "wholesaler" && <Tab label="Add a Car" />}
         {user?.role === "dealer" && <Tab label="Car Listing" />}
       </Tabs>
 
@@ -114,7 +114,10 @@ const Dashboard = () => {
                   { label: "Name", value: user.name },
                   { label: "Email", value: user.email },
                   // { label: "Phone", value: user.phone },
-                  // { label: "Business Registration Number", value: user.businessRegistrationNumber },
+                  // {
+                  //   label: "Business Registration Number",
+                  //   value: user.businessRegistrationNumber,
+                  // },
                   // { label: "Contact Person", value: user.contactPerson },
                   // { label: "Address", value: user.address },
                 ].map((item, idx) => (
@@ -146,9 +149,9 @@ const Dashboard = () => {
           </Box>
         )}
 
-        {selectedTab === 1 && user?.role === "dealer" && (
+        {selectedTab === 1 && user?.role === "wholesaler" && (
           <Suspense fallback={<CircularProgress />}>
-            {/* <CarAuctionForm /> */}
+            <CarAuctionForm />
           </Suspense>
         )}
         {selectedTab === 2 && user?.role === "dealer" && (

@@ -32,8 +32,11 @@ export interface CreateCarAdRequest {
   odometer: number;
   buildDate: string;
   vin: string;
+  engineNumber?: string;
+  chassisNumber?: string;
   driveType: string;
   fuelType: string;
+  cylinders?: number;
   seats: number;
   regoDue: string;
   asking: number;
@@ -88,6 +91,35 @@ export interface UpdateCarAdRequest {
   data: CreateCarAdRequest;
 }
 
+// API: POST /cars/{wholesalerId}
+export interface CreateCarForWholesalerRequest {
+  wholesalerId: string;
+  body: Omit<CreateCarAdRequest, "wholesaler">;
+}
+
+export interface CreateCarForWholesalerResponse {
+  message: string;
+  car: CarAd;
+}
+
+export const createCarForWholesaler = createAsyncThunk<
+  CreateCarForWholesalerResponse,
+  CreateCarForWholesalerRequest,
+  { rejectValue: string }
+>("cars/createForWholesaler", async ({ wholesalerId, body }, { rejectWithValue }) => {
+  try {
+    const response = await axios.post<CreateCarForWholesalerResponse>(
+      `${BACKEND_URL}/cars/${wholesalerId}`,
+      body
+    );
+    return response.data;
+  } catch (error: any) {
+    return rejectWithValue(
+      error.response?.data?.message || "Failed to create car for wholesaler"
+    );
+  }
+});
+
 interface CarAd {
   _id: string;
   wholesaler: string;
@@ -128,6 +160,50 @@ export const fetchAllCarAds = createAsyncThunk<
   } catch (error: any) {
     return rejectWithValue(
       error.response?.data?.message || "Failed to fetch car ads"
+    );
+  }
+});
+
+export interface CarsFilterParams {
+  search?: string;
+  vin?: string;
+  stock?: string;
+  branch?: string;
+  odometer?: string;
+  bayNumber?: string;
+  page?: string;
+  limit?: string;
+  wholesalerId?: string;
+}
+
+export const fetchCarsWithFilters = createAsyncThunk<
+  CarsApiResponse,
+  CarsFilterParams,
+  { rejectValue: string }
+>("ads/fetchWithFilters", async (params, { rejectWithValue }) => {
+  try {
+    // Build query parameters
+    const queryParams = new URLSearchParams();
+    
+    // Add non-empty parameters
+    Object.entries(params).forEach(([key, value]) => {
+      if (value && value.trim() !== "") {
+        let cleanValue = value.trim();
+        
+        // Clean odometer value - remove commas, spaces, and "miles"
+        if (key === 'odometer') {
+          cleanValue = cleanValue.replace(/[,\s]/g, '').replace(/miles?/gi, '');
+        }
+        
+        queryParams.append(key, cleanValue);
+      }
+    });
+
+    const response = await axios.get<CarsApiResponse>(`${BACKEND_URL}/cars?${queryParams.toString()}`);
+    return response.data;
+  } catch (error: any) {
+    return rejectWithValue(
+      error.response?.data?.message || "Failed to fetch car ads with filters"
     );
   }
 });
