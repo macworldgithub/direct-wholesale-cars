@@ -19,7 +19,8 @@ import { AppDispatch } from "@/store/store";
 const CarDetailsOverviewPage = () => {
   const dispatch = useDispatch<AppDispatch>();
   const searchParams = useSearchParams();
-  const carId = searchParams?.get("id") ?? "";
+  const carId = searchParams?.get("wholesalerId") ?? "";
+  const vinId = searchParams?.get("vin") ?? "";
 
   const [activeTab, setActiveTab] = useState("overview");
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -27,13 +28,13 @@ const CarDetailsOverviewPage = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (carId) {
-      dispatch(fetchCarAdById(carId))
+    if (carId && vinId) {
+      dispatch(fetchCarAdById({ wholesalerId: carId, vin: vinId }))
         .unwrap()
         .then((data) => setCarData(data))
         .finally(() => setLoading(false));
     }
-  }, [carId, dispatch]);
+  }, [carId, vinId, dispatch]);
 
   const handleImageChange = (direction: "prev" | "next") => {
     if (!carData?.images?.length) return;
@@ -124,9 +125,8 @@ const CarDetailsOverviewPage = () => {
                     key={index}
                     src={img}
                     alt={`Thumbnail ${index + 1}`}
-                    className={`thumbnail ${
-                      index === currentImageIndex ? "active" : ""
-                    }`}
+                    className={`thumbnail ${index === currentImageIndex ? "active" : ""
+                      }`}
                     onClick={() => setCurrentImageIndex(index)}
                   />
                 ))}
@@ -138,27 +138,24 @@ const CarDetailsOverviewPage = () => {
             <LocalizedButton
               label="Overview"
               onClick={() => setActiveTab("overview")}
-              className={`tab-button ${
-                activeTab === "overview" ? "active" : ""
-              }`}
+              className={`tab-button ${activeTab === "overview" ? "active" : ""
+                }`}
               variant="transparent-bottom-rounded"
               size="md"
             />
             <LocalizedButton
               label="Features"
               onClick={() => setActiveTab("features")}
-              className={`tab-button ${
-                activeTab === "features" ? "active" : ""
-              }`}
+              className={`tab-button ${activeTab === "features" ? "active" : ""
+                }`}
               variant="transparent-bottom-rounded"
               size="md"
             />
             <LocalizedButton
               label="Inspection Report"
               onClick={() => setActiveTab("inspection")}
-              className={`tab-button ${
-                activeTab === "inspection" ? "active" : ""
-              }`}
+              className={`tab-button ${activeTab === "inspection" ? "active" : ""
+                }`}
               variant="transparent-bottom-rounded"
               size="md"
             />

@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/store/store";
 import { fetchAllCarAds } from "@/api/cars";
 import Dropdown from "@/components/UIComponents/Dropdown/Dropdown";
+import { CarAd } from "@/slices/carAdsSlice";
 
 const sortOptions = [
   { label: "Sort by Price: Low to high", value: "price_low_to_high" },
@@ -22,6 +23,7 @@ const CarsPage = () => {
   const { ads, pagination, loading } = useSelector(
     (state: RootState) => state.carAds
   );
+  console.log(ads)
   const [sortValue, setSortValue] = useState<string>(sortOptions[0].value);
   const [search, setSearch] = useState("");
   const [isSticky, setIsSticky] = useState(false);
@@ -36,8 +38,10 @@ const CarsPage = () => {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const handleViewDetails = (carId: string) => {
-    router.push(`/car_Details?id=${carId}`);
+  const handleViewDetails = (car: CarAd) => {
+    router.push(
+      `/car_Details?wholesalerId=${car.wholesaler}&vin=${car.vin}`
+    );
   };
 
   useEffect(() => {
@@ -159,13 +163,12 @@ const CarsPage = () => {
                     <td className="seats-cell">{car.seats}</td>
                     <td className="rego-due-cell">{car.regoDue}</td>
                     <td className="price-cell">
-                      ${car.asking.toLocaleString()}
+                      ${car.asking}
                     </td>
                     <td className="status-cell">
                       <span
-                        className={`status-badge ${
-                          car.available ? "available" : "unavailable"
-                        }`}
+                        className={`status-badge ${car.available ? "available" : "unavailable"
+                          }`}
                       >
                         {car.available ? "Available" : "Unavailable"}
                       </span>
@@ -173,7 +176,7 @@ const CarsPage = () => {
                     <td className="actions-cell">
                       <button
                         className="view-details-btn"
-                        onClick={() => handleViewDetails(car._id)}
+                        onClick={() => handleViewDetails(car)}
                       >
                         View Details
                       </button>

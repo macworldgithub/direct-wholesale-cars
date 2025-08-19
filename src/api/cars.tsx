@@ -134,18 +134,23 @@ export const fetchAllCarAds = createAsyncThunk<
 
 export const fetchCarAdById = createAsyncThunk<
   CarAd,
-  string,
+  { wholesalerId: string; vin: string },
   { rejectValue: string }
->("ads/fetchById", async (id, { rejectWithValue }) => {
-  try {
-    const response = await axios.get<CarAd>(`${BACKEND_URL}/ads/${id}`);
-    return response.data;
-  } catch (error: any) {
-    return rejectWithValue(
-      error.response?.data?.message || "Failed to fetch car ad details"
-    );
+>(
+  "cars/fetchById",
+  async ({ wholesalerId, vin }, { rejectWithValue }) => {
+    try {
+      const response = await axios.get<CarAd>(
+        `${BACKEND_URL}/cars/${wholesalerId}/${vin}`
+      );
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to fetch car ad details"
+      );
+    }
   }
-});
+);
 
 export const updateCarAd = createAsyncThunk<
   CarAd,
