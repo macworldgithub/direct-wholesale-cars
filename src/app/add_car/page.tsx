@@ -78,8 +78,8 @@ const CarAuctionForm: React.FC = () => {
   });
   const dispatch = useDispatch<AppDispatch>();
   const searchParams = useSearchParams();
-  const adId = searchParams?.get("id") || undefined;
-  console.log(adId, "adId from search params");
+  const carId = searchParams?.get("wholesalerId") ?? "";
+  const vinId = searchParams?.get("vin") ?? "";
 
   const dealer = useSelector((state: RootState) => state.SignuinDealer.dealer);
   const wholesaler = useSelector(
@@ -88,16 +88,16 @@ const CarAuctionForm: React.FC = () => {
   const isWholesaler = Boolean(wholesaler?._id);
   const selectedAd = useSelector((state: RootState) => state.carAds.selectedAd);
   console.log(selectedAd);
-  const isEditMode = Boolean(adId);
+  const isEditMode = Boolean(carId);
   console.log(isEditMode, "isEditMode");
 
   useEffect(() => {
-    if (adId) {
-      dispatch(fetchCarAdById(adId));
+    if (carId) {
+      dispatch(fetchCarAdById({ wholesalerId: carId, vin: vinId }))
     } else {
       dispatch(clearSelectedAd());
     }
-  }, [adId, dispatch]);
+  }, [carId, dispatch]);
 
   useEffect(() => {
     if (isEditMode && selectedAd) {
@@ -215,7 +215,7 @@ const CarAuctionForm: React.FC = () => {
   }, [selectedState, setValue]);
 
   useEffect(() => {
-    if (selectedAd && adId) {
+    if (selectedAd && carId) {
       const ad: any = selectedAd as any;
       reset({
         ...(ad || {}),
@@ -236,7 +236,7 @@ const CarAuctionForm: React.FC = () => {
       setImagePreviews((ad?.images as string[]) || []);
       setImageKeys((ad?.images as string[]) || []);
     }
-  }, [selectedAd, adId, reset]);
+  }, [selectedAd, carId, reset]);
 
   const onSubmit = async (data: FormData) => {
     if (!dealer?._id && !wholesaler?._id) {
@@ -313,8 +313,8 @@ const CarAuctionForm: React.FC = () => {
         ).unwrap();
       } else {
         // Dealer flow (existing behavior)
-        if (adId) {
-          await dispatch(updateCarAd({ id: adId, data: payload as any }));
+        if (carId) {
+          await dispatch(updateCarAd({ id: carId, data: payload as any }));
         } else {
           await dispatch(createCarAd(payload as any));
         }

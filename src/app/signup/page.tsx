@@ -23,7 +23,7 @@ interface SignupFormData {
   name: string;
   email: string;
   password: string;
-  dealerLicenseNumber: string;
+  businessRegistrationNumber: string;
   phone: string;
   contactPerson: string;
   address: string;
@@ -54,25 +54,25 @@ const SignupPage = () => {
   } = useForm<SignupFormData>({
     defaultValues: dealer
       ? {
-          name: dealer.name,
-          email: dealer.email,
-          password: "",
-          // businessRegistrationNumber: dealer.businessRegistrationNumber,
-          // phone: dealer.phone,
-          // contactPerson: dealer.contactPerson,
-          // address: dealer.address,
-          // profileImage: null,
-        }
+        name: dealer.name,
+        email: dealer.email,
+        password: "",
+        // businessRegistrationNumber: dealer.businessRegistrationNumber,
+        // phone: dealer.phone,
+        // contactPerson: dealer.contactPerson,
+        // address: dealer.address,
+        // profileImage: null,
+      }
       : {
-          name: "",
-          email: "",
-          password: "",
-          dealerLicenseNumber: "",
-          phone: "",
-          contactPerson: "",
-          address: "",
-          // profileImage: null,
-        },
+        name: "",
+        email: "",
+        password: "",
+        businessRegistrationNumber: "",
+        phone: "",
+        contactPerson: "",
+        address: "",
+        // profileImage: null,
+      },
     mode: "onTouched",
   });
 
@@ -132,7 +132,7 @@ const SignupPage = () => {
       name: formValues.name,
       email: formValues.email,
       password: formValues.password,
-      dealerLicenseNumber: formValues.dealerLicenseNumber,
+      businessRegistrationNumber: formValues.businessRegistrationNumber,
       phone: formValues.phone,
       contactPerson: formValues.contactPerson,
       address: formValues.address,
@@ -198,7 +198,7 @@ const SignupPage = () => {
       valid = await trigger(["name", "email", "password", "phone"]);
     } else if (step === 2) {
       valid = await trigger([
-        "dealerLicenseNumber",
+        "businessRegistrationNumber",
         "contactPerson",
         "address",
       ]);
@@ -351,21 +351,21 @@ const SignupPage = () => {
         return (
           <div className="signup-inputs">
             <LocalizedInput
-              {...register("dealerLicenseNumber", { required: true })}
-              value={watch("dealerLicenseNumber")}
+              {...register("businessRegistrationNumber", { required: true })}
+              value={watch("businessRegistrationNumber")}
               onChange={(val) =>
-                setValue("dealerLicenseNumber", val, {
+                setValue("businessRegistrationNumber", val, {
                   shouldValidate: true,
                 })
               }
-              placeholderKey="Dealer License Number"
-              label="Dealer License Number"
+              placeholderKey="Business Registration Number"
+              label="Business Registration Number"
               required={true}
               size="lg"
               type="text"
               variant="full"
             />
-            {renderError("dealerLicenseNumber")}
+            {renderError("businessRegistrationNumber")}
 
             <LocalizedInput
               {...register("contactPerson", { required: true })}
@@ -546,9 +546,8 @@ const SignupPage = () => {
               <React.Fragment key={index}>
                 <div className="icon-section">
                   <div
-                    className={`icon-circle ${
-                      step === index + 1 ? "blinking" : ""
-                    }`}
+                    className={`icon-circle ${step === index + 1 ? "blinking" : ""
+                      }`}
                   >
                     <Image
                       src={stepIcon.icon}

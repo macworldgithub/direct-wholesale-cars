@@ -38,7 +38,7 @@ export interface CreateCarAdRequest {
   fuelType: string;
   cylinders?: number;
   seats: number;
-  regoDue: string;
+  regoDue?: string;
   asking: number;
   available: boolean;
 }
