@@ -11,7 +11,7 @@ interface CarData {
   engineNumber?: string;
   transmission?: string;
   driveType?: string;
-  cyls?: number;
+  cylinders?: number;
   seats?: number;
 }
 
@@ -73,7 +73,7 @@ const OverviewCard: React.FC<{ carData: CarData }> = ({ carData }) => {
           </div>
           <div className="details-row">
             <span className="details-label">Cylinders:</span>
-            <span className="details-value bold">{displayValue(carData.cyls)}</span>
+            <span className="details-value bold">{displayValue(carData.cylinders)}</span>
           </div>
           <div className="details-row">
             <span className="details-label">Seats:</span>

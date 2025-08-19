@@ -12,9 +12,10 @@ import LocalizedText from "../../components/UIComponents/LocalizedText/Localized
 import LocalizedButton from "../../components/UIComponents/LocalizedButton/LocalizedButton";
 import Card from "../../components/UIComponents/Card/Card";
 import SvgIcons from "../../components/UIComponents/SvgIcons/SvgIcons";
-import { fetchCarAdById } from "@/api/cars";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "@/store/store";
+import { fetchCarAdById, sendEmailInquiry } from "@/api/cars";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/store/store";
+import Toast from "@/components/UIComponents/Toast/Toast";
 
 const CarDetailsOverviewPage = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -25,8 +26,20 @@ const CarDetailsOverviewPage = () => {
   const [activeTab, setActiveTab] = useState("overview");
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [carData, setCarData] = useState<any>(null);
+  console.log(carData)
   const [loading, setLoading] = useState(true);
 
+  const [buttonLabel, setButtonLabel] = useState("Request More Info");
+  const [toastOpen, setToastOpen] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
+  const [toastSeverity, setToastSeverity] = useState<"success" | "error">("success");
+
+  const dealer = useSelector((state: RootState) => state.SignuinDealer.dealer);
+  const wholesaler = useSelector(
+    (state: RootState) => state.SigninWholesaler.wholesaler
+  );
+  const user = dealer || wholesaler;
+  const senderId = user?._id;
   useEffect(() => {
     if (carId && vinId) {
       dispatch(fetchCarAdById({ wholesalerId: carId, vin: vinId }))
@@ -55,6 +68,45 @@ const CarDetailsOverviewPage = () => {
     </div>
   );
 
+  useEffect(() => {
+    // Check per-car flag in localStorage
+    const inquirySent = localStorage.getItem(`inquirySent_${carId}`);
+    if (inquirySent === "true") {
+      setButtonLabel("Reserve Now");
+    }
+  }, [carId]);
+
+  const handleRequestInfo = () => {
+    if (!user?._id || !carData?._id || !carData?.wholesaler) {
+      setToastMessage("Missing required data to send inquiry");
+      setToastSeverity("error");
+      setToastOpen(true);
+      return;
+    }
+
+    dispatch(
+      sendEmailInquiry({
+        senderId: user._id,
+        receiverId: carData.wholesaler,
+        carId: carData._id,
+      })
+    )
+      .unwrap()
+      .then((res) => {
+        setToastMessage(res.message || "Inquiry sent successfully!");
+        setToastSeverity("success");
+        setToastOpen(true);
+
+        localStorage.setItem(`inquirySent_${carData._id}`, "true"); // per car
+        setButtonLabel("Reserve Now");
+      })
+      .catch((err) => {
+        setToastMessage(err || "Failed to send inquiry");
+        setToastSeverity("error");
+        setToastOpen(true);
+      });
+  };
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -64,7 +116,7 @@ const CarDetailsOverviewPage = () => {
   }
 
   const images = carData.images ?? [];
-  const mainImage = images[currentImageIndex] || "/images/placeholder-car.png";
+  const mainImage = images[currentImageIndex] || "/images/placeholder-image.jpg";
 
   return (
     <div className="car-details-overview-page">
@@ -189,8 +241,8 @@ const CarDetailsOverviewPage = () => {
             )}
             <div className="action-buttons">
               <LocalizedButton
-                label="Reserve"
-                onClick={() => console.log("Make Offer clicked")}
+                label={buttonLabel}
+                onClick={handleRequestInfo}
                 className="make-offer-btn"
                 variant="full"
               />
@@ -199,6 +251,17 @@ const CarDetailsOverviewPage = () => {
                 onClick={() => console.log("Contact clicked")}
                 className="contact-btn"
                 variant="full"
+              />
+              <Toast
+                open={toastOpen}
+                onClose={() => {
+                  setToastOpen(false);
+                  if (toastSeverity === "success") {
+                    window.location.reload();
+                  }
+                }}
+                message={toastMessage}
+                severity={toastSeverity}
               />
             </div>
           </Card>

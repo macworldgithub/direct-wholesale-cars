@@ -183,3 +183,35 @@ export const deleteCarAd = createAsyncThunk<
     );
   }
 });
+
+interface EmailInquiryRequest {
+  senderId: string;
+  receiverId: string;
+  carId: string;
+}
+
+interface EmailInquiryResponse {
+  message: string;
+  success: boolean;
+}
+
+export const sendEmailInquiry = createAsyncThunk<
+  EmailInquiryResponse,
+  EmailInquiryRequest,
+  { rejectValue: string }
+>(
+  "email/sendInquiry",
+  async (inquiryData, { rejectWithValue }) => {
+    try {
+      const response = await axios.post<EmailInquiryResponse>(
+        `${BACKEND_URL}/email/inquiry`,
+        inquiryData
+      );
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to send inquiry email"
+      );
+    }
+  }
+);

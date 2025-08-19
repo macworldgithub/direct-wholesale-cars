@@ -5,10 +5,8 @@ import SvgIcons from '../../UIComponents/SvgIcons/SvgIcons';
 import './FeaturesCard.scss';
 
 interface CarData {
-  make?: string;
-  model?: string;
   driveType?: string;
-  cyls?: number;
+  cylinders?: number;
   seats?: number;
   transmission?: string;
   fuelType?: string;
@@ -26,10 +24,8 @@ const FeaturesCard: React.FC<{ carData: CarData }> = ({ carData }) => {
   };
 
   const features = [
-    `Make: ${carData.make || '—'}`,
-    `Model: ${carData.model || '—'}`,
     `Drive Type: ${carData.driveType || '—'}`,
-    `${carData.cyls || '—'} Cylinders`,
+    `${carData.cylinders || '—'} Cylinders`,
     `${carData.seats || '—'} Seats`,
     `Transmission: ${carData.transmission || '—'}`,
     `Fuel: ${mapFuelType(carData.fuelType)}`
