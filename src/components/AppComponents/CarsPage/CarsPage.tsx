@@ -181,7 +181,7 @@ const CarsPage = () => {
                         View Details
                       </button>
                       <button
-                        className="message-btn"
+                        className="view-details-btn"
                         onClick={() => {
                           window.dispatchEvent(
                             new CustomEvent("openChat", {

@@ -1,57 +1,47 @@
 "use client";
 
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import io, { Socket } from "socket.io-client";
+import axios from "axios";
 import "./ChatWidget.scss";
+
 import ChatIcon from "@mui/icons-material/Chat";
 import CloseIcon from "@mui/icons-material/Close";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
 import MicIcon from "@mui/icons-material/Mic";
 import SendIcon from "@mui/icons-material/Send";
-import { BACKEND_URL } from "@/config/server";
+import LocalizedInput from "@/components/UIComponents/LocalizedInput/LocalizedInput";
+import LocalizedButton from "@/components/UIComponents/LocalizedButton/LocalizedButton";
+import LocalizedHeading from "@/components/UIComponents/LocalizedHeading/LocalizedHeading";
 import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
+import { BACKEND_URL } from "@/config/server";
+
+interface ChatRoom {
+  roomId: string;
+  otherUser: { id: string; name: string } | null;
+  lastMessage: any;
+  lastMessageAt: string;
+  unreadCount: number;
+  isUnseen: boolean;
+}
 
 interface Message {
   _id: string;
-  chatRoomId: string;
   senderId: string;
-  receiverId: string;
   text?: string;
   images?: string[];
-  audios?: string[];
-  videos?: string[];
-  documents?: string[];
-  seen?: boolean;
   createdAt: string;
-  updatedAt: string;
-}
-
-interface ChatRoom {
-  _id: string;
-  participants: string[]; // ["userA", "userB"]
-  lastMessageId?: string;
-  lastMessageSenderId?: string;
-  lastMessageAt?: string;
-  unreadCount?: Record<string, number>; // { userId: number }
-}
-
-interface RoomParticipantInfo {
-  id: string;
-  name: string;
-  avatar?: string;
+  roomId: string;
 }
 
 const ChatWidget = () => {
   const [open, setOpen] = useState(false);
-  const [activeRoom, setActiveRoom] = useState<ChatRoom | null>(null);
   const [rooms, setRooms] = useState<ChatRoom[]>([]);
-  const [participantInfo, setParticipantInfo] = useState<
-    Record<string, RoomParticipantInfo>
-  >({});
-  const [input, setInput] = useState("");
+  const [activeRoom, setActiveRoom] = useState<ChatRoom | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
-  const socketRef = useRef<Socket | null>(null);
+  const [input, setInput] = useState("");
+  const [socket, setSocket] = useState<Socket | null>(null);
 
   const dealer = useSelector((state: RootState) => state.SignuinDealer.dealer);
   const wholesaler = useSelector(
@@ -60,193 +50,92 @@ const ChatWidget = () => {
   const user = dealer || wholesaler;
   const userId = user?._id;
 
-  // Fetch chat list from API
-  const fetchChatList = async () => {
-    if (!userId) return;
-    try {
-      const res = await fetch(
-        `${BACKEND_URL}/rooms/chat-list?userId=${userId}`
-      );
-      console.log(res);
-      const data: ChatRoom[] = await res.json();
-      const chatRooms: ChatRoom[] = data.map((room) => ({
-        _id: room._id,
-        participants: room.participants,
-        lastMessageId: room.lastMessageId,
-        lastMessageSenderId: room.lastMessageSenderId,
-        lastMessageAt: room.lastMessageAt,
-        unreadCount: room.unreadCount || {},
-      }));
-      setRooms(chatRooms);
-      console.log(chatRooms);
-      // Extract participant IDs and store them (you might need to fetch their details elsewhere)
-      const participants: Record<string, RoomParticipantInfo> = {};
-      chatRooms.forEach((room) => {
-        room.participants.forEach((participantId) => {
-          if (participantId !== userId && !participants[participantId]) {
-            participants[participantId] = {
-              id: participantId,
-              name: `User ${participantId.slice(0, 5)}`, // Default name
-              avatar: undefined,
-            };
-          }
-        });
-      });
-      setParticipantInfo(participants);
-    } catch (err) {
-      console.error("Failed to fetch chat list", err);
-    }
-  };
-
-  // Initialize socket
   useEffect(() => {
-    if (!userId) return;
-
-    const socket = io(BACKEND_URL, { query: { userId } });
-    console.log(socket, "socket initialized");
-    socketRef.current = socket;
-    socket.emit("joinUser", userId);
-
-    socket.on("roomInvite", ({ chatRoomId, senderId, receiverId }) => {
-      // Update rooms list
-      setRooms((prev) => {
-        if (!prev.some((room) => room._id === chatRoomId)) {
-          return [
-            ...prev,
-            {
-              _id: chatRoomId,
-              participants: [senderId, receiverId],
-              unreadCount: { [userId]: 1 },
-            },
-          ];
+    axios
+      .get<ChatRoom[]>(`${BACKEND_URL}/rooms/chat-list?userId=${userId}`)
+      .then((res) => {
+        setRooms(res.data);
+        if (res.data.length > 0) {
+          setActiveRoom(res.data[0]);
         }
-        return prev;
       });
-    });
+  }, []);
 
-    socket.on("newMessage", (msg: Message) => {
-      // Update messages if active room matches
-      if (activeRoom?._id === msg.chatRoomId) {
-        setMessages((prev) => [...prev, msg]);
-      }
+  useEffect(() => {
+    const s = io(`${BACKEND_URL}`, { query: { userId } });
 
-      // Update rooms with new message info
+    s.on("connect", () => console.log("Socket connected"));
+
+    s.on("newMessage", (msg: Message) => {
+      setMessages((prev) =>
+        msg.roomId === activeRoom?.roomId ? [...prev, msg] : prev
+      );
+
       setRooms((prev) =>
-        prev.map((room) =>
-          room._id === msg.chatRoomId
+        prev.map((r) =>
+          r.roomId === msg.roomId
             ? {
-                ...room,
-                lastMessageId: msg._id,
-                lastMessageSenderId: msg.senderId,
-                lastMessageAt: msg.createdAt,
-                unreadCount: {
-                  ...room.unreadCount,
-                  [userId]:
-                    msg.senderId !== userId
-                      ? (room.unreadCount?.[userId] || 0) + 1
-                      : 0,
-                },
-              }
-            : room
+              ...r,
+              lastMessage: msg,
+              lastMessageAt: msg.createdAt,
+              unreadCount:
+                msg.senderId !== userId && r.roomId !== activeRoom?.roomId
+                  ? r.unreadCount + 1
+                  : r.unreadCount,
+            }
+            : r
         )
       );
     });
 
+    s.on("roomInvite", (invite) => {
+      console.log("New room invite:", invite);
+    });
+
+    s.on("seen", ({ roomId, userId: seenBy }) => {
+      console.log(`👀 Messages in room ${roomId} seen by ${seenBy}`);
+    });
+
+    setSocket(s);
+
     return () => {
-      socket.disconnect();
+      s.disconnect();
     };
-  }, [userId, activeRoom]);
-
-  // Fetch chat list on mount
-  useEffect(() => {
-    fetchChatList();
-  }, [userId]);
+  }, [activeRoom?.roomId]);
 
   useEffect(() => {
-  const handler = (e: CustomEvent<{ receiverId: string; name: string }>) => {
-    if (!userId) return;
-    
-    const { receiverId, name } = e.detail;
+    if (!activeRoom) return;
+    axios
+      .get<Message[]>(
+        `${BACKEND_URL}/messages/room/${activeRoom.roomId}?limit=50`
+      )
+      .then((res) => setMessages(res.data));
 
-    // Update participant info
-    setParticipantInfo(prev => ({
-      ...prev,
-      [receiverId]: {
-        id: receiverId,
-        name,
-        avatar: undefined
-      }
-    }));
-
-    // Check if room with this participant already exists
-    const existingRoom = rooms.find(room => 
-      room.participants.includes(receiverId) && room.participants.includes(userId)
+    setRooms((prev) =>
+      prev.map((r) =>
+        r.roomId === activeRoom.roomId ? { ...r, unreadCount: 0 } : r
+      )
     );
 
-    if (existingRoom) {
-      setActiveRoom(existingRoom);
-    } else {
-      // Create a new temporary room (will be replaced when socket creates actual room)
-      const tempRoom: ChatRoom = {
-        _id: `temp-${Date.now()}`,
-        participants: [userId, receiverId],
-        unreadCount: { [userId]: 0 }
-      };
-      
-      setRooms(prev => [...prev, tempRoom]);
-      setActiveRoom(tempRoom);
-      
-      // Emit socket event to create actual room
-      socketRef.current?.emit("createRoom", {
-        participantIds: [userId, receiverId]
-      });
-    }
-  };
+    socket?.emit("seenMessages", {
+      roomId: activeRoom.roomId,
+      userId,
+    });
+  }, [activeRoom, socket, userId]);
 
-  window.addEventListener("openChat", handler as EventListener);
-  return () => window.removeEventListener("openChat", handler as EventListener);
-}, [rooms, userId]);
+  const sendMessage = () => {
+    if (!input.trim() || !socket || !activeRoom) return;
 
-  const handleRoomClick = async (room: ChatRoom) => {
-    setActiveRoom(room);
-    setMessages([]);
-
-    // Fetch chat history from backend
-    try {
-      const res = await fetch(
-        `${BACKEND_URL}/messages/room/${room._id}`
-      );
-      const msgs: Message[] = await res.json();
-      setMessages(msgs);
-
-      // Mark messages as seen
-      //   if (room.unreadCount?.[userId!] > 0) {
-      //     setRooms(prev => prev.map(r =>
-      //       r._id === room._id ? {
-      //         ...r,
-      //         unreadCount: {
-      //           ...r.unreadCount,
-      //           [userId!]: 0
-      //         }
-      //       } : r
-      //     ));
-      //   }
-    } catch (err) {
-      console.error("Failed to fetch messages", err);
-    }
-  };
-
-  const handleSendMessage = async () => {
-    if (!input.trim() || !activeRoom || !userId) return;
-
-    const receiverId = activeRoom.participants.find((id) => id !== userId);
-    if (!receiverId) return;
-
-    socketRef.current?.emit("sendMessage", {
+    console.log("Emitting sendMessage:", {
       senderId: userId,
-      receiverId,
-      text: input.trim(),
-      chatRoomId: activeRoom._id,
+      receiverId: activeRoom.otherUser?.id,
+      text: input,
+    });
+
+    socket.emit("sendMessage", {
+      senderId: userId,
+      receiverId: activeRoom.otherUser?.id,
+      text: input,
     });
 
     setInput("");
@@ -262,118 +151,97 @@ const ChatWidget = () => {
 
       {open && (
         <div className="chat-app">
+          {/* Sidebar */}
           <aside className="sidebar">
             <header className="sidebar-header">
-              <h6>Chats</h6>
+              <LocalizedHeading heading="Chats" level={6} />
               <button className="close-btn" onClick={() => setOpen(false)}>
                 <CloseIcon />
               </button>
             </header>
-            <ul className="room-list">
-              {rooms.map((room) => {
-                const otherParticipantId = room.participants.find(
-                  (id) => id !== userId
-                );
-                const participant = otherParticipantId
-                  ? participantInfo[otherParticipantId]
-                  : null;
-
-                return (
-                  <li
-                    key={room._id}
-                    className={`room-item ${
-                      activeRoom?._id === room._id ? "active" : ""
+            <ul className="user-list">
+              {rooms.map((room) => (
+                <li
+                  key={room.roomId}
+                  className={`user-item ${activeRoom?.roomId === room.roomId ? "active" : ""
                     }`}
-                    onClick={() => handleRoomClick(room)}
-                  >
-                    {participant && (
-                      <>
-                        {/* <img
-                          src={
-                            participant.avatar || "/images/default-avatar.png"
-                          }
-                          alt={participant.name}
-                        /> */}
-                        <div>
-                          <p className="name">{participant.name}</p>
-                          <p className="last-msg">
-                            {room.lastMessageSenderId === userId ? "You: " : ""}
-                            {messages.find((m) => m._id === room.lastMessageId)
-                              ?.text || ""}
-                          </p>
-                          {/* {room.unreadCount?.[userId!] > 0 && (
-                            <span className="unseen-badge">{room.unreadCount[userId!]}</span>
-                          )} */}
-                        </div>
-                      </>
-                    )}
-                  </li>
-                );
-              })}
+                  onClick={() => setActiveRoom(room)}
+                >
+                  <img
+                    src="/images/default-avatar.png"
+                    alt={room.otherUser?.name}
+                  />
+                  <div>
+                    <p className="name">{room.otherUser?.name ?? "Unknown"}</p>
+                    <p className="last-msg">
+                      {room.lastMessage?.text ?? "No messages"}
+                    </p>
+                  </div>
+                  {room.unreadCount > 0 && (
+                    <span className="unread">{room.unreadCount}</span>
+                  )}
+                </li>
+              ))}
             </ul>
           </aside>
 
-          <section className="chat-window">
-            {activeRoom && (
-              <>
-                <header className="chat-header">
-                  {(() => {
-                    const otherParticipantId = activeRoom.participants.find(
-                      (id) => id !== userId
-                    );
-                    const participant = otherParticipantId
-                      ? participantInfo[otherParticipantId]
-                      : null;
+          {activeRoom && (
+            <section className="chat-window">
+              <header className="chat-header">
+                <img
+                  src="/images/default-avatar.png"
+                  alt={activeRoom.otherUser?.name}
+                />
+                <LocalizedHeading
+                  heading={activeRoom.otherUser?.name ?? "Unknown"}
+                  level={5}
+                />
+              </header>
 
-                    return participant ? (
-                      <>
-                        <img
-                          src={
-                            participant.avatar || "/images/default-avatar.png"
-                          }
-                          alt={participant.name}
-                        />
-                        <h5>{participant.name}</h5>
-                      </>
-                    ) : null;
-                  })()}
-                </header>
-
-                <div className="chat-messages">
-                  {messages.map((msg) => (
-                    <div
-                      key={msg._id}
-                      className={`message ${
-                        msg.senderId === userId ? "user" : "other"
+              <div className="chat-messages">
+                {messages.map((msg) => (
+                  <div
+                    key={msg._id}
+                    className={`message ${msg.senderId === userId ? "user" : "bot"
                       }`}
-                    >
-                      {msg.text}
-                    </div>
-                  ))}
-                </div>
-
-                <footer className="chat-input-box">
-                  <input
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
-                    placeholder="Type a message..."
-                    onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
-                  />
-                  <div className="chat-actions">
-                    <button>
-                      <AttachFileIcon />
-                    </button>
-                    <button>
-                      <MicIcon />
-                    </button>
-                    <button onClick={handleSendMessage}>
-                      <SendIcon />
-                    </button>
+                  >
+                    {msg.text}
                   </div>
-                </footer>
-              </>
-            )}
-          </section>
+                ))}
+              </div>
+
+              <footer className="chat-input-box">
+                <LocalizedInput
+                  name="chatMessage"
+                  value={input}
+                  onChange={setInput}
+                  placeholderKey="Type a message..."
+                  size="lg"
+                />
+                <div className="chat-actions">
+                  <LocalizedButton
+                    label={<AttachFileIcon />}
+                    variant="outlined"
+                    outlineColor="black"
+                    size="sm"
+                  />
+                  <LocalizedButton
+                    label={<MicIcon />}
+                    variant="outlined"
+                    outlineColor="black"
+                    size="sm"
+                  />
+                  <LocalizedButton
+                    className="send"
+                    label={<SendIcon />}
+                    variant="filled"
+                    size="sm"
+                    onClick={sendMessage}
+                  />
+                </div>
+              </footer>
+            </section>
+          )}
         </div>
       )}
     </div>

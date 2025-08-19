@@ -456,6 +456,8 @@
 
 .actions-cell {
   text-align: center;
+  display: flex;
+  gap: 2px;
   
   .view-details-btn {
     background: linear-gradient(135deg, #1800B2, #4C1D95);
