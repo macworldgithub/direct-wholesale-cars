@@ -64,9 +64,30 @@ const ChatPage = () => {
     <div className="chat-wrapper">
       <div className="chat-container">
         <div className="chat-box">
-          {messages.map((msg, index) => (
+          {/* {messages.map((msg, index) => (
             <div key={index} className={`message ${msg.sender}`}>
               <p>{msg.text}</p>
+            </div>
+          ))} */}
+          {messages.map((msg, index) => (
+            <div key={index} className={`message ${msg.sender}`}>
+              <p>
+                {msg.text.split(/(https?:\/\/[^\s]+)/g).map((part, i) =>
+                  part.match(/https?:\/\/[^\s]+/g) ? (
+                    <a
+                      key={i}
+                      href={part}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="chat-link"
+                    >
+                      {part}
+                    </a>
+                  ) : (
+                    part
+                  )
+                )}
+              </p>
             </div>
           ))}
 
