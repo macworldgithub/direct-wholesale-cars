@@ -189,7 +189,7 @@ const LoginPage = () => {
           <Toast
             open={toastOpen}
             onClose={() => setToastOpen(false)}
-            message="Signup Successful!"
+            message="Login Successful!"
             severity="success"
           />
 
