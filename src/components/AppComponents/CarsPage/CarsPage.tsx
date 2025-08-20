@@ -206,20 +206,6 @@ const CarsPage = () => {
                         }}
                       >
                         Message Seller
-                        {/* className="delete-btn"
-                        style={{
-                          background: "#fff",
-                          color: "#d32f2f",
-                          border: "1px solid #d32f2f",
-                          borderRadius: "4px",
-                          padding: "6px 16px",
-                          fontWeight: 500,
-                          cursor: "pointer",
-                          transition: "background 0.2s, color 0.2s",
-                        }}
-                        type="button"
-                      >
-                        Delete */}
                       </button>
                     </td>
                   </tr>

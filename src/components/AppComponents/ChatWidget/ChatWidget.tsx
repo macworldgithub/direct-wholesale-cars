@@ -67,10 +67,17 @@ const ChatWidget = () => {
     s.on("connect", () => console.log("Socket connected"));
 
     s.on("newMessage", (msg: Message) => {
-      setMessages((prev) =>
-        msg.roomId === activeRoom?.roomId ? [...prev, msg] : prev
-      );
+      setMessages((prev) => {
+        // If optimistic placeholder exists, replace it
+        const exists = prev.find((m) => m._id.startsWith("temp-") && m.text === msg.text && m.senderId === msg.senderId);
+        if (exists) {
+          return prev.map((m) => (m._id === exists._id ? msg : m));
+        }
+        // Otherwise just add normally
+        return msg.roomId === activeRoom?.roomId ? [...prev, msg] : prev;
+      });
 
+      // Update sidebar rooms
       setRooms((prev) =>
         prev.map((r) =>
           r.roomId === msg.roomId
@@ -126,12 +133,21 @@ const ChatWidget = () => {
   const sendMessage = () => {
     if (!input.trim() || !socket || !activeRoom) return;
 
-    console.log("Emitting sendMessage:", {
-      senderId: userId,
-      receiverId: activeRoom.otherUser?.id,
-      text: input,
-    });
+    const tempId = `temp-${Date.now()}`;
 
+    // Create optimistic message
+    const optimisticMsg: Message = {
+      _id: tempId,
+      senderId: userId!,
+      text: input,
+      createdAt: new Date().toISOString(),
+      roomId: activeRoom.roomId,
+    };
+
+    // Immediately add to UI
+    setMessages((prev) => [...prev, optimisticMsg]);
+
+    // Emit to server
     socket.emit("sendMessage", {
       senderId: userId,
       receiverId: activeRoom.otherUser?.id,
@@ -140,6 +156,38 @@ const ChatWidget = () => {
 
     setInput("");
   };
+
+  useEffect(() => {
+    const handleOpenChat = (e: CustomEvent<{ receiverId: string; name: string }>) => {
+      const { receiverId, name } = e.detail;
+      setOpen(true);
+
+      // Check if room already exists
+      const existingRoom = rooms.find((r) => r.otherUser?.id === receiverId);
+
+      if (existingRoom) {
+        setActiveRoom(existingRoom);
+      } else {
+        // Create a placeholder room until backend confirms / roomInvite arrives
+        const tempRoom: ChatRoom = {
+          roomId: `temp-${receiverId}`,
+          otherUser: { id: receiverId, name },
+          lastMessage: null,
+          lastMessageAt: new Date().toISOString(),
+          unreadCount: 0,
+          isUnseen: false,
+        };
+        setRooms((prev) => [...prev, tempRoom]);
+        setActiveRoom(tempRoom);
+      }
+    };
+
+    window.addEventListener("openChat", handleOpenChat as EventListener);
+
+    return () => {
+      window.removeEventListener("openChat", handleOpenChat as EventListener);
+    };
+  }, [rooms]);
 
   return (
     <div className="chat-widget">
