@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import io, { Socket } from "socket.io-client";
 import axios from "axios";
 import "./ChatWidget.scss";
@@ -50,7 +50,13 @@ const ChatWidget = () => {
   const user = dealer || wholesaler;
   const userId = user?._id;
 
+  const activeRoomRef = useRef<ChatRoom | null>(null);
   useEffect(() => {
+    activeRoomRef.current = activeRoom;
+  }, [activeRoom]);
+
+  useEffect(() => {
+    if (!userId) return;
     axios
       .get<ChatRoom[]>(`${BACKEND_URL}/rooms/chat-list?userId=${userId}`)
       .then((res) => {
@@ -59,7 +65,7 @@ const ChatWidget = () => {
           setActiveRoom(res.data[0]);
         }
       });
-  }, []);
+  }, [userId]);
 
   useEffect(() => {
     if (!userId) return;
@@ -70,7 +76,8 @@ const ChatWidget = () => {
 
     s.on("newMessage", (msg: Message) => {
       setMessages((prev) => {
-        // Optimistic replacement
+        const currentRoom = activeRoomRef.current;
+
         const exists = prev.find(
           (m) =>
             m._id.startsWith("temp-") &&
@@ -80,23 +87,27 @@ const ChatWidget = () => {
         if (exists) {
           return prev.map((m) => (m._id === exists._id ? msg : m));
         }
-        // Add only if it's for the currently active room
-        return msg.roomId === activeRoom?.roomId ? [...prev, msg] : prev;
+        // if the message belongs to the currently open room → append
+        if (msg.roomId === currentRoom?.roomId) {
+          return [...prev, msg];
+        }
+
+        return prev;
       });
 
-      // Update sidebar
       setRooms((prev) =>
         prev.map((r) =>
           r.roomId === msg.roomId
             ? {
-              ...r,
-              lastMessage: msg,
-              lastMessageAt: msg.createdAt,
-              unreadCount:
-                msg.senderId !== userId && r.roomId !== activeRoom?.roomId
-                  ? r.unreadCount + 1
-                  : r.unreadCount,
-            }
+                ...r,
+                lastMessage: msg,
+                lastMessageAt: msg.createdAt,
+                unreadCount:
+                  msg.senderId !== userId &&
+                  r.roomId !== activeRoomRef.current?.roomId
+                    ? r.unreadCount + 1
+                    : r.unreadCount,
+              }
             : r
         )
       );
