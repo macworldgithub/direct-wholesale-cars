@@ -62,22 +62,29 @@ const ChatWidget = () => {
   }, []);
 
   useEffect(() => {
+    if (!userId) return;
+
     const s = io(`${BACKEND_URL}`, { query: { userId } });
 
-    s.on("connect", () => console.log("Socket connected"));
+    s.on("connect", () => console.log("✅ Socket connected"));
 
     s.on("newMessage", (msg: Message) => {
       setMessages((prev) => {
-        // If optimistic placeholder exists, replace it
-        const exists = prev.find((m) => m._id.startsWith("temp-") && m.text === msg.text && m.senderId === msg.senderId);
+        // Optimistic replacement
+        const exists = prev.find(
+          (m) =>
+            m._id.startsWith("temp-") &&
+            m.text === msg.text &&
+            m.senderId === msg.senderId
+        );
         if (exists) {
           return prev.map((m) => (m._id === exists._id ? msg : m));
         }
-        // Otherwise just add normally
+        // Add only if it's for the currently active room
         return msg.roomId === activeRoom?.roomId ? [...prev, msg] : prev;
       });
 
-      // Update sidebar rooms
+      // Update sidebar
       setRooms((prev) =>
         prev.map((r) =>
           r.roomId === msg.roomId
@@ -108,14 +115,13 @@ const ChatWidget = () => {
     return () => {
       s.disconnect();
     };
-  }, [activeRoom?.roomId]);
+  }, [userId]);
 
   useEffect(() => {
     if (!activeRoom) return;
+
     axios
-      .get<Message[]>(
-        `${BACKEND_URL}/messages/room/${activeRoom.roomId}?limit=50`
-      )
+      .get<Message[]>(`${BACKEND_URL}/messages/room/${activeRoom.roomId}?limit=50`)
       .then((res) => setMessages(res.data));
 
     setRooms((prev) =>
