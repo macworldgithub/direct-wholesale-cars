@@ -64,6 +64,15 @@
     animation: slideInLeft 0.35s ease forwards;
   }
 }
+.chat-link {
+  color: #1a73e8;
+  text-decoration: underline;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: none;
+  }
+}
 
 .typing-indicator {
   display: flex;
@@ -166,3 +175,5 @@
     transform: translateX(0) scale(1);
   }
 }
+
+
