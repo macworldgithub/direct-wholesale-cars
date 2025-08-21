@@ -260,6 +260,32 @@ export const deleteCarAd = createAsyncThunk<
   }
 });
 
+// API: DELETE /cars/{wholesalerId}/{vin}
+export interface DeleteCarResponse {
+  message: string;
+  vin: string;
+}
+
+export const deleteCarByWholesalerAndVin = createAsyncThunk<
+  DeleteCarResponse,
+  { wholesalerId: string; vin: string },
+  { rejectValue: string }
+>(
+  "cars/deleteByWholesalerAndVin",
+  async ({ wholesalerId, vin }, { rejectWithValue }) => {
+    try {
+      const response = await axios.delete<DeleteCarResponse>(
+        `${BACKEND_URL}/cars/${wholesalerId}/${vin}`
+      );
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to delete car"
+      );
+    }
+  }
+);
+
 interface EmailInquiryRequest {
   senderId: string;
   receiverId: string;

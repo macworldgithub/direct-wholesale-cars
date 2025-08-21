@@ -1,5 +1,3 @@
-
-
 "use client";
 
 import Banner from "@/components/UIComponents/Banner/Banner";
@@ -9,7 +7,7 @@ import "../../../app/cars/cars.scss";
 import Hero from "../Hero/Hero";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/store/store";
-import { fetchAllCarAds } from "@/api/cars";
+import { fetchAllCarAds, deleteCarByWholesalerAndVin } from "@/api/cars";
 import Dropdown from "@/components/UIComponents/Dropdown/Dropdown";
 import { CarAd } from "@/slices/carAdsSlice";
 // import { Pagination } from "@mui/material";
@@ -26,7 +24,7 @@ const CarsPage = () => {
   const { ads, pagination, loading } = useSelector(
     (state: RootState) => state.carAds
   );
-  console.log(ads)
+  console.log(ads);
   const [sortValue, setSortValue] = useState<string>(sortOptions[0].value);
   const [isSticky, setIsSticky] = useState(false);
   const router = useRouter();
@@ -41,9 +39,7 @@ const CarsPage = () => {
   }, []);
 
   const handleViewDetails = (car: CarAd) => {
-    router.push(
-      `/car_Details?wholesalerId=${car.wholesaler}&vin=${car.vin}`
-    );
+    router.push(`/car_Details?wholesalerId=${car.wholesaler}&vin=${car.vin}`);
   };
 
   useEffect(() => {
@@ -156,9 +152,7 @@ const CarsPage = () => {
                     <td className="fuel-type-cell">{car.fuelType}</td>
                     <td className="seats-cell">{car.seats}</td>
 
-                    <td className="price-cell">
-                      ${car.asking}
-                    </td>
+                    <td className="price-cell">${car.asking}</td>
                     <td className="status-cell">
                       <span
                         className={`status-badge ${
@@ -206,6 +200,41 @@ const CarsPage = () => {
                         }}
                       >
                         Message Seller
+                      </button>
+
+                      <button
+                        className=""
+                        style={{
+                          background: "#1800B2",
+                          color: "#fff",
+                          border: "none",
+                          borderRadius: "4px",
+                          padding: "6px 16px",
+                          fontWeight: 500,
+                          cursor: "pointer",
+                          transition: "background 0.2s",
+                        }}
+                        onClick={async () => {
+                          try {
+                            const confirmed = window.confirm(
+                              `Are you sure you want to delete car with VIN ${car.vin}?`
+                            );
+                            if (!confirmed) return;
+                            await dispatch(
+                              // @ts-ignore awaiting thunk result type
+                              deleteCarByWholesalerAndVin({
+                                wholesalerId: car.wholesaler,
+                                vin: car.vin,
+                              })
+                            );
+                            // Refresh list to ensure counts are accurate
+                            dispatch(fetchAllCarAds());
+                          } catch (e) {
+                            console.error(e);
+                          }
+                        }}
+                      >
+                        Delete
                       </button>
                     </td>
                   </tr>

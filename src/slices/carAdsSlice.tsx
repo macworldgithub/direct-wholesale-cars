@@ -6,6 +6,8 @@ import {
   updateCarAd,
   fetchCarsWithFilters,
   CarsApiResponse,
+  deleteCarByWholesalerAndVin,
+  DeleteCarResponse,
 } from "@/api/cars";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
@@ -191,7 +193,29 @@ const carAdsSlice = createSlice({
       .addCase(deleteCarAd.rejected, (state, action: PayloadAction<any>) => {
         state.loading = false;
         state.error = action.payload || "Failed to delete car ad";
-      });
+      })
+      // Handle delete by wholesaler and vin
+      .addCase(deleteCarByWholesalerAndVin.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(
+        deleteCarByWholesalerAndVin.fulfilled,
+        (state, action: PayloadAction<DeleteCarResponse>) => {
+          state.loading = false;
+          state.ads = state.ads.filter((ad) => ad.vin !== action.payload.vin);
+          if (state.selectedAd?.vin === action.payload.vin) {
+            state.selectedAd = null;
+          }
+        }
+      )
+      .addCase(
+        deleteCarByWholesalerAndVin.rejected,
+        (state, action: PayloadAction<any>) => {
+          state.loading = false;
+          state.error = action.payload || "Failed to delete car";
+        }
+      );
   },
 });
 
