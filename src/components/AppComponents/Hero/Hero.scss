@@ -107,7 +107,7 @@
   }
 
   .top-search-button {
-    background: linear-gradient(135deg, #1800B2, #4C1D95);
+    background: linear-gradient(135deg, #1800b2, #4c1d95);
     border: none;
     border-radius: 50%;
     width: 36px;
@@ -151,6 +151,17 @@
   @media (max-width: 768px) {
     width: 100%;
     max-width: 400px;
+
+    // Create a grid layout for mobile to position search button on right
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+
+    // Last item (search button) should be positioned on the right
+    .search-field:last-child {
+      justify-self: end;
+      width: auto;
+    }
   }
 }
 
@@ -159,6 +170,13 @@
 
   @media (max-width: 1024px) {
     width: 100%;
+  }
+
+  @media (max-width: 768px) {
+    // Override width for search button on mobile
+    &:last-child {
+      width: auto;
+    }
   }
 }
 
