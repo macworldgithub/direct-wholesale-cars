@@ -143,9 +143,9 @@ export default function Footer() {
                 info@omnisuiteai.com
               </a>
             </li>
-            {/* <li>
-              <a href="tel:+15551234567">+1 (555) 123-4567</a>
-            </li> */}
+             <li>
+              <a href="tel:+61435386534">+61 435 386 534</a>
+            </li> 
             <li>Sydney, Australia</li>
           </ul>
         </div>
