@@ -56,7 +56,7 @@ const Dashboard = () => {
       >
         <Tab label="Profile" />
         {user?.role === "wholesaler" && <Tab label="Add a Car" />}
-        {user?.role === "dealer" && <Tab label="Car Listing" />}
+        {user?.role === "wholesaler" && <Tab label="Car Listing" />}
       </Tabs>
 
       <Box sx={{ mt: 4 }}>
@@ -154,7 +154,7 @@ const Dashboard = () => {
             <CarAuctionForm />
           </Suspense>
         )}
-        {selectedTab === 2 && user?.role === "dealer" && (
+        {selectedTab === 2 && user?.role === "wholesaler" && (
           <Suspense fallback={<CircularProgress />}>
             <CarListing />
           </Suspense>
