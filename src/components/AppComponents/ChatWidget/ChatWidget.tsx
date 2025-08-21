@@ -209,27 +209,26 @@ const ChatWidget = () => {
   return (
     <div className="chat-widget">
       {!open && (
-        <button className="chat-toggle" onClick={() => setOpen(true)}>
+        <button onClick={() => setOpen(true)}>
           <ChatIcon />
         </button>
       )}
 
       {open && (
-        <div className="chat-app">
+        <div>
           {/* Sidebar */}
-          <aside className="sidebar">
-            <header className="sidebar-header">
+          <aside>
+            <header>
               <LocalizedHeading heading="Chats" level={6} />
-              <button className="close-btn" onClick={() => setOpen(false)}>
+              <button onClick={() => setOpen(false)}>
                 <CloseIcon />
               </button>
             </header>
-            <ul className="user-list">
+            <ul>
               {rooms.map((room) => (
                 <li
                   key={room.roomId}
-                  className={`user-item ${activeRoom?.roomId === room.roomId ? "active" : ""
-                    }`}
+                  
                   onClick={() => setActiveRoom(room)}
                 >
                   <img
@@ -237,13 +236,13 @@ const ChatWidget = () => {
                     alt={room.otherUser?.name}
                   />
                   <div>
-                    <p className="name">{room.otherUser?.name ?? "Unknown"}</p>
-                    <p className="last-msg">
+                    <p>{room.otherUser?.name ?? "Unknown"}</p>
+                    <p >
                       {room.lastMessage?.text ?? "No messages"}
                     </p>
                   </div>
                   {room.unreadCount > 0 && (
-                    <span className="unread">{room.unreadCount}</span>
+                    <span>{room.unreadCount}</span>
                   )}
                 </li>
               ))}
@@ -251,8 +250,8 @@ const ChatWidget = () => {
           </aside>
 
           {activeRoom && (
-            <section className="chat-window">
-              <header className="chat-header">
+            <section>
+              <header>
                 <img
                   src="/images/default-avatar.png"
                   alt={activeRoom.otherUser?.name}
@@ -263,19 +262,18 @@ const ChatWidget = () => {
                 />
               </header>
 
-              <div className="chat-messages">
+              <div>
                 {messages.map((msg) => (
                   <div
                     key={msg._id}
-                    className={`message ${msg.senderId === userId ? "user" : "bot"
-                      }`}
+                   
                   >
                     {msg.text}
                   </div>
                 ))}
               </div>
 
-              <footer className="chat-input-box">
+              <footer>
                 <LocalizedInput
                   name="chatMessage"
                   value={input}
@@ -283,7 +281,7 @@ const ChatWidget = () => {
                   placeholderKey="Type a message..."
                   size="lg"
                 />
-                <div className="chat-actions">
+                <div >
                   <LocalizedButton
                     label={<AttachFileIcon />}
                     variant="outlined"
@@ -297,7 +295,6 @@ const ChatWidget = () => {
                     size="sm"
                   />
                   <LocalizedButton
-                    className="send"
                     label={<SendIcon />}
                     variant="filled"
                     size="sm"
