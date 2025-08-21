@@ -268,7 +268,7 @@
 import Banner from "@/components/UIComponents/Banner/Banner";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import "../../../app/cars/cars.scss";
+import "./CarsPage.scss";
 import Hero from "../Hero/Hero";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/store/store";
@@ -398,20 +398,20 @@ const CarsPage = () => {
               <tbody>
                 {sortedAds.map((car) => (
                   <tr key={car._id} className="car-row">
-                    <td className="stock-cell">{car.stock}</td>
-                    <td className="vin-cell">{car.vin}</td>
-                    <td className="branch-cell">{car.branch}</td>
-                    <td className="bay-cell">{car.bayNumber}</td>
-                    <td className="description-cell">{car.description}</td>
-                    <td className="odometer-cell">
+                    <td className="stock-cell" data-label="Stock">{car.stock}</td>
+                    <td className="vin-cell" data-label="VIN">{car.vin}</td>
+                    <td className="branch-cell" data-label="Branch">{car.branch}</td>
+                    <td className="bay-cell" data-label="Bay">{car.bayNumber}</td>
+                    <td className="description-cell" data-label="Description">{car.description}</td>
+                    <td className="odometer-cell" data-label="Odometer">
                       {car.odometer.toLocaleString()} miles
                     </td>
-                    <td className="build-date-cell">{car.buildDate}</td>
-                    <td className="drive-type-cell">{car.driveType}</td>
-                    <td className="fuel-type-cell">{car.fuelType}</td>
-                    <td className="seats-cell">{car.seats}</td>
-                    <td className="price-cell">${car.asking}</td>
-                    <td className="status-cell">
+                    <td className="build-date-cell" data-label="Build Date">{car.buildDate}</td>
+                    <td className="drive-type-cell" data-label="Drive Type">{car.driveType}</td>
+                    <td className="fuel-type-cell" data-label="Fuel Type">{car.fuelType}</td>
+                    <td className="seats-cell" data-label="Seats">{car.seats}</td>
+                    <td className="price-cell" data-label="Asking Price">${car.asking}</td>
+                    <td className="status-cell" data-label="Status">
                       <span
                         className={`status-badge ${
                           car.available ? "available" : "unavailable"
@@ -420,35 +420,15 @@ const CarsPage = () => {
                         {car.available ? "Available" : "Unavailable"}
                       </span>
                     </td>
-                    <td className="actions-cell">
+                    <td className="actions-cell" data-label="Actions">
                       <button
                         className="view-details-btn"
-                        style={{
-                          background: "#1800B2",
-                          color: "#fff",
-                          border: "none",
-                          borderRadius: "4px",
-                          padding: "6px 16px",
-                          fontWeight: 500,
-                          cursor: "pointer",
-                          transition: "background 0.2s",
-                        }}
                         onClick={() => handleViewDetails(car)}
                       >
                         View Details
                       </button>
                       <button
                         className="view-details-btn"
-                        style={{
-                          background: "#1800B2",
-                          color: "#fff",
-                          border: "none",
-                          borderRadius: "4px",
-                          padding: "6px 16px",
-                          fontWeight: 500,
-                          cursor: "pointer",
-                          transition: "background 0.2s",
-                        }}
                         onClick={() => {
                           window.dispatchEvent(
                             new CustomEvent("openChat", {
@@ -464,16 +444,6 @@ const CarsPage = () => {
                       </button>
                       <button
                         className="view-details-btn"
-                        style={{
-                          background: "#1800B2",
-                          color: "#fff",
-                          border: "none",
-                          borderRadius: "4px",
-                          padding: "6px 16px",
-                          fontWeight: 500,
-                          cursor: "pointer",
-                          transition: "background 0.2s",
-                        }}
                         onClick={async () => {
                           try {
                             const confirmed = window.confirm(
