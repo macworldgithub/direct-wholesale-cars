@@ -139,14 +139,14 @@ export default function Footer() {
           <h4 className="footer-heading">Contact</h4>
           <ul className="footer-contact">
             <li>
-              <a href="mailto:info@directwholesalecars.com">
-                info@directwholesalecars.com
+              <a href="mailto:info@omnisuiteai.com">
+                info@omnisuiteai.com
               </a>
             </li>
             <li>
               <a href="tel:+15551234567">+1 (555) 123-4567</a>
             </li>
-            <li>123 Auto Plaza, City, State 12345</li>
+            <li>Sydney, Australia</li>
           </ul>
         </div>
       </div>
