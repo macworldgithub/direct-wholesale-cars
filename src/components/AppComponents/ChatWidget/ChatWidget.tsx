@@ -16,6 +16,7 @@ import LocalizedHeading from "@/components/UIComponents/LocalizedHeading/Localiz
 import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
 import { BACKEND_URL } from "@/config/server";
+import { FileTypeEnum } from "@/utils/file-type";
 
 interface ChatRoom {
   roomId: string;
@@ -31,6 +32,9 @@ interface Message {
   senderId: string;
   text?: string;
   images?: string[];
+  audios?: string[];
+  videos?: string[];
+  documents?: string[];
   createdAt: string;
   roomId: string;
 }
@@ -40,6 +44,10 @@ const ChatWidget = () => {
   const [rooms, setRooms] = useState<ChatRoom[]>([]);
   const [activeRoom, setActiveRoom] = useState<ChatRoom | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
+  console.log("messages", messages);
+  const [pendingUploads, setPendingUploads] = useState<
+    { key: string; preview: string; type: string }[]
+  >([]);
   const [input, setInput] = useState("");
   const [socket, setSocket] = useState<Socket | null>(null);
 
@@ -51,6 +59,60 @@ const ChatWidget = () => {
   const userId = user?._id;
 
   const activeRoomRef = useRef<ChatRoom | null>(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  const handleAttachClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files || !activeRoom) return;
+
+    const selectedFiles = Array.from(e.target.files);
+
+    try {
+      const filesDto = selectedFiles.map((file) => {
+        const ext = file.name.split(".").pop()?.toLowerCase() as FileTypeEnum;
+        return {
+          count: 1,
+          type: ext,
+          folder: "chat_uploads",
+        };
+      });
+
+      const { data } = await axios.post(`${BACKEND_URL}/messages/presigned-urls`, {
+        files: filesDto,
+      });
+
+      const uploaded: { key: string; preview: string; type: string }[] = [];
+
+      await Promise.all(
+        data.urls.map(async (urlObj: { key: string; url: string }, i: number) => {
+          const file = selectedFiles[i];
+
+          // Upload file to S3
+          await axios.put(urlObj.url, file, {
+            headers: { "Content-Type": file.type },
+          });
+
+          // Store uploaded key + preview
+          uploaded.push({
+            key: urlObj.key,
+            preview: URL.createObjectURL(file),
+            type: file.type,
+          });
+        })
+      );
+
+      // Add to pending state
+      setPendingUploads((prev) => [...prev, ...uploaded]);
+    } catch (err) {
+      console.error("Upload failed", err);
+    } finally {
+      e.target.value = "";
+    }
+  };
+
   useEffect(() => {
     activeRoomRef.current = activeRoom;
   }, [activeRoom]);
@@ -78,16 +140,23 @@ const ChatWidget = () => {
       setMessages((prev) => {
         const currentRoom = activeRoomRef.current;
 
-        const exists = prev.find(
+        const optimistic = prev.find(
           (m) =>
             m._id.startsWith("temp-") &&
-            m.text === msg.text &&
-            m.senderId === msg.senderId
+            (m.text === msg.text || (!!m.images && !!msg.images)) &&
+            m.senderId === msg.senderId &&
+            m.roomId === msg.roomId
         );
-        if (exists) {
-          return prev.map((m) => (m._id === exists._id ? msg : m));
+        if (optimistic) {
+          return prev.map((m) => (m._id === optimistic._id ? msg : m));
         }
-        // if the message belongs to the currently open room → append
+
+        // 2. Prevent duplicates (server re-broadcast of same message)
+        if (prev.some((m) => m._id === msg._id)) {
+          return prev;
+        }
+
+        // 3. Only add if it's for the active room
         if (msg.roomId === currentRoom?.roomId) {
           return [...prev, msg];
         }
@@ -99,15 +168,15 @@ const ChatWidget = () => {
         prev.map((r) =>
           r.roomId === msg.roomId
             ? {
-                ...r,
-                lastMessage: msg,
-                lastMessageAt: msg.createdAt,
-                unreadCount:
-                  msg.senderId !== userId &&
+              ...r,
+              lastMessage: msg,
+              lastMessageAt: msg.createdAt,
+              unreadCount:
+                msg.senderId !== userId &&
                   r.roomId !== activeRoomRef.current?.roomId
-                    ? r.unreadCount + 1
-                    : r.unreadCount,
-              }
+                  ? r.unreadCount + 1
+                  : r.unreadCount,
+            }
             : r
         )
       );
@@ -148,7 +217,8 @@ const ChatWidget = () => {
   }, [activeRoom, socket, userId]);
 
   const sendMessage = () => {
-    if (!input.trim() || !socket || !activeRoom) return;
+    if ((!input.trim() && pendingUploads.length === 0) || !socket || !activeRoom)
+      return;
 
     const tempId = `temp-${Date.now()}`;
 
@@ -159,6 +229,10 @@ const ChatWidget = () => {
       text: input,
       createdAt: new Date().toISOString(),
       roomId: activeRoom.roomId,
+      images: pendingUploads
+        .filter((f) => f.type.startsWith("image/"))
+        .map((f) => f.key),
+      // extend for videos/audio/docs later
     };
 
     // Immediately add to UI
@@ -169,9 +243,11 @@ const ChatWidget = () => {
       senderId: userId,
       receiverId: activeRoom.otherUser?.id,
       text: input,
+      images: optimisticMsg.images,
     });
 
     setInput("");
+    setPendingUploads([]);
   };
 
   useEffect(() => {
@@ -228,7 +304,7 @@ const ChatWidget = () => {
               {rooms.map((room) => (
                 <li
                   key={room.roomId}
-                  
+
                   onClick={() => setActiveRoom(room)}
                 >
                   <img
@@ -266,13 +342,40 @@ const ChatWidget = () => {
                 {messages.map((msg) => (
                   <div
                     key={msg._id}
-                   
+
                   >
                     {msg.text}
+                    {msg.images && msg.images.length > 0 && (
+                      <div className="message-images">
+                        {msg.images.map((img, i) => (
+                          <img
+                            key={`${msg._id}-img-${i}`}
+                            src={`https://directwholesale.s3.ap-southeast-2.amazonaws.com/${img}`}
+                            alt="chat image"
+                            style={{ maxWidth: "200px", borderRadius: "8px", marginTop: "6px" }}
+                          />
+                        ))}
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
-
+              {pendingUploads.length > 0 && (
+                <div className="pending-uploads">
+                  {pendingUploads.map((file, idx) => (
+                    <div key={idx} style={{ marginBottom: "8px" }}>
+                      {file.type.startsWith("image/") && (
+                        <img
+                          src={file.preview}
+                          alt="preview"
+                          style={{ width: "100px", borderRadius: "8px" }}
+                        />
+                      )}
+                      {/* Later: handle video/audio/doc preview */}
+                    </div>
+                  ))}
+                </div>
+              )}
               <footer>
                 <LocalizedInput
                   name="chatMessage"
@@ -281,12 +384,22 @@ const ChatWidget = () => {
                   placeholderKey="Type a message..."
                   size="lg"
                 />
-                <div >
+                <div>
+                  <input
+                    type="file"
+                    ref={fileInputRef}
+                    style={{ display: "none" }}
+                    multiple
+                    accept="image/*,video/*,audio/*,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv,.json,.xml,.html,.md,.zip,.rar,.7z,.tar,.gz"
+                    onChange={handleFileChange}
+                  />
+
                   <LocalizedButton
                     label={<AttachFileIcon />}
                     variant="outlined"
                     outlineColor="black"
                     size="sm"
+                    onClick={handleAttachClick}
                   />
                   <LocalizedButton
                     label={<MicIcon />}
