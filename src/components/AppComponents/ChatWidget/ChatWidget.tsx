@@ -39,15 +39,22 @@ interface Message {
   roomId: string;
 }
 
+type PendingFile = {
+  key: string;
+  preview: string;   // Local preview for images/videos
+  type: string;
+  name: string;
+  progress: number;  // 0-100
+  uploaded: boolean; // flag
+};
+
 const ChatWidget = () => {
   const [open, setOpen] = useState(false);
   const [rooms, setRooms] = useState<ChatRoom[]>([]);
   const [activeRoom, setActiveRoom] = useState<ChatRoom | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   console.log("messages", messages);
-  const [pendingUploads, setPendingUploads] = useState<
-    { key: string; preview: string; type: string }[]
-  >([]);
+  const [pendingUploads, setPendingUploads] = useState<PendingFile[]>([]);
   const [input, setInput] = useState("");
   const [socket, setSocket] = useState<Socket | null>(null);
 
@@ -71,46 +78,66 @@ const ChatWidget = () => {
     const selectedFiles = Array.from(e.target.files);
 
     try {
-      const filesDto = selectedFiles.map((file) => {
-        const ext = file.name.split(".").pop()?.toLowerCase() as FileTypeEnum;
-        return {
-          count: 1,
-          type: ext,
-          folder: "chat_uploads",
-        };
-      });
+      // 1️⃣ Request presigned URLs
+      const filesDto = selectedFiles.map((file) => ({
+        count: 1,
+        type: file.name.split(".").pop()?.toLowerCase() as FileTypeEnum,
+        folder: "chat_uploads",
+      }));
 
       const { data } = await axios.post(`${BACKEND_URL}/messages/presigned-urls`, {
         files: filesDto,
       });
 
-      const uploaded: { key: string; preview: string; type: string }[] = [];
+      // 2️⃣ Add files to pendingUploads with progress=0
+      const initialUploads: PendingFile[] = selectedFiles.map((file, i) => ({
+        key: data.urls[i].key,
+        preview: file.type.startsWith("image/") || file.type.startsWith("video/")
+          ? URL.createObjectURL(file)
+          : "",
+        type: file.type,
+        name: file.name,
+        progress: 0,
+        uploaded: false,
+      }));
+      setPendingUploads((prev) => [...prev, ...initialUploads]);
 
+      // 3️⃣ Upload with progress
       await Promise.all(
         data.urls.map(async (urlObj: { key: string; url: string }, i: number) => {
           const file = selectedFiles[i];
 
-          // Upload file to S3
           await axios.put(urlObj.url, file, {
             headers: { "Content-Type": file.type },
+            onUploadProgress: (progressEvent) => {
+              const percent = Math.round(
+                (progressEvent.loaded * 100) / (progressEvent.total || 1)
+              );
+              setPendingUploads((prev) =>
+                prev.map((p) =>
+                  p.key === urlObj.key ? { ...p, progress: percent } : p
+                )
+              );
+            },
           });
 
-          // Store uploaded key + preview
-          uploaded.push({
-            key: urlObj.key,
-            preview: URL.createObjectURL(file),
-            type: file.type,
-          });
+          // Mark as uploaded
+          setPendingUploads((prev) =>
+            prev.map((p) =>
+              p.key === urlObj.key ? { ...p, uploaded: true, progress: 100 } : p
+            )
+          );
         })
       );
-
-      // Add to pending state
-      setPendingUploads((prev) => [...prev, ...uploaded]);
     } catch (err) {
       console.error("Upload failed", err);
     } finally {
       e.target.value = "";
     }
+  };
+
+  const removePendingUpload = (index: number) => {
+    setPendingUploads((prev) => prev.filter((_, i) => i !== index));
   };
 
   useEffect(() => {
@@ -187,7 +214,7 @@ const ChatWidget = () => {
     });
 
     s.on("seen", ({ roomId, userId: seenBy }) => {
-      console.log(`👀 Messages in room ${roomId} seen by ${seenBy}`);
+      console.log(`Messages in room ${roomId} seen by ${seenBy}`);
     });
 
     setSocket(s);
@@ -229,10 +256,12 @@ const ChatWidget = () => {
       text: input,
       createdAt: new Date().toISOString(),
       roomId: activeRoom.roomId,
-      images: pendingUploads
-        .filter((f) => f.type.startsWith("image/"))
-        .map((f) => f.key),
-      // extend for videos/audio/docs later
+      images: pendingUploads.filter(f => f.type.startsWith("image/")).map(f => f.key),
+      videos: pendingUploads.filter(f => f.type.startsWith("video/")).map(f => f.key),
+      audios: pendingUploads.filter(f => f.type.startsWith("audio/")).map(f => f.key),
+      documents: pendingUploads.filter(f =>
+        f.type.startsWith("application/") || f.type.startsWith("text/")
+      ).map(f => f.key),
     };
 
     // Immediately add to UI
@@ -244,6 +273,9 @@ const ChatWidget = () => {
       receiverId: activeRoom.otherUser?.id,
       text: input,
       images: optimisticMsg.images,
+      videos: optimisticMsg.videos,
+      audios: optimisticMsg.audios,
+      documents: optimisticMsg.documents,
     });
 
     setInput("");
@@ -345,37 +377,135 @@ const ChatWidget = () => {
 
                   >
                     {msg.text}
-                    {msg.images && msg.images.length > 0 && (
-                      <div className="message-images">
-                        {msg.images.map((img, i) => (
-                          <img
-                            key={`${msg._id}-img-${i}`}
-                            src={`https://directwholesale.s3.ap-southeast-2.amazonaws.com/${img}`}
-                            alt="chat image"
-                            style={{ maxWidth: "200px", borderRadius: "8px", marginTop: "6px" }}
-                          />
-                        ))}
-                      </div>
-                    )}
+                    <div>
+                      {(msg.images || []).map((img, i) => (
+                        <img style={{ maxWidth: "200px", borderRadius: "8px", marginTop: "6px" }} key={`${msg._id}-img-${i}`} src={img} alt="chat image" />
+                      ))}
+
+                      {(msg.videos || []).map((vid, i) => (
+                        <video style={{ maxWidth: "200px", borderRadius: "8px", marginTop: "6px" }} key={`${msg._id}-vid-${i}`} src={vid} controls />
+                      ))}
+
+                      {(msg.audios || []).map((aud, i) => (
+                        <audio key={`${msg._id}-aud-${i}`} controls src={aud} />
+                      ))}
+
+                      {(msg.documents || []).map((doc, i) => {
+                        const fileName = doc.split("/").pop();
+                        return (
+                          <a style={{
+                            display: "inline-block",
+                            marginTop: "6px",
+                            padding: "6px 10px",
+                            border: "1px solid #ccc",
+                            borderRadius: "6px",
+                            background: "#f5f5f5",
+                            color: "black",
+                            textDecoration: "none",
+                            maxWidth: "200px",
+                            whiteSpace: "nowrap",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                          }} key={`${msg._id}-doc-${i}`} href={doc} target="_blank" rel="noopener noreferrer">
+                            📄 {fileName}
+                          </a>
+                        );
+                      })}
+                    </div>
+
                   </div>
                 ))}
               </div>
-              {pendingUploads.length > 0 && (
-                <div className="pending-uploads">
-                  {pendingUploads.map((file, idx) => (
-                    <div key={idx} style={{ marginBottom: "8px" }}>
-                      {file.type.startsWith("image/") && (
-                        <img
-                          src={file.preview}
-                          alt="preview"
-                          style={{ width: "100px", borderRadius: "8px" }}
-                        />
-                      )}
-                      {/* Later: handle video/audio/doc preview */}
+              {pendingUploads.map((file, idx) => (
+                <div
+                  key={idx}
+                  style={{
+                    marginBottom: "8px",
+                    position: "relative",
+                    display: "inline-block",
+                    width: "160px",
+                  }}
+                >
+                  {/* Cancel / remove button */}
+                  <button
+                    onClick={() => removePendingUpload(idx)}
+                    style={{
+                      position: "absolute",
+                      top: "2px",
+                      right: "2px",
+                      background: "rgba(0,0,0,0.6)",
+                      color: "white",
+                      border: "none",
+                      borderRadius: "50%",
+                      width: "20px",
+                      height: "20px",
+                      cursor: "pointer",
+                    }}
+                  >
+                    ✕
+                  </button>
+
+                  {/* File preview */}
+                  {file.type.startsWith("image/") && (
+                    <img src={file.preview} alt="preview" style={{ width: "100%", borderRadius: "8px" }} />
+                  )}
+
+                  {file.type.startsWith("video/") && (
+                    <video
+                      src={file.preview}
+                      controls
+                      style={{ width: "100%", borderRadius: "8px" }}
+                    />
+                  )}
+
+                  {file.type.startsWith("audio/") && (
+                    <audio src={file.preview} controls style={{ width: "100%" }} />
+                  )}
+
+                  {file.type.startsWith("application/") && (
+                    <div
+                      style={{
+                        padding: "6px 10px",
+                        border: "1px solid #ccc",
+                        borderRadius: "6px",
+                        background: "#f5f5f5",
+                        color: "black",
+                        textAlign: "center",
+                        fontSize: "14px",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      📄 {file.name}
                     </div>
-                  ))}
+                  )}
+
+                  {/* Progress Bar */}
+                  {!file.uploaded && (
+                    <div style={{ marginTop: "4px", width: "100%" }}>
+                      <div
+                        style={{
+                          height: "6px",
+                          background: "#ddd",
+                          borderRadius: "3px",
+                          overflow: "hidden",
+                        }}
+                      >
+                        <div
+                          style={{
+                            width: `${file.progress}%`,
+                            height: "100%",
+                            background: "#007bff",
+                            transition: "width 0.3s",
+                          }}
+                        />
+                      </div>
+                      <span style={{ fontSize: "12px" }}>{file.progress}%</span>
+                    </div>
+                  )}
                 </div>
-              )}
+              ))}
               <footer>
                 <LocalizedInput
                   name="chatMessage"
@@ -400,12 +530,6 @@ const ChatWidget = () => {
                     outlineColor="black"
                     size="sm"
                     onClick={handleAttachClick}
-                  />
-                  <LocalizedButton
-                    label={<MicIcon />}
-                    variant="outlined"
-                    outlineColor="black"
-                    size="sm"
                   />
                   <LocalizedButton
                     label={<SendIcon />}
