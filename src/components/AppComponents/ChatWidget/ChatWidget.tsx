@@ -41,10 +41,10 @@ interface Message {
 
 type PendingFile = {
   key: string;
-  preview: string;   // Local preview for images/videos
+  preview: string; // Local preview for images/videos
   type: string;
   name: string;
-  progress: number;  // 0-100
+  progress: number; // 0-100
   uploaded: boolean; // flag
 };
 
@@ -85,16 +85,20 @@ const ChatWidget = () => {
         folder: "chat_uploads",
       }));
 
-      const { data } = await axios.post(`${BACKEND_URL}/messages/presigned-urls`, {
-        files: filesDto,
-      });
+      const { data } = await axios.post(
+        `${BACKEND_URL}/messages/presigned-urls`,
+        {
+          files: filesDto,
+        }
+      );
 
       // 2️⃣ Add files to pendingUploads with progress=0
       const initialUploads: PendingFile[] = selectedFiles.map((file, i) => ({
         key: data.urls[i].key,
-        preview: file.type.startsWith("image/") || file.type.startsWith("video/")
-          ? URL.createObjectURL(file)
-          : "",
+        preview:
+          file.type.startsWith("image/") || file.type.startsWith("video/")
+            ? URL.createObjectURL(file)
+            : "",
         type: file.type,
         name: file.name,
         progress: 0,
@@ -104,30 +108,34 @@ const ChatWidget = () => {
 
       // 3️⃣ Upload with progress
       await Promise.all(
-        data.urls.map(async (urlObj: { key: string; url: string }, i: number) => {
-          const file = selectedFiles[i];
+        data.urls.map(
+          async (urlObj: { key: string; url: string }, i: number) => {
+            const file = selectedFiles[i];
 
-          await axios.put(urlObj.url, file, {
-            headers: { "Content-Type": file.type },
-            onUploadProgress: (progressEvent) => {
-              const percent = Math.round(
-                (progressEvent.loaded * 100) / (progressEvent.total || 1)
-              );
-              setPendingUploads((prev) =>
-                prev.map((p) =>
-                  p.key === urlObj.key ? { ...p, progress: percent } : p
-                )
-              );
-            },
-          });
+            await axios.put(urlObj.url, file, {
+              headers: { "Content-Type": file.type },
+              onUploadProgress: (progressEvent) => {
+                const percent = Math.round(
+                  (progressEvent.loaded * 100) / (progressEvent.total || 1)
+                );
+                setPendingUploads((prev) =>
+                  prev.map((p) =>
+                    p.key === urlObj.key ? { ...p, progress: percent } : p
+                  )
+                );
+              },
+            });
 
-          // Mark as uploaded
-          setPendingUploads((prev) =>
-            prev.map((p) =>
-              p.key === urlObj.key ? { ...p, uploaded: true, progress: 100 } : p
-            )
-          );
-        })
+            // Mark as uploaded
+            setPendingUploads((prev) =>
+              prev.map((p) =>
+                p.key === urlObj.key
+                  ? { ...p, uploaded: true, progress: 100 }
+                  : p
+              )
+            );
+          }
+        )
       );
     } catch (err) {
       console.error("Upload failed", err);
@@ -161,7 +169,7 @@ const ChatWidget = () => {
 
     const s = io(`${BACKEND_URL}`, { query: { userId } });
 
-    s.on("connect", () => console.log("✅ Socket connected"));
+    s.on("connect", () => console.log("Socket connected"));
 
     s.on("newMessage", (msg: Message) => {
       setMessages((prev) => {
@@ -195,15 +203,15 @@ const ChatWidget = () => {
         prev.map((r) =>
           r.roomId === msg.roomId
             ? {
-              ...r,
-              lastMessage: msg,
-              lastMessageAt: msg.createdAt,
-              unreadCount:
-                msg.senderId !== userId &&
+                ...r,
+                lastMessage: msg,
+                lastMessageAt: msg.createdAt,
+                unreadCount:
+                  msg.senderId !== userId &&
                   r.roomId !== activeRoomRef.current?.roomId
-                  ? r.unreadCount + 1
-                  : r.unreadCount,
-            }
+                    ? r.unreadCount + 1
+                    : r.unreadCount,
+              }
             : r
         )
       );
@@ -228,7 +236,9 @@ const ChatWidget = () => {
     if (!activeRoom) return;
 
     axios
-      .get<Message[]>(`${BACKEND_URL}/messages/room/${activeRoom.roomId}?limit=50`)
+      .get<Message[]>(
+        `${BACKEND_URL}/messages/room/${activeRoom.roomId}?limit=50`
+      )
       .then((res) => setMessages(res.data));
 
     setRooms((prev) =>
@@ -244,7 +254,11 @@ const ChatWidget = () => {
   }, [activeRoom, socket, userId]);
 
   const sendMessage = () => {
-    if ((!input.trim() && pendingUploads.length === 0) || !socket || !activeRoom)
+    if (
+      (!input.trim() && pendingUploads.length === 0) ||
+      !socket ||
+      !activeRoom
+    )
       return;
 
     const tempId = `temp-${Date.now()}`;
@@ -256,12 +270,20 @@ const ChatWidget = () => {
       text: input,
       createdAt: new Date().toISOString(),
       roomId: activeRoom.roomId,
-      images: pendingUploads.filter(f => f.type.startsWith("image/")).map(f => f.key),
-      videos: pendingUploads.filter(f => f.type.startsWith("video/")).map(f => f.key),
-      audios: pendingUploads.filter(f => f.type.startsWith("audio/")).map(f => f.key),
-      documents: pendingUploads.filter(f =>
-        f.type.startsWith("application/") || f.type.startsWith("text/")
-      ).map(f => f.key),
+      images: pendingUploads
+        .filter((f) => f.type.startsWith("image/"))
+        .map((f) => f.key),
+      videos: pendingUploads
+        .filter((f) => f.type.startsWith("video/"))
+        .map((f) => f.key),
+      audios: pendingUploads
+        .filter((f) => f.type.startsWith("audio/"))
+        .map((f) => f.key),
+      documents: pendingUploads
+        .filter(
+          (f) => f.type.startsWith("application/") || f.type.startsWith("text/")
+        )
+        .map((f) => f.key),
     };
 
     // Immediately add to UI
@@ -283,7 +305,9 @@ const ChatWidget = () => {
   };
 
   useEffect(() => {
-    const handleOpenChat = (e: CustomEvent<{ receiverId: string; name: string }>) => {
+    const handleOpenChat = (
+      e: CustomEvent<{ receiverId: string; name: string }>
+    ) => {
       const { receiverId, name } = e.detail;
       setOpen(true);
 
@@ -334,24 +358,16 @@ const ChatWidget = () => {
             </header>
             <ul>
               {rooms.map((room) => (
-                <li
-                  key={room.roomId}
-
-                  onClick={() => setActiveRoom(room)}
-                >
+                <li key={room.roomId} onClick={() => setActiveRoom(room)}>
                   <img
                     src="/images/default-avatar.png"
                     alt={room.otherUser?.name}
                   />
                   <div>
                     <p>{room.otherUser?.name ?? "Unknown"}</p>
-                    <p >
-                      {room.lastMessage?.text ?? "No messages"}
-                    </p>
+                    <p>{room.lastMessage?.text ?? "No messages"}</p>
                   </div>
-                  {room.unreadCount > 0 && (
-                    <span>{room.unreadCount}</span>
-                  )}
+                  {room.unreadCount > 0 && <span>{room.unreadCount}</span>}
                 </li>
               ))}
             </ul>
@@ -371,51 +387,65 @@ const ChatWidget = () => {
               </header>
 
               <div>
-                {messages.map((msg) => (
-                  <div
-                    key={msg._id}
+                {messages.map((msg) => {
+                  const fromMe = msg.senderId === userId; 
+                  return (
+                    <div
+                      key={msg._id}
+                      className={`message-bubble ${
+                        msg.text ? "text-msg" : "media-msg"
+                      } ${fromMe ? "from-me" : "from-them"}`}
+                    >
+                      {msg.text && <p>{msg.text}</p>}
 
-                  >
-                    {msg.text}
-                    <div>
-                      {(msg.images || []).map((img, i) => (
-                        <img style={{ maxWidth: "200px", borderRadius: "8px", marginTop: "6px" }} key={`${msg._id}-img-${i}`} src={img} alt="chat image" />
-                      ))}
+                      <div className="attachments">
+                        {(msg.images || []).map((img, i) => (
+                          <img
+                            key={`${msg._id}-img-${i}`}
+                            src={img}
+                            alt="chat image"
+                            className="chat-media"
+                          />
+                        ))}
 
-                      {(msg.videos || []).map((vid, i) => (
-                        <video style={{ maxWidth: "200px", borderRadius: "8px", marginTop: "6px" }} key={`${msg._id}-vid-${i}`} src={vid} controls />
-                      ))}
+                        {(msg.videos || []).map((vid, i) => (
+                          <video
+                            key={`${msg._id}-vid-${i}`}
+                            src={vid}
+                            controls
+                            className="chat-media"
+                          />
+                        ))}
 
-                      {(msg.audios || []).map((aud, i) => (
-                        <audio key={`${msg._id}-aud-${i}`} controls src={aud} />
-                      ))}
+                        {(msg.audios || []).map((aud, i) => (
+                          <audio
+                            key={`${msg._id}-aud-${i}`}
+                            controls
+                            src={aud}
+                            className="chat-audio"
+                          />
+                        ))}
 
-                      {(msg.documents || []).map((doc, i) => {
-                        const fileName = doc.split("/").pop();
-                        return (
-                          <a style={{
-                            display: "inline-block",
-                            marginTop: "6px",
-                            padding: "6px 10px",
-                            border: "1px solid #ccc",
-                            borderRadius: "6px",
-                            background: "#f5f5f5",
-                            color: "black",
-                            textDecoration: "none",
-                            maxWidth: "200px",
-                            whiteSpace: "nowrap",
-                            overflow: "hidden",
-                            textOverflow: "ellipsis",
-                          }} key={`${msg._id}-doc-${i}`} href={doc} target="_blank" rel="noopener noreferrer">
-                            📄 {fileName}
-                          </a>
-                        );
-                      })}
+                        {(msg.documents || []).map((doc, i) => {
+                          const fileName = doc.split("/").pop();
+                          return (
+                            <a
+                              key={`${msg._id}-doc-${i}`}
+                              href={doc}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="chat-doc"
+                            >
+                              📄 {fileName}
+                            </a>
+                          );
+                        })}
+                      </div>
                     </div>
-
-                  </div>
-                ))}
+                  );
+                })}
               </div>
+
               {pendingUploads.map((file, idx) => (
                 <div
                   key={idx}
@@ -447,7 +477,11 @@ const ChatWidget = () => {
 
                   {/* File preview */}
                   {file.type.startsWith("image/") && (
-                    <img src={file.preview} alt="preview" style={{ width: "100%", borderRadius: "8px" }} />
+                    <img
+                      src={file.preview}
+                      alt="preview"
+                      style={{ width: "100%", borderRadius: "8px" }}
+                    />
                   )}
 
                   {file.type.startsWith("video/") && (
@@ -459,7 +493,11 @@ const ChatWidget = () => {
                   )}
 
                   {file.type.startsWith("audio/") && (
-                    <audio src={file.preview} controls style={{ width: "100%" }} />
+                    <audio
+                      src={file.preview}
+                      controls
+                      style={{ width: "100%" }}
+                    />
                   )}
 
                   {file.type.startsWith("application/") && (
