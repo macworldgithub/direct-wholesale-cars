@@ -8,7 +8,6 @@ import Navbar from "@/components/AppComponents/Navbar/Navbar";
 import Footer from "@/components/AppComponents/Footer/Footer";
 import { Providers } from "./providers";
 import { LayoutClientWrapper } from "@/components/AppComponents/LayoutClientWrapper";
-import ChatWidget from "@/components/AppComponents/ChatWidget/ChatWidget";
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -36,7 +35,6 @@ export default function RootLayout({
             <LayoutClientWrapper>
               <main className="layout-content">{children}</main>
             </LayoutClientWrapper>
-            <ChatWidget />
             <Footer />
           </div>
         </Providers>
