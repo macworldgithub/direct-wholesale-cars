@@ -72,12 +72,12 @@ const features = [
 
 const networkSteps = [
   {
-    image: <img src="/images/application.png" alt="Application" />,
+    image: <img src="/images/Application.png" alt="Application" />,
     title: "Application",
     subtitle: "Submit your dealer application with business documentation",
   },
   {
-    image: <img src="/images/verification.png" alt="Verification" />,
+    image: <img src="/images/Verification.png" alt="Verification" />,
     title: "Verification",
     subtitle: "Our team verifies your credentials and business license",
   },
