@@ -291,6 +291,17 @@
   max-width: 1400px;
   margin: 0 auto;
   padding: 0 1rem;
+
+  /* Add loading state to prevent layout shift */
+  &.table-loading {
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+
+  &.table-ready {
+    opacity: 1;
+    transition: opacity 0.2s ease;
+  }
 }
 
 /* Cars table */
@@ -339,88 +350,121 @@
     }
   }
 
-  /* Mobile card layout */
-  @media (max-width: 768px) {
-    display: block;
+  /* Mobile card layout - Enhanced with better CSS application */
+  @media screen and (max-width: 768px) {
+    display: block !important;
+    border-radius: 0;
+    box-shadow: none;
 
     thead {
-      display: none; /* Hide table header on mobile */
+      display: none !important; /* Force hide table header on mobile */
     }
 
     tbody {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
+      display: block !important;
+      width: 100% !important;
 
       tr {
-        display: flex;
-        flex-direction: column;
-        border: 1px solid #e5e7eb;
-        border-radius: 8px;
-        padding: 1rem;
-        background-color: #fafafa;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        display: block !important;
+        width: 100% !important;
+        border: 1px solid #e5e7eb !important;
+        border-radius: 8px !important;
+        padding: 1rem !important;
+        margin-bottom: 1rem !important;
+        background-color: white !important;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+        position: relative;
 
         &:nth-child(even) {
-          background-color: #f5f5f5;
+          background-color: #f9fafb !important;
         }
 
         &:hover {
-          background-color: #f0f0f0;
+          background-color: #f5f5f5 !important;
+        }
+
+        &:last-child {
+          border-bottom: 1px solid #e5e7eb !important;
+          margin-bottom: 0;
         }
       }
 
       td {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 0.5rem 0;
-        font-size: clamp(0.75rem, 2vw, 0.85rem);
-        border-bottom: 1px solid #eee;
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        padding: 0.6rem 0 !important;
+        font-size: clamp(0.75rem, 2vw, 0.85rem) !important;
+        border-bottom: 1px solid #eee !important;
+        border: none !important;
+        width: 100% !important;
+        text-align: left !important;
+        position: relative;
+        min-height: 1.5rem;
 
         &:last-child {
-          border-bottom: none;
+          border-bottom: none !important;
         }
 
         &:before {
-          content: attr(data-label);
-          font-weight: 600;
-          color: #1800b2;
-          text-transform: uppercase;
-          font-size: clamp(0.7rem, 1.8vw, 0.8rem);
-          flex: 0 0 40%;
+          content: attr(data-label) ": " !important;
+          font-weight: 600 !important;
+          color: #1800b2 !important;
+          text-transform: uppercase !important;
+          font-size: clamp(0.7rem, 1.8vw, 0.8rem) !important;
+          flex: 0 0 40% !important;
+          text-align: left !important;
+          padding-right: 0.5rem;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        /* Content wrapper for mobile */
+        .mobile-content {
+          flex: 1;
+          text-align: right;
+          word-break: break-word;
         }
 
         /* Hide less critical columns on mobile */
-        &:nth-child(3), /* Branch */
-        &:nth-child(4), /* Bay */
-        &:nth-child(7), /* Build Date */
-        &:nth-child(8), /* Drive Type */
-        &:nth-child(9) /* Fuel Type */ {
-          display: none;
+        &.branch-cell,
+        &.bay-cell,
+        &.build-date-cell,
+        &.drive-type-cell,
+        &.fuel-type-cell {
+          display: none !important;
         }
       }
     }
   }
 
-  @media (max-width: 480px) {
+  @media screen and (max-width: 480px) {
     tbody td {
-      font-size: clamp(0.7rem, 1.8vw, 0.8rem);
+      font-size: clamp(0.7rem, 1.8vw, 0.8rem) !important;
+      padding: 0.5rem 0 !important;
 
       &:before {
-        font-size: clamp(0.65rem, 1.6vw, 0.75rem);
-        flex: 0 0 45%;
+        font-size: clamp(0.65rem, 1.6vw, 0.75rem) !important;
+        flex: 0 0 45% !important;
       }
     }
   }
 
-  @media (max-width: 360px) {
+  @media screen and (max-width: 360px) {
+    tbody {
+      tr {
+        padding: 0.8rem !important;
+      }
+    }
+
     tbody td {
-      font-size: clamp(0.65rem, 1.6vw, 0.75rem);
+      font-size: clamp(0.65rem, 1.6vw, 0.75rem) !important;
+      padding: 0.4rem 0 !important;
 
       &:before {
-        font-size: clamp(0.6rem, 1.4vw, 0.7rem);
-        flex: 0 0 50%;
+        font-size: clamp(0.6rem, 1.4vw, 0.7rem) !important;
+        flex: 0 0 50% !important;
       }
     }
   }
@@ -435,9 +479,12 @@
 .vin-cell {
   font-family: 'Courier New', monospace;
   font-size: clamp(0.7rem, 1.8vw, 0.8rem);
-  background-color: #f3f4f6;
-  padding: 0.25rem 0.5rem;
-  border-radius: 4px;
+  
+  @media screen and (min-width: 769px) {
+    background-color: #f3f4f6;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+  }
 }
 
 .branch-cell {
@@ -445,13 +492,26 @@
 }
 
 .bay-cell {
-  text-align: center;
   font-weight: 600;
   color: #059669;
+  
+  @media screen and (min-width: 769px) {
+    text-align: center;
+  }
 }
 
 .description-cell {
   line-height: 1.4;
+  
+  @media screen and (max-width: 768px) {
+    word-break: break-word;
+    
+    &:after {
+      content: "";
+      flex: 1;
+      text-align: right;
+    }
+  }
 }
 
 .odometer-cell {
@@ -459,7 +519,9 @@
 }
 
 .build-date-cell {
-  text-align: center;
+  @media screen and (min-width: 769px) {
+    text-align: center;
+  }
 }
 
 .drive-type-cell {
@@ -471,17 +533,16 @@
 }
 
 .seats-cell {
-
   font-weight: 600;
 }
 
 .price-cell {
   font-weight: 700;
   color: #059669;
+  font-size: clamp(0.8rem, 2vw, 0.95rem);
 }
 
 .status-cell {
-
   .status-badge {
     display: inline-block;
     padding: clamp(0.2rem, 0.5vw, 0.25rem) clamp(0.6rem, 1.5vw, 0.75rem);
@@ -506,10 +567,20 @@
 }
 
 .actions-cell {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  justify-content: center;
+  display: block !important;
+  
+  @media screen and (min-width: 769px) {
+    display: flex !important;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: center;
+  }
+
+  @media screen and (max-width: 768px) {
+    &:before {
+      display: none !important;
+    }
+  }
 
   .view-details-btn {
     background: linear-gradient(135deg, #1800b2, #4c1d95);
@@ -521,9 +592,16 @@
     font-weight: 500;
     cursor: pointer;
     transition: all 0.2s ease;
-    flex: 1;
-    min-width: clamp(70px, 20vw, 80px);
     text-align: center;
+    margin: 0.25rem 0;
+    width: 100%;
+
+    @media screen and (min-width: 769px) {
+      flex: 1;
+      min-width: clamp(70px, 20vw, 80px);
+      width: auto;
+      margin: 0;
+    }
 
     &:hover {
       transform: translateY(-1px);
@@ -534,17 +612,12 @@
       transform: translateY(0);
     }
 
-    @media (max-width: 768px) {
-      flex: 1 1 100%;
-      min-width: 100%;
-    }
-
-    @media (max-width: 480px) {
+    @media screen and (max-width: 480px) {
       font-size: clamp(0.65rem, 1.6vw, 0.75rem);
       padding: clamp(0.25rem, 0.6vw, 0.3rem) clamp(0.5rem, 1.2vw, 0.6rem);
     }
 
-    @media (max-width: 360px) {
+    @media screen and (max-width: 360px) {
       font-size: clamp(0.6rem, 1.4vw, 0.7rem);
     }
   }
@@ -568,5 +641,39 @@
 
   @media (max-width: 360px) {
     font-size: clamp(0.75rem, 1.8vw, 0.85rem);
+  }
+}
+
+/* Force proper mobile layout with CSS Grid fallback */
+@media screen and (max-width: 768px) {
+  .cars-table tbody tr {
+    display: grid !important;
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .cars-table tbody td {
+    display: grid !important;
+    grid-template-columns: 40% 1fr;
+    align-items: center;
+    gap: 0.5rem;
+    
+    &:before {
+      grid-column: 1;
+      margin: 0;
+    }
+  }
+
+  .actions-cell {
+    grid-template-columns: 1fr !important;
+    gap: 0.25rem;
+
+    &:before {
+      display: none !important;
+    }
+
+    .view-details-btn {
+      grid-column: 1 / -1;
+    }
   }
 }

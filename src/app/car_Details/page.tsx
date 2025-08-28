@@ -226,11 +226,11 @@ const CarDetailsOverviewPage = () => {
 
         <div className="right-column">
           <Card className="price-card">
-            <LocalizedHeading
+            {/* <LocalizedHeading
               heading={carData.title ?? "Untitled Car"}
               level={2}
               className="car-title"
-            />
+            /> */}
             {carData.price && (
               <div className="price-display">
                 <LocalizedText
