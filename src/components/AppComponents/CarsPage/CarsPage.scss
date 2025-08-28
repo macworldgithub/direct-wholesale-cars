@@ -1,14 +1,14 @@
 /* Base styles */
 .main-container {
   width: 100%;
-  max-width: 1920px; /* Increased max-width for ultra-wide screens */
+  max-width: 1920px;
   margin: 0 auto;
   box-sizing: border-box;
 }
 
 .page-content {
   padding: clamp(0.5rem, 2vw, 1rem);
-  min-height: 100vh; /* Ensure content fills viewport height */
+  min-height: 100vh;
   box-sizing: border-box;
 }
 
@@ -53,7 +53,7 @@
       padding-left: clamp(0.4rem, 1vw, 0.5rem);
     }
     
-    @media (max-width: 320px) { /* Support for very small screens */
+    @media (max-width: 320px) {
       font-size: clamp(0.9rem, 2.2vw, 1rem);
     }
   }
@@ -163,7 +163,7 @@
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
-  max-width: 1920px; /* Match main-container */
+  max-width: 1920px;
   margin: clamp(1rem, 2vw, 1.5rem) auto;
   padding: 0 clamp(0.5rem, 1vw, 1rem);
   gap: clamp(0.5rem, 1.5vw, 1rem);
@@ -343,7 +343,7 @@
 
 /* Cars container with responsive layout */
 .cars-container {
-  max-width: 1920px; /* Match main-container */
+  max-width: 1920px;
   margin: 0 auto;
   padding: 0 clamp(0.5rem, 1vw, 1rem);
   
@@ -361,9 +361,9 @@
 /* Desktop table - hidden on tablet and below */
 .desktop-table {
   display: block;
-  overflow-x: auto; /* Enable horizontal scroll for small screens */
+  overflow-x: auto;
   
-  @media (max-width: 1024px) { /* Adjusted breakpoint for tablets */
+  @media (max-width: 1024px) {
     display: none;
   }
 }
@@ -382,7 +382,7 @@
 /* Desktop table styles */
 .cars-table {
   width: 100%;
-  min-width: 800px; /* Ensure table doesn’t collapse on smaller desktops */
+  min-width: 800px;
   border-collapse: collapse;
   background: white;
   border-radius: 8px;
@@ -401,7 +401,7 @@
       text-transform: uppercase;
       letter-spacing: 0.5px;
       border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      white-space: nowrap; /* Prevent text wrapping in headers */
+      white-space: nowrap;
     }
   }
   
@@ -424,10 +424,10 @@
       font-size: clamp(0.7rem, 1.8vw, 0.8rem);
       color: #374151;
       vertical-align: middle;
-      white-space: nowrap; /* Prevent text wrapping */
+      white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      max-width: 150px; /* Limit column width to prevent overflow */
+      max-width: 150px;
     }
   }
 }
@@ -435,15 +435,25 @@
 /* Mobile card styles */
 .car-card {
   background: white;
+  border: clamp(1px, 0.2vw, 2px) solid #D1D5DB;
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  margin-bottom: clamp(0.5rem, 1.5vw, 0.8rem);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: clamp(0.8rem, 2vw, 1rem);
   overflow: hidden;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
   
   &:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    border-color: #9CA3AF;
+  }
+  
+  @media (max-width: 480px) {
+    margin-bottom: clamp(0.6rem, 1.8vw, 0.8rem);
+  }
+  
+  @media (max-width: 320px) {
+    margin-bottom: clamp(0.5rem, 1.5vw, 0.7rem);
   }
 }
 
@@ -775,11 +785,11 @@
   .banner-cta,
   .action-btn,
   .view-details-btn {
-    font-weight: 600; /* Slightly bolder for clarity */
+    font-weight: 600;
   }
   
   .spinner {
-    border-width: clamp(1.5px, 0.3vw, 2px); /* Thinner borders for sharper rendering */
+    border-width: clamp(1.5px, 0.3vw, 2px);
   }
 }
 
@@ -804,7 +814,7 @@
   .main-container,
   .cars-container,
   .results-header {
-    max-width: 2400px; /* Allow more content width */
+    max-width: 2400px;
   }
   
   .banner-title {

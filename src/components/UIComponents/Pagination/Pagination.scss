@@ -44,30 +44,32 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.75rem;
-  margin-top: 2.5rem;
-  padding: 1rem 1.5rem;
+  gap: clamp(0.5rem, 1vw, 0.75rem);
+  margin-top: clamp(1.5rem, 3vw, 2.5rem);
+  padding: clamp(0.5rem, 1.5vw, 1rem) clamp(1rem, 2vw, 1.5rem);
   background: linear-gradient(
     135deg,
     rgba(64, 10, 192, 0.1),
     rgba(24, 0, 178, 0.1)
   );
+  /* Fallback for browsers that don't support backdrop-filter */
+  background-color: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(10px);
-  border-radius: 30px;
+  border-radius: clamp(20px, 3vw, 30px);
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .pagination button {
-  padding: 0.75rem 1.25rem;
-  min-width: 48px;
-  height: 48px;
+  padding: clamp(0.5rem, 1vw, 0.75rem) clamp(0.75rem, 1.5vw, 1.25rem);
+  min-width: clamp(36px, 5vw, 48px);
+  height: clamp(36px, 5vw, 48px);
   border: none;
   background: rgba(255, 255, 255, 0.9);
   color: #1800b2;
   font-weight: 600;
-  font-size: 1rem;
-  border-radius: 24px;
+  font-size: clamp(0.75rem, 1.5vw, 1rem);
+  border-radius: clamp(16px, 2vw, 24px);
   cursor: pointer;
   transition: all 0.4s ease;
   display: flex;
@@ -99,10 +101,178 @@
 }
 
 .pagination-ellipsis {
-  padding: 0.75rem 1.25rem;
+  padding: clamp(0.5rem, 1vw, 0.75rem) clamp(0.75rem, 1.5vw, 1.25rem);
   color: #666;
-  font-size: 1rem;
+  font-size: clamp(0.75rem, 1.5vw, 1rem);
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1280px) {
+  .pagination {
+    padding: clamp(0.4rem, 1.2vw, 0.8rem) clamp(0.8rem, 1.8vw, 1.2rem);
+    gap: clamp(0.4rem, 0.9vw, 0.6rem);
+    margin-top: clamp(1.2rem, 2.5vw, 2rem);
+  }
+
+  .pagination button {
+    padding: clamp(0.4rem, 0.9vw, 0.6rem) clamp(0.6rem, 1.2vw, 1rem);
+    min-width: clamp(32px, 4.5vw, 42px);
+    height: clamp(32px, 4.5vw, 42px);
+    font-size: clamp(0.7rem, 1.4vw, 0.9rem);
+    border-radius: clamp(14px, 1.8vw, 20px);
+  }
+
+  .pagination-ellipsis {
+    padding: clamp(0.4rem, 0.9vw, 0.6rem) clamp(0.6rem, 1.2vw, 1rem);
+    font-size: clamp(0.7rem, 1.4vw, 0.9rem);
+  }
+}
+
+@media (max-width: 1024px) {
+  .pagination {
+    padding: clamp(0.35rem, 1vw, 0.7rem) clamp(0.7rem, 1.6vw, 1rem);
+    gap: clamp(0.35rem, 0.8vw, 0.5rem);
+    margin-top: clamp(1rem, 2vw, 1.8rem);
+  }
+
+  .pagination button {
+    padding: clamp(0.35rem, 0.8vw, 0.5rem) clamp(0.5rem, 1.1vw, 0.8rem);
+    min-width: clamp(30px, 4vw, 38px);
+    height: clamp(30px, 4vw, 38px);
+    font-size: clamp(0.65rem, 1.3vw, 0.85rem);
+    border-radius: clamp(12px, 1.6vw, 18px);
+  }
+
+  .pagination-ellipsis {
+    padding: clamp(0.35rem, 0.8vw, 0.5rem) clamp(0.5rem, 1.1vw, 0.8rem);
+    font-size: clamp(0.65rem, 1.3vw, 0.85rem);
+  }
+}
+
+@media (max-width: 768px) {
+  .pagination {
+    padding: clamp(0.3rem, 0.8vw, 0.6rem) clamp(0.6rem, 1.4vw, 0.8rem);
+    gap: clamp(0.3rem, 0.7vw, 0.4rem);
+    margin-top: clamp(0.8rem, 1.8vw, 1.5rem);
+    border-radius: clamp(16px, 2.5vw, 24px);
+  }
+
+  .pagination button {
+    padding: clamp(0.3rem, 0.7vw, 0.4rem) clamp(0.4rem, 1vw, 0.6rem);
+    min-width: clamp(28px, 3.5vw, 34px);
+    height: clamp(28px, 3.5vw, 34px);
+    font-size: clamp(0.6rem, 1.2vw, 0.8rem);
+    border-radius: clamp(10px, 1.4vw, 16px);
+  }
+
+  .pagination-ellipsis {
+    padding: clamp(0.3rem, 0.7vw, 0.4rem) clamp(0.4rem, 1vw, 0.6rem);
+    font-size: clamp(0.6rem, 1.2vw, 0.8rem);
+  }
+}
+
+@media (max-width: 480px) {
+  .pagination {
+    padding: clamp(0.25rem, 0.6vw, 0.5rem) clamp(0.5rem, 1.2vw, 0.7rem);
+    gap: clamp(0.25rem, 0.6vw, 0.35rem);
+    margin-top: clamp(0.6rem, 1.5vw, 1.2rem);
+  }
+
+  .pagination button {
+    padding: clamp(0.25rem, 0.6vw, 0.35rem) clamp(0.35rem, 0.8vw, 0.5rem);
+    min-width: clamp(26px, 3vw, 30px);
+    height: clamp(26px, 3vw, 30px);
+    font-size: clamp(0.55rem, 1.1vw, 0.75rem);
+    border-radius: clamp(8px, 1.2vw, 14px);
+  }
+
+  .pagination-ellipsis {
+    padding: clamp(0.25rem, 0.6vw, 0.35rem) clamp(0.35rem, 0.8vw, 0.5rem);
+    font-size: clamp(0.55rem, 1.1vw, 0.75rem);
+  }
+}
+
+@media (max-width: 320px) {
+  .pagination {
+    padding: clamp(0.2rem, 0.5vw, 0.4rem) clamp(0.4rem, 1vw, 0.6rem);
+    gap: clamp(0.2rem, 0.5vw, 0.3rem);
+    margin-top: clamp(0.5rem, 1.2vw, 1rem);
+    border-radius: clamp(14px, 2vw, 20px);
+  }
+
+  .pagination button {
+    padding: clamp(0.2rem, 0.5vw, 0.3rem) clamp(0.3rem, 0.7vw, 0.4rem);
+    min-width: clamp(24px, 2.5vw, 28px);
+    height: clamp(24px, 2.5vw, 28px);
+    font-size: clamp(0.5rem, 1vw, 0.7rem);
+    border-radius: clamp(8px, 1vw, 12px);
+  }
+
+  .pagination-ellipsis {
+    padding: clamp(0.2rem, 0.5vw, 0.3rem) clamp(0.3rem, 0.7vw, 0.4rem);
+    font-size: clamp(0.5rem, 1vw, 0.7rem);
+  }
+}
+
+/* Ultra-wide screens */
+@media (min-width: 1920px) {
+  .pagination {
+    padding: clamp(0.8rem, 1.8vw, 1.2rem) clamp(1.2rem, 2.5vw, 1.8rem);
+    gap: clamp(0.6rem, 1.2vw, 0.9rem);
+    margin-top: clamp(2rem, 3.5vw, 3rem);
+  }
+
+  .pagination button {
+    padding: clamp(0.6rem, 1.2vw, 0.9rem) clamp(0.9rem, 1.8vw, 1.5rem);
+    min-width: clamp(48px, 6vw, 56px);
+    height: clamp(48px, 6vw, 56px);
+    font-size: clamp(0.9rem, 1.8vw, 1.1rem);
+    border-radius: clamp(20px, 2.5vw, 28px);
+  }
+
+  .pagination-ellipsis {
+    padding: clamp(0.6rem, 1.2vw, 0.9rem) clamp(0.9rem, 1.8vw, 1.5rem);
+    font-size: clamp(0.9rem, 1.8vw, 1.1rem);
+  }
+}
+
+/* High-density display adjustments */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .pagination {
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.2);
+  }
+
+  .pagination button {
+    font-weight: 700;
+  }
+
+  .pagination-ellipsis {
+    font-weight: 600;
+  }
+}
+
+/* Landscape orientation for mobile devices */
+@media (max-height: 500px) and (orientation: landscape) {
+  .pagination {
+    padding: clamp(0.3rem, 0.8vw, 0.5rem) clamp(0.5rem, 1.2vw, 0.7rem);
+    gap: clamp(0.3rem, 0.7vw, 0.4rem);
+  }
+
+  .pagination button {
+    padding: clamp(0.3rem, 0.7vw, 0.4rem) clamp(0.4rem, 1vw, 0.6rem);
+    min-width: clamp(28px, 3.5vw, 34px);
+    height: clamp(28px, 3.5vw, 34px);
+    font-size: clamp(0.6rem, 1.2vw, 0.8rem);
+  }
+
+  .pagination-ellipsis {
+    padding: clamp(0.3rem, 0.7vw, 0.4rem) clamp(0.4rem, 1vw, 0.6rem);
+    font-size: clamp(0.6rem, 1.2vw, 0.8rem);
+  }
 }
