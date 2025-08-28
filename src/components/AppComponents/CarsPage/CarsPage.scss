@@ -1,128 +1,158 @@
 /* Base styles */
 .main-container {
   width: 100%;
-  max-width: 1600px;
+  max-width: 1920px; /* Increased max-width for ultra-wide screens */
   margin: 0 auto;
+  box-sizing: border-box;
 }
 
 .page-content {
-  padding: 1rem;
+  padding: clamp(0.5rem, 2vw, 1rem);
+  min-height: 100vh; /* Ensure content fills viewport height */
+  box-sizing: border-box;
 }
 
 /* Banner styles */
 .banner-left-align {
   text-align: left;
-
+  
   .banner-content {
     align-items: flex-start;
+    padding: clamp(0.5rem, 2vw, 1rem);
   }
-
-  .banner-title,
-  .banner-subtitle {
+  
+  .banner-title, .banner-subtitle {
     text-align: left;
   }
-
+  
   .banner-title {
     opacity: 0;
     transform: translateY(-10px);
     animation: fadeInDown 0.8s ease-out forwards;
     animation-delay: 0.3s;
     transition: font-size 0.3s ease, padding 0.3s ease;
-
+    font-size: clamp(1.2rem, 4vw, 2rem);
+    
+    @media (max-width: 1280px) {
+      font-size: clamp(1.4rem, 3.5vw, 1.8rem);
+      padding-left: clamp(1rem, 2vw, 1.5rem);
+    }
+    
     @media (max-width: 1024px) {
-      font-size: clamp(1.6rem, 4vw, 1.8rem);
-      padding-left: 1.5rem;
+      font-size: clamp(1.3rem, 3vw, 1.6rem);
+      padding-left: clamp(0.75rem, 1.5vw, 1rem);
     }
-
+    
     @media (max-width: 768px) {
-      font-size: clamp(1.4rem, 3.5vw, 1.5rem);
-      padding-left: 1rem;
+      font-size: clamp(1.2rem, 2.8vw, 1.4rem);
+      padding-left: clamp(0.5rem, 1.2vw, 0.75rem);
     }
-
+    
     @media (max-width: 480px) {
-      font-size: clamp(1.2rem, 3vw, 1.3rem);
-      padding-left: 0.75rem;
+      font-size: clamp(1rem, 2.5vw, 1.2rem);
+      padding-left: clamp(0.4rem, 1vw, 0.5rem);
     }
-
-    @media (max-width: 360px) {
-      font-size: clamp(1rem, 2.8vw, 1.1rem);
+    
+    @media (max-width: 320px) { /* Support for very small screens */
+      font-size: clamp(0.9rem, 2.2vw, 1rem);
     }
   }
-
+  
   .banner-subtitle {
-    font-size: clamp(1rem, 2.5vw, 1.2rem);
+    font-size: clamp(0.9rem, 2.2vw, 1.1rem);
     line-height: 1.6;
     opacity: 0;
     transform: translateY(10px);
     animation: fadeInUp 0.8s ease-out forwards;
     animation-delay: 0.3s;
     transition: font-size 0.3s ease, padding 0.3s ease, width 0.3s ease;
-    width: clamp(50%, 30vw, 90%);
-
+    width: clamp(40%, 25vw, 85%);
+    
+    @media (max-width: 1280px) {
+      font-size: clamp(0.85rem, 2vw, 1rem);
+      padding-left: clamp(1rem, 2vw, 1.5rem);
+      width: clamp(45%, 30vw, 80%);
+    }
+    
     @media (max-width: 1024px) {
-      font-size: clamp(0.9rem, 2.2vw, 1rem);
-      padding-left: 1.5rem;
+      font-size: clamp(0.8rem, 1.8vw, 0.95rem);
+      padding-left: clamp(0.75rem, 1.5vw, 1rem);
       width: 80%;
     }
-
+    
     @media (max-width: 768px) {
-      font-size: clamp(0.85rem, 2vw, 0.95rem);
-      padding-left: 1rem;
+      font-size: clamp(0.75rem, 1.6vw, 0.9rem);
+      padding-left: clamp(0.5rem, 1.2vw, 0.75rem);
       width: 85%;
     }
-
+    
     @media (max-width: 480px) {
-      font-size: clamp(0.8rem, 1.8vw, 0.9rem);
-      padding-left: 0.75rem;
+      font-size: clamp(0.7rem, 1.4vw, 0.85rem);
+      padding-left: clamp(0.4rem, 1vw, 0.5rem);
       width: 90%;
     }
-
-    @media (max-width: 360px) {
-      font-size: clamp(0.75rem, 1.6vw, 0.85rem);
+    
+    @media (max-width: 320px) {
+      font-size: clamp(0.65rem, 1.3vw, 0.8rem);
     }
   }
-
+  
   .banner-button {
-    margin-top: 1.5rem;
-
+    margin-top: clamp(1rem, 2vw, 1.5rem);
+    
+    @media (max-width: 1280px) {
+      padding-left: clamp(1rem, 2vw, 1.5rem);
+    }
+    
     @media (max-width: 1024px) {
-      padding-left: 1.5rem;
+      padding-left: clamp(0.75rem, 1.5vw, 1rem);
     }
-
+    
     @media (max-width: 768px) {
-      padding-left: 1rem;
+      padding-left: clamp(0.5rem, 1.2vw, 0.75rem);
     }
-
+    
     @media (max-width: 480px) {
-      padding-left: 0.75rem;
+      padding-left: clamp(0.4rem, 1vw, 0.5rem);
+    }
+    
+    @media (max-width: 320px) {
+      margin-top: clamp(0.8rem, 1.8vw, 1rem);
     }
   }
-
+  
   .banner-cta {
     border-radius: 20px;
-    padding: clamp(0.4rem, 1vw, 0.6rem) clamp(1rem, 2vw, 1.4rem);
+    padding: clamp(0.3rem, 0.8vw, 0.5rem) clamp(0.8rem, 1.8vw, 1.2rem);
     font-weight: 500;
     backdrop-filter: blur(10px);
     transition: all 0.3s ease;
-
+    font-size: clamp(0.75rem, 1.8vw, 0.9rem);
+    
+    @media (max-width: 1280px) {
+      margin-top: clamp(0.8rem, 1.8vw, 1rem);
+      margin-left: clamp(1rem, 2vw, 1.5rem);
+    }
+    
     @media (max-width: 1024px) {
-      margin-top: 1rem;
-      margin-left: 1.5rem;
+      margin-left: clamp(0.75rem, 1.5vw, 1rem);
+      font-size: clamp(0.7rem, 1.6vw, 0.85rem);
     }
-
+    
     @media (max-width: 768px) {
-      margin-left: 1rem;
-      font-size: clamp(0.85rem, 2vw, 0.9rem);
+      margin-left: clamp(0.5rem, 1.2vw, 0.75rem);
+      font-size: clamp(0.65rem, 1.4vw, 0.8rem);
+      padding: clamp(0.25rem, 0.6vw, 0.4rem) clamp(0.6rem, 1.4vw, 0.9rem);
     }
-
+    
     @media (max-width: 480px) {
-      margin-left: 0.75rem;
-      font-size: clamp(0.8rem, 1.8vw, 0.85rem);
-      padding: clamp(0.3rem, 0.8vw, 0.5rem) clamp(0.8rem, 1.8vw, 1rem);
+      margin-left: clamp(0.4rem, 1vw, 0.5rem);
+      font-size: clamp(0.6rem, 1.3vw, 0.75rem);
     }
-
-    @media (max-width: 360px) {
-      font-size: clamp(0.75rem, 1.6vw, 0.8rem);
+    
+    @media (max-width: 320px) {
+      font-size: clamp(0.55rem, 1.2vw, 0.7rem);
+      padding: clamp(0.2rem, 0.5vw, 0.3rem) clamp(0.5rem, 1.2vw, 0.7rem);
     }
   }
 }
@@ -133,51 +163,64 @@
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
-  max-width: 1400px;
-  margin: 1.5rem auto;
-  padding: 0 1rem;
-  gap: 1rem;
-
+  max-width: 1920px; /* Match main-container */
+  margin: clamp(1rem, 2vw, 1.5rem) auto;
+  padding: 0 clamp(0.5rem, 1vw, 1rem);
+  gap: clamp(0.5rem, 1.5vw, 1rem);
+  
   .results-count {
     color: #1800b2;
-    font-size: clamp(1rem, 2.5vw, 1.1rem);
+    font-size: clamp(0.9rem, 2vw, 1rem);
     font-weight: 600;
-
+    
+    @media (max-width: 1280px) {
+      font-size: clamp(0.85rem, 1.8vw, 0.95rem);
+    }
+    
+    @media (max-width: 1024px) {
+      font-size: clamp(0.8rem, 1.6vw, 0.9rem);
+    }
+    
     @media (max-width: 768px) {
-      font-size: clamp(0.9rem, 2.2vw, 1rem);
+      font-size: clamp(0.75rem, 1.4vw, 0.85rem);
     }
-
+    
     @media (max-width: 480px) {
-      font-size: clamp(0.85rem, 2vw, 0.95rem);
+      font-size: clamp(0.7rem, 1.3vw, 0.8rem);
     }
-
-    @media (max-width: 360px) {
-      font-size: clamp(0.8rem, 1.8vw, 0.9rem);
+    
+    @media (max-width: 320px) {
+      font-size: clamp(0.65rem, 1.2vw, 0.75rem);
     }
   }
-
+  
   .sort-dropdown {
     .sort-select {
-      padding: clamp(0.3rem, 0.8vw, 0.4rem) clamp(0.6rem, 1.5vw, 0.8rem);
+      padding: clamp(0.25rem, 0.6vw, 0.35rem) clamp(0.5rem, 1.2vw, 0.7rem);
       border: 1px solid #d1d5db;
       border-radius: 6px;
       background: white;
-      font-size: clamp(0.8rem, 2vw, 0.9rem);
+      font-size: clamp(0.75rem, 1.8vw, 0.85rem);
       color: #374151;
       cursor: pointer;
-
+      
       &:focus {
         outline: none;
         border-color: #1800b2;
       }
-
-      @media (max-width: 480px) {
-        font-size: clamp(0.75rem, 1.8vw, 0.85rem);
-        padding: clamp(0.25rem, 0.6vw, 0.3rem) clamp(0.5rem, 1.2vw, 0.6rem);
-      }
-
-      @media (max-width: 360px) {
+      
+      @media (max-width: 1024px) {
         font-size: clamp(0.7rem, 1.6vw, 0.8rem);
+        padding: clamp(0.2rem, 0.5vw, 0.3rem) clamp(0.4rem, 1vw, 0.6rem);
+      }
+      
+      @media (max-width: 480px) {
+        font-size: clamp(0.65rem, 1.4vw, 0.75rem);
+      }
+      
+      @media (max-width: 320px) {
+        font-size: clamp(0.6rem, 1.3vw, 0.7rem);
+        padding: clamp(0.15rem, 0.4vw, 0.25rem) clamp(0.3rem, 0.8vw, 0.5rem);
       }
     }
   }
@@ -188,7 +231,7 @@
   position: relative;
   width: 100%;
   height: auto;
-
+  
   .hero-background {
     position: absolute;
     top: 0;
@@ -200,25 +243,33 @@
     background-position: center;
     z-index: 0;
   }
-
+  
   .hero-overlay {
     position: relative;
     z-index: 1;
-    padding: clamp(2rem, 5vw, 4rem) 1rem;
-
+    padding: clamp(1.5rem, 4vw, 3rem) clamp(0.5rem, 1vw, 1rem);
+    
+    @media (max-width: 1280px) {
+      padding: clamp(1.2rem, 3.5vw, 2.5rem) clamp(0.4rem, 0.8vw, 0.8rem);
+    }
+    
     @media (max-width: 1024px) {
-      padding: clamp(1.5rem, 4vw, 3rem) 0.75rem;
+      padding: clamp(1rem, 3vw, 2rem) clamp(0.3rem, 0.7vw, 0.6rem);
     }
-
+    
     @media (max-width: 768px) {
-      padding: clamp(1rem, 3vw, 2rem) 0.5rem;
+      padding: clamp(0.8rem, 2.5vw, 1.5rem) clamp(0.2rem, 0.5vw, 0.4rem);
     }
-
+    
     @media (max-width: 480px) {
-      padding: clamp(0.75rem, 2vw, 1.5rem) 0.5rem;
+      padding: clamp(0.6rem, 2vw, 1rem) clamp(0.15rem, 0.4vw, 0.3rem);
+    }
+    
+    @media (max-width: 320px) {
+      padding: clamp(0.5rem, 1.5vw, 0.8rem) clamp(0.1rem, 0.3vw, 0.2rem);
     }
   }
-
+  
   @media (max-width: 768px) {
     .hero-background {
       background-image: linear-gradient(#0a004c, #1b01b0);
@@ -232,44 +283,48 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: clamp(1.5rem, 4vw, 2rem);
-
+  padding: clamp(1rem, 3vw, 1.5rem);
+  
   .spinner {
-    width: clamp(24px, 6vw, 32px);
-    height: clamp(24px, 6vw, 32px);
-    border: clamp(2px, 0.5vw, 3px) solid #f3f3f3;
-    border-top: clamp(2px, 0.5vw, 3px) solid #1800b2;
+    width: clamp(20px, 5vw, 28px);
+    height: clamp(20px, 5vw, 28px);
+    border: clamp(2px, 0.4vw, 2.5px) solid #f3f3f3;
+    border-top: clamp(2px, 0.4vw, 2.5px) solid #1800b2;
     border-radius: 50%;
     animation: spin 1s linear infinite;
-    margin-bottom: 0.8rem;
+    margin-bottom: clamp(0.5rem, 1.5vw, 0.8rem);
   }
-
+  
   p {
     color: #666;
-    font-size: clamp(0.9rem, 2.2vw, 1rem);
+    font-size: clamp(0.8rem, 1.8vw, 0.9rem);
   }
-
+  
+  @media (max-width: 768px) {
+    padding: clamp(0.8rem, 2.5vw, 1.2rem);
+  }
+  
   @media (max-width: 480px) {
     p {
-      font-size: clamp(0.8rem, 2vw, 0.9rem);
+      font-size: clamp(0.7rem, 1.6vw, 0.8rem);
     }
   }
-
-  @media (max-width: 360px) {
+  
+  @media (max-width: 320px) {
     p {
-      font-size: clamp(0.75rem, 1.8vw, 0.85rem);
+      font-size: clamp(0.65rem, 1.4vw, 0.75rem);
+    }
+    .spinner {
+      width: clamp(16px, 4vw, 20px);
+      height: clamp(16px, 4vw, 20px);
     }
   }
 }
 
 /* Animations */
 @keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 @keyframes fadeInUp {
@@ -286,191 +341,295 @@
   }
 }
 
-/* Table container */
-.table-container {
-  max-width: 1400px;
+/* Cars container with responsive layout */
+.cars-container {
+  max-width: 1920px; /* Match main-container */
   margin: 0 auto;
-  padding: 0 1rem;
-
-  /* Add loading state to prevent layout shift */
-  &.table-loading {
+  padding: 0 clamp(0.5rem, 1vw, 1rem);
+  
+  &.cars-loading {
     opacity: 0;
     transition: opacity 0.2s ease;
   }
-
-  &.table-ready {
+  
+  &.cars-ready {
     opacity: 1;
     transition: opacity 0.2s ease;
   }
 }
 
-/* Cars table */
+/* Desktop table - hidden on tablet and below */
+.desktop-table {
+  display: block;
+  overflow-x: auto; /* Enable horizontal scroll for small screens */
+  
+  @media (max-width: 1024px) { /* Adjusted breakpoint for tablets */
+    display: none;
+  }
+}
+
+/* Mobile cards - hidden on desktop */
+.mobile-cards {
+  display: none;
+  
+  @media (max-width: 1024px) {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.5rem, 1.5vw, 0.8rem);
+  }
+}
+
+/* Desktop table styles */
 .cars-table {
   width: 100%;
+  min-width: 800px; /* Ensure table doesn’t collapse on smaller desktops */
   border-collapse: collapse;
   background: white;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  margin-bottom: 1.5rem;
-
+  margin-bottom: clamp(1rem, 2vw, 1.5rem);
+  
   thead {
     background: linear-gradient(135deg, #1800b2, #4c1d95);
-
+    
     th {
       color: white;
-      padding: clamp(0.6rem, 1.5vw, 0.8rem) clamp(0.4rem, 1vw, 0.5rem);
+      padding: clamp(0.5rem, 1.2vw, 0.7rem) clamp(0.3rem, 0.8vw, 0.4rem);
       text-align: left;
       font-weight: 600;
-      font-size: clamp(0.75rem, 2vw, 0.85rem);
+      font-size: clamp(0.7rem, 1.8vw, 0.8rem);
       text-transform: uppercase;
       letter-spacing: 0.5px;
       border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      white-space: nowrap; /* Prevent text wrapping in headers */
     }
   }
-
+  
   tbody {
     tr {
       border-bottom: 1px solid #e5e7eb;
       transition: background-color 0.2s ease;
-
+      
       &:hover {
         background-color: #f9fafb;
       }
-
+      
       &:last-child {
         border-bottom: none;
       }
     }
-
+    
     td {
-      padding: clamp(0.6rem, 1.5vw, 0.8rem) clamp(0.4rem, 1vw, 0.5rem);
-      font-size: clamp(0.75rem, 2vw, 0.85rem);
+      padding: clamp(0.5rem, 1.2vw, 0.7rem) clamp(0.3rem, 0.8vw, 0.4rem);
+      font-size: clamp(0.7rem, 1.8vw, 0.8rem);
       color: #374151;
       vertical-align: middle;
-    }
-  }
-
-  /* Mobile card layout - Enhanced with better CSS application */
-  @media screen and (max-width: 768px) {
-    display: block !important;
-    border-radius: 0;
-    box-shadow: none;
-
-    thead {
-      display: none !important; /* Force hide table header on mobile */
-    }
-
-    tbody {
-      display: block !important;
-      width: 100% !important;
-
-      tr {
-        display: block !important;
-        width: 100% !important;
-        border: 1px solid #e5e7eb !important;
-        border-radius: 8px !important;
-        padding: 1rem !important;
-        margin-bottom: 1rem !important;
-        background-color: white !important;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
-        position: relative;
-
-        &:nth-child(even) {
-          background-color: #f9fafb !important;
-        }
-
-        &:hover {
-          background-color: #f5f5f5 !important;
-        }
-
-        &:last-child {
-          border-bottom: 1px solid #e5e7eb !important;
-          margin-bottom: 0;
-        }
-      }
-
-      td {
-        display: flex !important;
-        justify-content: space-between !important;
-        align-items: center !important;
-        padding: 0.6rem 0 !important;
-        font-size: clamp(0.75rem, 2vw, 0.85rem) !important;
-        border-bottom: 1px solid #eee !important;
-        border: none !important;
-        width: 100% !important;
-        text-align: left !important;
-        position: relative;
-        min-height: 1.5rem;
-
-        &:last-child {
-          border-bottom: none !important;
-        }
-
-        &:before {
-          content: attr(data-label) ": " !important;
-          font-weight: 600 !important;
-          color: #1800b2 !important;
-          text-transform: uppercase !important;
-          font-size: clamp(0.7rem, 1.8vw, 0.8rem) !important;
-          flex: 0 0 40% !important;
-          text-align: left !important;
-          padding-right: 0.5rem;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-        }
-
-        /* Content wrapper for mobile */
-        .mobile-content {
-          flex: 1;
-          text-align: right;
-          word-break: break-word;
-        }
-
-        /* Hide less critical columns on mobile */
-        &.branch-cell,
-        &.bay-cell,
-        &.build-date-cell,
-        &.drive-type-cell,
-        &.fuel-type-cell {
-          display: none !important;
-        }
-      }
-    }
-  }
-
-  @media screen and (max-width: 480px) {
-    tbody td {
-      font-size: clamp(0.7rem, 1.8vw, 0.8rem) !important;
-      padding: 0.5rem 0 !important;
-
-      &:before {
-        font-size: clamp(0.65rem, 1.6vw, 0.75rem) !important;
-        flex: 0 0 45% !important;
-      }
-    }
-  }
-
-  @media screen and (max-width: 360px) {
-    tbody {
-      tr {
-        padding: 0.8rem !important;
-      }
-    }
-
-    tbody td {
-      font-size: clamp(0.65rem, 1.6vw, 0.75rem) !important;
-      padding: 0.4rem 0 !important;
-
-      &:before {
-        font-size: clamp(0.6rem, 1.4vw, 0.7rem) !important;
-        flex: 0 0 50% !important;
-      }
+      white-space: nowrap; /* Prevent text wrapping */
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 150px; /* Limit column width to prevent overflow */
     }
   }
 }
 
-/* Cell-specific styles */
+/* Mobile card styles */
+.car-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: clamp(0.5rem, 1.5vw, 0.8rem);
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+}
+
+.car-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: clamp(0.5rem, 1.5vw, 0.8rem) clamp(0.5rem, 1vw, 0.8rem) clamp(0.3rem, 0.8vw, 0.5rem);
+  border-bottom: 1px solid #f1f5f9;
+  
+  .car-title {
+    flex: 1;
+    
+    .car-description {
+      font-size: clamp(0.9rem, 2vw, 1rem);
+      font-weight: 600;
+      color: #1e293b;
+      margin: 0 0 clamp(0.2rem, 0.5vw, 0.3rem) 0;
+      line-height: 1.3;
+      word-break: break-word;
+    }
+    
+    .car-stock {
+      font-size: clamp(0.7rem, 1.8vw, 0.8rem);
+      color: #1800b2;
+      font-weight: 500;
+    }
+  }
+  
+  .car-price {
+    font-size: clamp(0.9rem, 2vw, 1rem);
+    font-weight: 700;
+    color: #059669;
+    text-align: right;
+  }
+  
+  @media (max-width: 480px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: clamp(0.3rem, 0.8vw, 0.5rem);
+  }
+}
+
+.car-card-body {
+  padding: clamp(0.5rem, 1.5vw, 0.8rem);
+}
+
+.car-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: clamp(0.5rem, 1.5vw, 0.75rem);
+  margin-bottom: clamp(0.5rem, 1.5vw, 0.8rem);
+  
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
+    gap: clamp(0.3rem, 0.8vw, 0.5rem);
+  }
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.2rem, 0.5vw, 0.3rem);
+  
+  .info-label {
+    font-size: clamp(0.65rem, 1.6vw, 0.75rem);
+    color: #64748b;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  
+  .info-value {
+    font-size: clamp(0.7rem, 1.8vw, 0.85rem);
+    color: #1e293b;
+    font-weight: 500;
+    word-break: break-word;
+    
+    &.vin-text {
+      font-family: 'Courier New', monospace;
+      font-size: clamp(0.65rem, 1.6vw, 0.75rem);
+      background-color: #f8fafc;
+      padding: clamp(0.2rem, 0.5vw, 0.3rem) clamp(0.3rem, 0.8vw, 0.5rem);
+      border-radius: 4px;
+      border: 1px solid #e2e8f0;
+      word-break: break-all;
+    }
+  }
+}
+
+.car-status {
+  display: flex;
+  justify-content: center;
+  margin-bottom: clamp(0.5rem, 1.5vw, 0.8rem);
+  
+  .status-badge {
+    display: inline-block;
+    padding: clamp(0.2rem, 0.5vw, 0.3rem) clamp(0.5rem, 1.2vw, 0.6rem);
+    border-radius: 20px;
+    font-size: clamp(0.65rem, 1.6vw, 0.75rem);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    
+    &.available {
+      background-color: #d1fae5;
+      color: #065f46;
+      border: 1px solid #a7f3d0;
+    }
+    
+    &.unavailable {
+      background-color: #fee2e2;
+      color: #991b1b;
+      border: 1px solid #fca5a5;
+    }
+  }
+}
+
+.car-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(0.3rem, 0.8vw, 0.5rem);
+  padding: 0 clamp(0.5rem, 1vw, 0.8rem) clamp(0.5rem, 1.5vw, 0.8rem);
+  
+  .action-btn {
+    flex: 1;
+    padding: clamp(0.5rem, 1.2vw, 0.7rem) clamp(0.5rem, 1vw, 0.8rem);
+    border: none;
+    border-radius: 8px;
+    font-size: clamp(0.7rem, 1.8vw, 0.8rem);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: center;
+    min-width: clamp(80px, 20vw, 100px);
+    
+    &.primary {
+      background: linear-gradient(135deg, #1800b2, #4c1d95);
+      color: white;
+      
+      &:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 2px 4px rgba(24, 0, 178, 0.3);
+      }
+    }
+    
+    &.secondary {
+      background: #f8fafc;
+      color: #475569;
+      border: 1px solid #e2e8f0;
+      
+      &:hover {
+        background: #f1f5f9;
+        border-color: #cbd5e1;
+      }
+    }
+    
+    &.danger {
+      background: #fee2e2;
+      color: #991b1b;
+      border: 1px solid #fca5a5;
+      
+      &:hover {
+        background: #fecaca;
+        border-color: #f87171;
+      }
+    }
+    
+    &:active {
+      transform: translateY(0);
+    }
+    
+    @media (max-width: 480px) {
+      font-size: clamp(0.65rem, 1.6vw, 0.75rem);
+      padding: clamp(0.4rem, 1vw, 0.6rem) clamp(0.4rem, 0.8vw, 0.6rem);
+      min-width: clamp(70px, 18vw, 90px);
+    }
+    
+    @media (max-width: 320px) {
+      font-size: clamp(0.6rem, 1.4vw, 0.7rem);
+      min-width: clamp(60px, 16vw, 80px);
+    }
+  }
+}
+
+/* Cell-specific styles for desktop table */
 .stock-cell {
   font-weight: 600;
   color: #1800b2;
@@ -478,13 +637,11 @@
 
 .vin-cell {
   font-family: 'Courier New', monospace;
-  font-size: clamp(0.7rem, 1.8vw, 0.8rem);
-  
-  @media screen and (min-width: 769px) {
-    background-color: #f3f4f6;
-    padding: 0.25rem 0.5rem;
-    border-radius: 4px;
-  }
+  font-size: clamp(0.65rem, 1.6vw, 0.75rem);
+  background-color: #f3f4f6;
+  padding: clamp(0.2rem, 0.5vw, 0.3rem) clamp(0.3rem, 0.8vw, 0.5rem);
+  border-radius: 4px;
+  word-break: break-all;
 }
 
 .branch-cell {
@@ -494,24 +651,12 @@
 .bay-cell {
   font-weight: 600;
   color: #059669;
-  
-  @media screen and (min-width: 769px) {
-    text-align: center;
-  }
+  text-align: center;
 }
 
 .description-cell {
   line-height: 1.4;
-  
-  @media screen and (max-width: 768px) {
-    word-break: break-word;
-    
-    &:after {
-      content: "";
-      flex: 1;
-      text-align: right;
-    }
-  }
+  word-break: break-word;
 }
 
 .odometer-cell {
@@ -519,9 +664,7 @@
 }
 
 .build-date-cell {
-  @media screen and (min-width: 769px) {
-    text-align: center;
-  }
+  text-align: center;
 }
 
 .drive-type-cell {
@@ -539,25 +682,25 @@
 .price-cell {
   font-weight: 700;
   color: #059669;
-  font-size: clamp(0.8rem, 2vw, 0.95rem);
+  font-size: clamp(0.75rem, 1.8vw, 0.9rem);
 }
 
 .status-cell {
   .status-badge {
     display: inline-block;
-    padding: clamp(0.2rem, 0.5vw, 0.25rem) clamp(0.6rem, 1.5vw, 0.75rem);
+    padding: clamp(0.15rem, 0.4vw, 0.2rem) clamp(0.5rem, 1.2vw, 0.6rem);
     border-radius: 20px;
-    font-size: clamp(0.7rem, 1.8vw, 0.8rem);
+    font-size: clamp(0.65rem, 1.6vw, 0.75rem);
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-
+    
     &.available {
       background-color: #d1fae5;
       color: #065f46;
       border: 1px solid #a7f3d0;
     }
-
+    
     &.unavailable {
       background-color: #fee2e2;
       color: #991b1b;
@@ -567,58 +710,37 @@
 }
 
 .actions-cell {
-  display: block !important;
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(0.3rem, 0.8vw, 0.5rem);
+  justify-content: center;
   
-  @media screen and (min-width: 769px) {
-    display: flex !important;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    justify-content: center;
-  }
-
-  @media screen and (max-width: 768px) {
-    &:before {
-      display: none !important;
-    }
-  }
-
   .view-details-btn {
     background: linear-gradient(135deg, #1800b2, #4c1d95);
     color: white;
     border: none;
-    padding: clamp(0.3rem, 0.8vw, 0.4rem) clamp(0.6rem, 1.5vw, 0.8rem);
+    padding: clamp(0.25rem, 0.6vw, 0.35rem) clamp(0.5rem, 1.2vw, 0.7rem);
     border-radius: 6px;
-    font-size: clamp(0.7rem, 1.8vw, 0.8rem);
+    font-size: clamp(0.65rem, 1.6vw, 0.75rem);
     font-weight: 500;
     cursor: pointer;
     transition: all 0.2s ease;
     text-align: center;
-    margin: 0.25rem 0;
-    width: 100%;
-
-    @media screen and (min-width: 769px) {
-      flex: 1;
-      min-width: clamp(70px, 20vw, 80px);
-      width: auto;
-      margin: 0;
-    }
-
+    flex: 1;
+    min-width: clamp(70px, 18vw, 80px);
+    
     &:hover {
       transform: translateY(-1px);
       box-shadow: 0 2px 4px rgba(24, 0, 178, 0.3);
     }
-
+    
     &:active {
       transform: translateY(0);
     }
-
-    @media screen and (max-width: 480px) {
-      font-size: clamp(0.65rem, 1.6vw, 0.75rem);
-      padding: clamp(0.25rem, 0.6vw, 0.3rem) clamp(0.5rem, 1.2vw, 0.6rem);
-    }
-
-    @media screen and (max-width: 360px) {
+    
+    @media (max-width: 1280px) {
       font-size: clamp(0.6rem, 1.4vw, 0.7rem);
+      min-width: clamp(65px, 16vw, 75px);
     }
   }
 }
@@ -626,54 +748,71 @@
 /* No results */
 .no-results {
   text-align: center;
-  padding: clamp(1.5rem, 4vw, 2rem);
+  padding: clamp(1rem, 3vw, 1.5rem);
   color: #666;
-  font-size: clamp(0.9rem, 2.2vw, 1rem);
-
+  font-size: clamp(0.8rem, 1.8vw, 0.9rem);
+  
   p {
     margin: 0;
   }
-
-  @media (max-width: 480px) {
-    font-size: clamp(0.8rem, 2vw, 0.9rem);
-    padding: clamp(1rem, 3vw, 1.5rem);
+  
+  @media (max-width: 768px) {
+    padding: clamp(0.8rem, 2.5vw, 1.2rem);
   }
-
-  @media (max-width: 360px) {
-    font-size: clamp(0.75rem, 1.8vw, 0.85rem);
+  
+  @media (max-width: 480px) {
+    font-size: clamp(0.7rem, 1.6vw, 0.8rem);
+  }
+  
+  @media (max-width: 320px) {
+    font-size: clamp(0.65rem, 1.4vw, 0.75rem);
+    padding: clamp(0.6rem, 2vw, 1rem);
   }
 }
 
-/* Force proper mobile layout with CSS Grid fallback */
-@media screen and (max-width: 768px) {
-  .cars-table tbody tr {
-    display: grid !important;
-    grid-template-columns: 1fr;
-    gap: 0;
+/* High-density display adjustments */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .banner-cta,
+  .action-btn,
+  .view-details-btn {
+    font-weight: 600; /* Slightly bolder for clarity */
   }
-
-  .cars-table tbody td {
-    display: grid !important;
-    grid-template-columns: 40% 1fr;
-    align-items: center;
-    gap: 0.5rem;
-    
-    &:before {
-      grid-column: 1;
-      margin: 0;
-    }
+  
+  .spinner {
+    border-width: clamp(1.5px, 0.3vw, 2px); /* Thinner borders for sharper rendering */
   }
+}
 
-  .actions-cell {
-    grid-template-columns: 1fr !important;
-    gap: 0.25rem;
+/* Landscape orientation for mobile devices */
+@media (max-height: 500px) and (orientation: landscape) {
+  .hero-overlay {
+    padding: clamp(0.5rem, 1.5vw, 0.8rem);
+  }
+  
+  .car-card-actions {
+    flex-direction: row;
+    gap: clamp(0.2rem, 0.5vw, 0.3rem);
+  }
+  
+  .car-info-grid {
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  }
+}
 
-    &:before {
-      display: none !important;
-    }
-
-    .view-details-btn {
-      grid-column: 1 / -1;
-    }
+/* Ultra-wide screens */
+@media (min-width: 1920px) {
+  .main-container,
+  .cars-container,
+  .results-header {
+    max-width: 2400px; /* Allow more content width */
+  }
+  
+  .banner-title {
+    font-size: clamp(1.8rem, 3vw, 2.2rem);
+  }
+  
+  .banner-subtitle {
+    font-size: clamp(1.1rem, 2vw, 1.3rem);
+    width: clamp(30%, 20vw, 70%);
   }
 }
