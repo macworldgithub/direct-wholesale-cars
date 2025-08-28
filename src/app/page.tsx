@@ -47,7 +47,7 @@ const features = [
   {
     icon: (
       <img
-        src="/images/pricing.png"
+        src="/images/Pricing.png"
         alt="Wholesale Pricing"
         style={{ width: 36, height: 36 }}
       />
