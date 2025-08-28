@@ -3,14 +3,17 @@
 // import Banner from "@/components/UIComponents/Banner/Banner";
 // import React, { useEffect, useState } from "react";
 // import { useRouter } from "next/navigation";
-// import "../../../app/cars/cars.scss";
+// import "./CarsPage.scss";
 // import Hero from "../Hero/Hero";
 // import { useDispatch, useSelector } from "react-redux";
 // import { AppDispatch, RootState } from "@/store/store";
-// import { fetchAllCarAds, deleteCarByWholesalerAndVin } from "@/api/cars";
+// import {
+//   fetchAllCarAds,
+//   deleteCarByWholesalerAndVin,
+//   fetchCarsWithFilters,
+// } from "@/api/cars";
 // import Dropdown from "@/components/UIComponents/Dropdown/Dropdown";
 // import { CarAd } from "@/slices/carAdsSlice";
-// // import { Pagination } from "@mui/material";
 // import Pagination from "../../UIComponents/Pagination/Pagination";
 
 // const sortOptions = [
@@ -24,9 +27,9 @@
 //   const { ads, pagination, loading } = useSelector(
 //     (state: RootState) => state.carAds
 //   );
-//   console.log(ads);
 //   const [sortValue, setSortValue] = useState<string>(sortOptions[0].value);
 //   const [isSticky, setIsSticky] = useState(false);
+//   const [currentPage, setCurrentPage] = useState(1);
 //   const router = useRouter();
 //   const dispatch = useDispatch<AppDispatch>();
 
@@ -38,19 +41,20 @@
 //     return () => window.removeEventListener("scroll", onScroll);
 //   }, []);
 
+//   useEffect(() => {
+//     dispatch(
+//       fetchCarsWithFilters({ page: currentPage.toString(), limit: "10" })
+//     );
+//   }, [dispatch, currentPage]);
+
 //   const handleViewDetails = (car: CarAd) => {
 //     router.push(`/car_Details?wholesalerId=${car.wholesaler}&vin=${car.vin}`);
 //   };
-
-//   useEffect(() => {
-//     dispatch(fetchAllCarAds());
-//   }, [dispatch]);
 
 //   const handleSortChange = (value: string) => {
 //     setSortValue(value);
 //   };
 
-//   // Sort the ads based on selected option
 //   const sortedAds = [...ads].sort((a, b) => {
 //     switch (sortValue) {
 //       case "price_low_to_high":
@@ -69,15 +73,6 @@
 //         return 0;
 //     }
 //   });
-
-//   // Filter ads based on search
-//   // const filteredAds = sortedAds.filter(
-//   //   (car) =>
-//   //     car.stock.toLowerCase().includes(search.toLowerCase()) ||
-//   //     car.vin.toLowerCase().includes(search.toLowerCase()) ||
-//   //     car.branch.toLowerCase().includes(search.toLowerCase()) ||
-//   //     car.description.toLowerCase().includes(search.toLowerCase())
-//   // );
 
 //   return (
 //     <div className="main-container">
@@ -130,7 +125,6 @@
 //                   <th>Drive Type</th>
 //                   <th>Fuel Type</th>
 //                   <th>Seats</th>
-
 //                   <th>Asking Price</th>
 //                   <th>Status</th>
 //                   <th>Actions</th>
@@ -139,21 +133,20 @@
 //               <tbody>
 //                 {sortedAds.map((car) => (
 //                   <tr key={car._id} className="car-row">
-//                     <td className="stock-cell">{car.stock}</td>
-//                     <td className="vin-cell">{car.vin}</td>
-//                     <td className="branch-cell">{car.branch}</td>
-//                     <td className="bay-cell">{car.bayNumber}</td>
-//                     <td className="description-cell">{car.description}</td>
-//                     <td className="odometer-cell">
+//                     <td className="stock-cell" data-label="Stock">{car.stock}</td>
+//                     <td className="vin-cell" data-label="VIN">{car.vin}</td>
+//                     <td className="branch-cell" data-label="Branch">{car.branch}</td>
+//                     <td className="bay-cell" data-label="Bay">{car.bayNumber}</td>
+//                     <td className="description-cell" data-label="Description">{car.description}</td>
+//                     <td className="odometer-cell" data-label="Odometer">
 //                       {car.odometer.toLocaleString()} miles
 //                     </td>
-//                     <td className="build-date-cell">{car.buildDate}</td>
-//                     <td className="drive-type-cell">{car.driveType}</td>
-//                     <td className="fuel-type-cell">{car.fuelType}</td>
-//                     <td className="seats-cell">{car.seats}</td>
-
-//                     <td className="price-cell">${car.asking}</td>
-//                     <td className="status-cell">
+//                     <td className="build-date-cell" data-label="Build Date">{car.buildDate}</td>
+//                     <td className="drive-type-cell" data-label="Drive Type">{car.driveType}</td>
+//                     <td className="fuel-type-cell" data-label="Fuel Type">{car.fuelType}</td>
+//                     <td className="seats-cell" data-label="Seats">{car.seats}</td>
+//                     <td className="price-cell" data-label="Asking Price">${car.asking}</td>
+//                     <td className="status-cell" data-label="Status">
 //                       <span
 //                         className={`status-badge ${
 //                           car.available ? "available" : "unavailable"
@@ -162,26 +155,9 @@
 //                         {car.available ? "Available" : "Unavailable"}
 //                       </span>
 //                     </td>
-//                     <td
-//                       className="actions-cell"
-//                       style={{
-//                         display: "flex",
-//                         gap: "8px",
-//                         alignItems: "center",
-//                       }}
-//                     >
+//                     <td className="actions-cell" data-label="Actions">
 //                       <button
 //                         className="view-details-btn"
-//                         style={{
-//                           background: "#1800B2",
-//                           color: "#fff",
-//                           border: "none",
-//                           borderRadius: "4px",
-//                           padding: "6px 16px",
-//                           fontWeight: 500,
-//                           cursor: "pointer",
-//                           transition: "background 0.2s",
-//                         }}
 //                         onClick={() => handleViewDetails(car)}
 //                       >
 //                         View Details
@@ -201,19 +177,8 @@
 //                       >
 //                         Message Seller
 //                       </button>
-
 //                       <button
-//                         className=""
-//                         style={{
-//                           background: "#1800B2",
-//                           color: "#fff",
-//                           border: "none",
-//                           borderRadius: "4px",
-//                           padding: "6px 16px",
-//                           fontWeight: 500,
-//                           cursor: "pointer",
-//                           transition: "background 0.2s",
-//                         }}
+//                         className="view-details-btn"
 //                         onClick={async () => {
 //                           try {
 //                             const confirmed = window.confirm(
@@ -221,14 +186,17 @@
 //                             );
 //                             if (!confirmed) return;
 //                             await dispatch(
-//                               // @ts-ignore awaiting thunk result type
 //                               deleteCarByWholesalerAndVin({
 //                                 wholesalerId: car.wholesaler,
 //                                 vin: car.vin,
 //                               })
 //                             );
-//                             // Refresh list to ensure counts are accurate
-//                             dispatch(fetchAllCarAds());
+//                             dispatch(
+//                               fetchCarsWithFilters({
+//                                 page: currentPage.toString(),
+//                                 limit: "10",
+//                               })
+//                             );
 //                           } catch (e) {
 //                             console.error(e);
 //                           }
@@ -249,24 +217,25 @@
 //             )}
 //           </div>
 //         )}
-//       </main>
 
-//       {/* <Pagination
-//         currentPage={currentPage}
-//         totalPages={totalPages}
-//         onPageChange={setCurrentPage}
-//       /> */}
-//       {/* <Pagination /> */}
+//         <Pagination
+//           currentPage={pagination.page}
+//           totalPages={pagination.totalPages}
+//           onPageChange={(page) => setCurrentPage(page)}
+//         />
+//       </main>
 //     </div>
 //   );
 // };
 
 // export default CarsPage;
 
+
+
 "use client";
 
 import Banner from "@/components/UIComponents/Banner/Banner";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,useRef  } from "react";
 import { useRouter } from "next/navigation";
 import "./CarsPage.scss";
 import Hero from "../Hero/Hero";
@@ -297,7 +266,7 @@ const CarsPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
-
+  const resultsRef = useRef<HTMLDivElement | null>(null); // create ref
   useEffect(() => {
     const onScroll = () => {
       setIsSticky(window.scrollY > 100);
@@ -318,6 +287,12 @@ const CarsPage = () => {
 
   const handleSortChange = (value: string) => {
     setSortValue(value);
+  };
+
+  const handleScrollToResults = () => {
+    if (resultsRef.current) {
+      resultsRef.current.scrollIntoView({ behavior: "smooth" });
+    }
   };
 
   const sortedAds = [...ads].sort((a, b) => {
@@ -353,9 +328,9 @@ const CarsPage = () => {
             </>
           }
         >
-          <Hero />
+          <Hero onSearch={handleScrollToResults} />
         </Banner>
-
+        <div ref={resultsRef}>
         <div className="results-header">
           <div className="results-count">
             {pagination.total} {pagination.total === 1 ? "Vehicle" : "Vehicles"}{" "}
@@ -369,7 +344,7 @@ const CarsPage = () => {
             />
           </div>
         </div>
-
+          
         {loading ? (
           <div className="loading-container">
             <div className="spinner"></div>
@@ -488,9 +463,9 @@ const CarsPage = () => {
           totalPages={pagination.totalPages}
           onPageChange={(page) => setCurrentPage(page)}
         />
+        </div>
       </main>
     </div>
   );
 };
-
 export default CarsPage;

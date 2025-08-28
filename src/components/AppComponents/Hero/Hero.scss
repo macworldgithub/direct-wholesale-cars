@@ -107,27 +107,36 @@
   }
 
   .top-search-button {
-    background: linear-gradient(135deg, #1800b2, #4c1d95);
-    border: none;
-    border-radius: 50%;
-    width: 36px;
-    height: 36px;
+  background: linear-gradient(135deg, #1800b2, #4c1d95);
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-left: 0.5rem;
+  padding: 0; /* Ensure no padding interferes with centering */
+
+  &:hover {
+    transform: scale(1.1);
+    box-shadow: 0 2px 8px rgba(24, 0, 178, 0.4);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+
+  .svg-icon {
     display: flex;
     align-items: center;
     justify-content: center;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    margin-left: 0.5rem;
-
-    &:hover {
-      transform: scale(1.1);
-      box-shadow: 0 2px 8px rgba(24, 0, 178, 0.4);
-    }
-
-    &:active {
-      transform: scale(0.95);
-    }
+    margin: 0; /* Remove any default margins */
+    transform: none; /* Reset any transform that might offset the icon */
   }
+}
 }
 
 /* Bottom Filter Container */
