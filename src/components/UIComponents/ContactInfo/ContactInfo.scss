@@ -1,3 +1,113 @@
+// .contact-info {
+//   flex: 1;
+//   padding: 2rem;
+//   background: transparent;
+  
+//   .contact-title {
+//     font-size: 2.5rem;
+//     font-weight: 700;
+//     color: #1a1a1a;
+//     margin-bottom: 1rem;
+    
+//     @media (max-width: 768px) {
+//       font-size: 2rem;
+//     }
+//   }
+  
+//   .contact-description {
+//     font-size: 1.1rem;
+//     color: #666;
+//     line-height: 1.6;
+//     margin-bottom: 3rem;
+//     max-width: 500px;
+//   }
+  
+//   .contact-methods {
+//     display: flex;
+//     flex-direction: column;
+//     gap: 2rem;
+//   }
+  
+//   .contact-item {
+//     display: flex;
+//     align-items: flex-start;
+//     gap: 1rem;
+    
+//     .contact-icon {
+//       width: 48px;
+//       height: 48px;
+//       background: #f0f4ff;
+//       border-radius: 12px;
+//       display: flex;
+//       align-items: center;
+//       justify-content: center;
+//       flex-shrink: 0;
+      
+//       img {
+//         width: 24px;
+//         height: 24px;
+//       }
+//     }
+    
+//     .contact-details {
+//       flex: 1;
+      
+//       h4 {
+//         font-size: 1.1rem;
+//         font-weight: 600;
+//         color: #1a1a1a;
+//         margin-bottom: 0.5rem;
+//       }
+      
+//       p {
+//         font-size: 1rem;
+//         color: #666;
+//         margin: 0;
+//         line-height: 1.4;
+//       }
+//     }
+//   }
+  
+//   @media (max-width: 768px) {
+//     padding: 1.5rem;
+//     width: 100%;
+    
+//     .contact-title {
+//       font-size: 1.8rem;
+//     }
+    
+//     .contact-description {
+//       font-size: 1rem;
+//       margin-bottom: 2rem;
+//     }
+    
+//     .contact-item {
+//       gap: 0.75rem;
+      
+//       .contact-icon {
+//         width: 40px;
+//         height: 40px;
+        
+//         img {
+//           width: 20px;
+//           height: 20px;
+//         }
+//       }
+      
+//       .contact-details {
+//         h4 {
+//           font-size: 1rem;
+//         }
+        
+//         p {
+//           font-size: 0.9rem;
+//         }
+//       }
+//     }
+//   }
+// }
+
+
 .contact-info {
   flex: 1;
   padding: 2rem;

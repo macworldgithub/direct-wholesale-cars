@@ -78,7 +78,7 @@ const CarDetailsOverviewPage = () => {
 
   const handleRequestInfo = () => {
     if (!user?._id || !carData?._id || !carData?.wholesaler) {
-      setToastMessage("Missing required data to send inquiry");
+      setToastMessage("Please log in to send an inquiry.");
       setToastSeverity("error");
       setToastOpen(true);
       return;

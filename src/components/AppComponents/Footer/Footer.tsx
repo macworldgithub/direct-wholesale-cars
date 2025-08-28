@@ -146,7 +146,7 @@ export default function Footer() {
              <li>
               <a href="tel:+61435386534">+61 435 386 534</a>
             </li> 
-            <li>Sydney, Australia</li>
+            <li>Melbourne, Australia</li>
           </ul>
         </div>
       </div>

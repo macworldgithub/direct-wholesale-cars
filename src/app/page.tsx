@@ -77,7 +77,7 @@ const networkSteps = [
     subtitle: "Submit your dealer application with business documentation",
   },
   {
-    image: <img src="/images/verification.png" alt="Verification" />,
+    image: <img src="/images/verification.png" alt="Verification" color="black"/>,
     title: "Verification",
     subtitle: "Our team verifies your credentials and business license",
   },
