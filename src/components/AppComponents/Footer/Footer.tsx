@@ -112,10 +112,10 @@ export default function Footer() {
               <Link href="/">Home</Link>
             </li>
             <li>
-              <Link href="/search">Search Vehicle</Link>
+              <Link href="/cars">Search Vehicle</Link>
             </li>
             <li>
-              <Link href="/register">Register</Link>
+              <Link href="/signup">Register</Link>
             </li>
             <li>
               <Link href="/about">About Us</Link>
