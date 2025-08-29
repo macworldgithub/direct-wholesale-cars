@@ -459,7 +459,7 @@ const SignupPage = () => {
                 level={6}
               />
               <div className="account-options">
-                {(["dealer", "wholesaler"] as const).map((type) => {
+                {(["wholesaler", "dealer"] as const).map((type) => {
                   const selected = searchParams?.get("role") === type;
 
                   return (
@@ -489,12 +489,12 @@ const SignupPage = () => {
                       />
                       <div>
                         <h3>
-                          {type === "dealer"
-                            ? "Dealer Account"
-                            : "Wholesaler Account"}
+                          {type !== "dealer"
+                            ? "Wholesaler Account"
+                            : "Dealer Account"}
                         </h3>
                         <p>
-                          {type === "dealer"
+                          {type !== "dealer"
                             ? "Buy and sell vehicles"
                             : "Purchase vehicles only"}
                         </p>
