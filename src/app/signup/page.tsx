@@ -32,6 +32,10 @@ interface SignupFormData {
 const SignupPage = () => {
   const [step, setStep] = useState(1);
   const [toastOpen, setToastOpen] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
+  const [toastSeverity, setToastSeverity] = useState<"success" | "error">(
+    "success"
+  );
   const [showCropModal, setShowCropModal] = useState(false);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [croppedImageURL, setCroppedImageURL] = useState<string | null>(null);
@@ -54,25 +58,25 @@ const SignupPage = () => {
   } = useForm<SignupFormData>({
     defaultValues: dealer
       ? {
-        name: dealer.name,
-        email: dealer.email,
-        password: "",
-        // businessRegistrationNumber: dealer.businessRegistrationNumber,
-        // phone: dealer.phone,
-        // contactPerson: dealer.contactPerson,
-        // address: dealer.address,
-        // profileImage: null,
-      }
+          name: dealer.name,
+          email: dealer.email,
+          password: "",
+          // businessRegistrationNumber: dealer.businessRegistrationNumber,
+          // phone: dealer.phone,
+          // contactPerson: dealer.contactPerson,
+          // address: dealer.address,
+          // profileImage: null,
+        }
       : {
-        name: "",
-        email: "",
-        password: "",
-        businessRegistrationNumber: "",
-        phone: "",
-        contactPerson: "",
-        address: "",
-        // profileImage: null,
-      },
+          name: "",
+          email: "",
+          password: "",
+          businessRegistrationNumber: "",
+          phone: "",
+          contactPerson: "",
+          address: "",
+          // profileImage: null,
+        },
     mode: "onTouched",
   });
 
@@ -164,29 +168,52 @@ const SignupPage = () => {
       dispatch(UpdateDealer({ accountId: dealer._id, data: payload }))
         .unwrap()
         .then(() => {
+          setToastMessage("Account updated successfully!");
+          setToastSeverity("success");
           setToastOpen(true);
           setTimeout(() => {
             router.push("/dashboard");
           }, 2000);
+        })
+        .catch((error) => {
+          setToastMessage(error?.message || "Failed to update account.");
+          setToastSeverity("error");
+          setToastOpen(true);
         });
     } else {
       if (accountRole === "dealer") {
         dispatch(SignupDealer(payload))
           .unwrap()
           .then(() => {
+            setToastMessage("Signup successful!");
+            setToastSeverity("success");
             setToastOpen(true);
             setTimeout(() => {
               router.push("/login");
             }, 2000);
+          })
+          .catch((error) => {
+            const msg = error?.message || "Signup failed.";
+            setToastMessage(msg);
+            setToastSeverity("error");
+            setToastOpen(true);
           });
       } else if (accountRole === "wholesaler") {
         dispatch(SignupWholesaler(payload))
           .unwrap()
           .then(() => {
+            setToastMessage("Signup successful!");
+            setToastSeverity("success");
             setToastOpen(true);
             setTimeout(() => {
               router.push("/login");
             }, 2000);
+          })
+          .catch((error) => {
+            const msg = error?.message || "Signup failed.";
+            setToastMessage(msg);
+            setToastSeverity("error");
+            setToastOpen(true);
           });
       }
     }
@@ -546,8 +573,9 @@ const SignupPage = () => {
               <React.Fragment key={index}>
                 <div className="icon-section">
                   <div
-                    className={`icon-circle ${step === index + 1 ? "blinking" : ""
-                      }`}
+                    className={`icon-circle ${
+                      step === index + 1 ? "blinking" : ""
+                    }`}
                   >
                     <Image
                       src={stepIcon.icon}
@@ -595,10 +623,8 @@ const SignupPage = () => {
           <Toast
             open={toastOpen}
             onClose={() => setToastOpen(false)}
-            message={
-              dealer ? "Account updated successfully!" : "Signup Successful!"
-            }
-            severity="success"
+            message={toastMessage}
+            severity={toastSeverity}
           />
           <div className="login-redirect">
             Already have an account?{" "}

@@ -28,7 +28,7 @@ export const SignupDealer = createAsyncThunk(
 
       return response.data;
     } catch (error: any) {
-      return rejectWithValue(error.response?.data?.message || "Signup failed");
+      return rejectWithValue(error.response?.data || "Signup failed");
     }
   }
 );
@@ -62,7 +62,7 @@ export const SignupWholesaler = createAsyncThunk(
 
       return response.data;
     } catch (error: any) {
-      return rejectWithValue(error.response?.data?.message || "Signup failed");
+      return rejectWithValue(error.response?.data || "Signup failed");
     }
   }
 );
