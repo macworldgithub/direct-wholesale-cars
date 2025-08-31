@@ -505,7 +505,6 @@
 
 // export default CarsPage;
 
-
 "use client"
 import Banner from "@/components/UIComponents/Banner/Banner"
 import { useEffect, useState, useRef, useLayoutEffect } from "react"
@@ -528,6 +527,9 @@ const sortOptions = [
 
 const CarsPage = () => {
   const { ads, pagination, loading } = useSelector((state: RootState) => state.carAds)
+  // Use the provided approach to get wholesaler and check if user is wholesaler
+  const wholesaler = useSelector((state: RootState) => state.SigninWholesaler.wholesaler)
+  const isWholesaler = Boolean(wholesaler?._id)
   const [sortValue, setSortValue] = useState<string>(sortOptions[0].value)
   const [isSticky, setIsSticky] = useState(false)
   const [currentPage, setCurrentPage] = useState(1)
@@ -609,6 +611,11 @@ const CarsPage = () => {
         return 0
     }
   })
+
+  // Check if the user is a wholesaler and matches the car's wholesaler ID
+  const canDeleteCar = (car: CarAd) => {
+    return isWholesaler && wholesaler?._id === car.wholesaler
+  }
 
   if (!isClient) {
     return null // Prevent SSR mismatch
@@ -709,34 +716,36 @@ const CarsPage = () => {
                           >
                             Message Seller
                           </button>
-                          <button
-                            className="view-details-btn"
-                            onClick={async () => {
-                              try {
-                                const vin = car.vin && typeof car.vin === 'string' ? car.vin : ''
-                                const confirmed = window.confirm(`Are you sure you want to delete car with VIN ${vin || 'N/A'}?`)
-                                if (!confirmed) return
-                                if (car.wholesaler && vin) {
-                                  await dispatch(
-                                    deleteCarByWholesalerAndVin({
-                                      wholesalerId: car.wholesaler,
-                                      vin,
-                                    }),
-                                  )
-                                  dispatch(
-                                    fetchCarsWithFilters({
-                                      page: currentPage.toString(),
-                                      limit: "10",
-                                    }),
-                                  )
+                          {canDeleteCar(car) && (
+                            <button
+                              className="view-details-btn"
+                              onClick={async () => {
+                                try {
+                                  const vin = car.vin && typeof car.vin === 'string' ? car.vin : ''
+                                  const confirmed = window.confirm(`Are you sure you want to delete car with VIN ${vin || 'N/A'}?`)
+                                  if (!confirmed) return
+                                  if (car.wholesaler && vin) {
+                                    await dispatch(
+                                      deleteCarByWholesalerAndVin({
+                                        wholesalerId: car.wholesaler,
+                                        vin,
+                                      }),
+                                    )
+                                    dispatch(
+                                      fetchCarsWithFilters({
+                                        page: currentPage.toString(),
+                                        limit: "10",
+                                      }),
+                                    )
+                                  }
+                                } catch (e) {
+                                  console.error(e)
                                 }
-                              } catch (e) {
-                                console.error(e)
-                              }
-                            }}
-                          >
-                            Delete
-                          </button>
+                              }}
+                            >
+                              Delete
+                            </button>
+                          )}
                         </td>
                       </tr>
                     ))}
@@ -817,34 +826,36 @@ const CarsPage = () => {
                       >
                         Message
                       </button>
-                      <button
-                        className="action-btn danger"
-                        onClick={async () => {
-                          try {
-                            const vin = car.vin && typeof car.vin === 'string' ? car.vin : ''
-                            const confirmed = window.confirm(`Are you sure you want to delete car with VIN ${vin || 'N/A'}?`)
-                            if (!confirmed) return
-                            if (car.wholesaler && vin) {
-                              await dispatch(
-                                deleteCarByWholesalerAndVin({
-                                  wholesalerId: car.wholesaler,
-                                  vin,
-                                }),
-                              )
-                              dispatch(
-                                fetchCarsWithFilters({
-                                  page: currentPage.toString(),
-                                  limit: "10",
-                                }),
-                              )
+                      {canDeleteCar(car) && (
+                        <button
+                          className="action-btn danger"
+                          onClick={async () => {
+                            try {
+                              const vin = car.vin && typeof car.vin === 'string' ? car.vin : ''
+                              const confirmed = window.confirm(`Are you sure you want to delete car with VIN ${vin || 'N/A'}?`)
+                              if (!confirmed) return
+                              if (car.wholesaler && vin) {
+                                await dispatch(
+                                  deleteCarByWholesalerAndVin({
+                                    wholesalerId: car.wholesaler,
+                                    vin,
+                                  }),
+                                )
+                                dispatch(
+                                  fetchCarsWithFilters({
+                                    page: currentPage.toString(),
+                                    limit: "10",
+                                  }),
+                                )
+                              }
+                            } catch (e) {
+                              console.error(e)
                             }
-                          } catch (e) {
-                            console.error(e)
-                          }
-                        }}
-                      >
-                        Delete
-                      </button>
+                          }}
+                        >
+                          Delete
+                        </button>
+                      )}
                     </div>
                   </div>
                 ))}
