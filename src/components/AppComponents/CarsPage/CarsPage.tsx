@@ -683,7 +683,7 @@ const CarsPage = () => {
                         <td className="bay-cell">{car.bayNumber && typeof car.bayNumber === 'string' ? car.bayNumber : 'N/A'}</td>
                         <td className="description-cell">{car.description && typeof car.description === 'string' ? car.description : 'N/A'}</td>
                         <td className="odometer-cell">
-                          {typeof car.odometer === 'number' && !isNaN(car.odometer) ? `${car.odometer.toLocaleString()} miles` : 'N/A'}
+                          {typeof car.odometer === 'number' && !isNaN(car.odometer) ? `${car.odometer.toLocaleString()} km` : 'N/A'}
                         </td>
                         <td className="build-date-cell">{car.buildDate && typeof car.buildDate === 'string' ? car.buildDate : 'N/A'}</td>
                         <td className="drive-type-cell">{car.driveType && typeof car.driveType === 'string' ? car.driveType : 'N/A'}</td>
@@ -779,7 +779,7 @@ const CarsPage = () => {
                         <div className="info-item">
                           <span className="info-label">Odometer</span>
                           <span className="info-value">
-                            {typeof car.odometer === 'number' && !isNaN(car.odometer) ? `${car.odometer.toLocaleString()} mi` : 'N/A'}
+                            {typeof car.odometer === 'number' && !isNaN(car.odometer) ? `${car.odometer.toLocaleString()} km` : 'N/A'}
                           </span>
                         </div>
                         <div className="info-item">
