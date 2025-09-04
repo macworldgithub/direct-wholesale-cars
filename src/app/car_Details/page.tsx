@@ -129,7 +129,7 @@ const CarDetailsOverviewPage = () => {
 
       <div className="main-content">
         <div className="left-column">
-          <div className="car-gallery">
+          {/* <div className="car-gallery">
             <div className="main-image-container">
               <img
                 src={mainImage}
@@ -184,6 +184,12 @@ const CarDetailsOverviewPage = () => {
                 ))}
               </div>
             )}
+          </div> */}
+          <div className="car-description-container">
+            <h2 className="car-description-heading">Description</h2>
+            <p className="car-description-text">
+              {carData.description || "No description available."}
+            </p>
           </div>
 
           <div className="navigation-tabs">
