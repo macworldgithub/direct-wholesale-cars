@@ -50,7 +50,7 @@ const LocalizedInput = forwardRef<HTMLInputElement, LocalizedInputProps>(
           type={type}
           name={name}
           id={name}
-          value={value}
+          value={value ?? ""}
           onChange={(e) => onChange(e.target.value)}
           onKeyDown={onKeyDown}
           placeholder={placeholderKey || ""}

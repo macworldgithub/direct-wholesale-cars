@@ -9,11 +9,15 @@ export const SignupDealer = createAsyncThunk(
     try {
       const isFormData = data instanceof FormData;
 
-      const response = await axios.post(`${BACKEND_URL}/auth/signup/dealer`, data, {
-        headers: isFormData
-          ? { "Content-Type": "multipart/form-data" }
-          : { "Content-Type": "application/json" },
-      });
+      const response = await axios.post(
+        `${BACKEND_URL}/auth/signup/dealer`,
+        data,
+        {
+          headers: isFormData
+            ? { "Content-Type": "multipart/form-data" }
+            : { "Content-Type": "application/json" },
+        }
+      );
 
       try {
         await sendWelcomeEmail(
@@ -74,6 +78,10 @@ interface Response {
     id: string;
     name: string;
     email: string;
+    businessRegistrationNumber: string;
+    address: string;
+    phone: string;
+    contactPerson: string;
   };
 }
 export const SigninDealer = createAsyncThunk<
@@ -146,8 +154,9 @@ export const SigninWholesaler = createAsyncThunk<
     //   console.error("Failed to fetch signed profile image", err);
     // }
 
-    return { ...response.data, 
-    //  signedProfileImage 
+    return {
+      ...response.data,
+      //  signedProfileImage
     };
   } catch (error: any) {
     return rejectWithValue(
@@ -251,3 +260,125 @@ const sendWelcomeEmail = async (
     }
   );
 };
+
+export const forgotPassword = createAsyncThunk<
+  any,
+  { email: string; role: "dealer" | "wholesaler" },
+  { rejectValue: string }
+>("auth/forgotPassword", async ({ email, role }, { rejectWithValue }) => {
+  try {
+    const res = await axios.post(`${BACKEND_URL}/auth/forgot-password`, {
+      email,
+      role,
+    });
+    return res.data;
+  } catch (err: any) {
+    return rejectWithValue(err.response?.data?.message || "Failed to send OTP");
+  }
+});
+
+export const resetPassword = createAsyncThunk<
+  any,
+  { email: string; otp: string; newPassword: string; role: string },
+  { rejectValue: string }
+>(
+  "auth/resetPassword",
+  async ({ email, otp, newPassword, role }, { rejectWithValue }) => {
+    try {
+      const res = await axios.post(`${BACKEND_URL}/auth/reset-password`, {
+        email,
+        otp,
+        newPassword,
+        role,
+      });
+      return res.data;
+    } catch (err: any) {
+      return rejectWithValue(err.response?.data?.message || "Invalid OTP");
+    }
+  }
+);
+
+export const requestChangePassword = createAsyncThunk<
+  any,
+  { email: string; oldPassword: string; role: string },
+  { rejectValue: string }
+>(
+  "auth/requestChangePassword",
+  async ({ email, oldPassword, role }, { rejectWithValue }) => {
+    try {
+      const res = await axios.post(
+        `${BACKEND_URL}/auth/request-change-password`,
+        {
+          email,
+          oldPassword,
+          role,
+        }
+      );
+      return res.data;
+    } catch (err: any) {
+      return rejectWithValue(
+        err.response?.data?.message || "Failed to send OTP"
+      );
+    }
+  }
+);
+
+export const verifyChangePassword = createAsyncThunk<
+  any,
+  { email: string; otp: string; newPassword: string; role: string },
+  { rejectValue: string }
+>(
+  "auth/verifyChangePassword",
+  async ({ email, otp, newPassword, role }, { rejectWithValue }) => {
+    try {
+      const res = await axios.post(
+        `${BACKEND_URL}/auth/verify-change-password`,
+        {
+          email,
+          otp,
+          newPassword,
+          role,
+        }
+      );
+      return res.data;
+    } catch (err: any) {
+      return rejectWithValue(err.response?.data?.message || "Invalid OTP");
+    }
+  }
+);
+
+export const resendForgotOtp = createAsyncThunk<
+  any,
+  { email: string; role: string },
+  { rejectValue: string }
+>("auth/resendForgotOtp", async ({ email, role }, { rejectWithValue }) => {
+  try {
+    const res = await axios.post(`${BACKEND_URL}/auth/resend-forgot-otp`, {
+      email,
+      role,
+    });
+    return res.data;
+  } catch (err: any) {
+    return rejectWithValue(
+      err.response?.data?.message || "Failed to resend OTP"
+    );
+  }
+});
+
+export const resendChangeOtp = createAsyncThunk<
+  any,
+  { email: string; role: string },
+  { rejectValue: string }
+>("auth/resendChangeOtp", async ({ email, role }, { rejectWithValue }) => {
+  try {
+    const res = await axios.post(`${BACKEND_URL}/auth/resend-change-otp`, {
+      email,
+      role,
+    });
+    return res.data;
+  } catch (err: any) {
+    return rejectWithValue(
+      err.response?.data?.message || "Failed to resend OTP"
+    );
+  }
+});

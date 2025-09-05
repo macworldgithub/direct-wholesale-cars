@@ -16,19 +16,26 @@ import CarAuctionForm from "../add_car/page";
 import { useRouter } from "next/navigation";
 import CarListing from "@/components/AppComponents/CarListing/CarListing";
 
+import Popup from "@/components/UIComponents/Popup/Popup";
+import PasswordForm from "@/components/AppComponents/PasswordForm/PasswordForm";
+
 const Dashboard = () => {
   const router = useRouter();
   const [selectedTab, setSelectedTab] = useState(0);
 
-  // Unified: get logged-in user from either dealer or wholesaler slice
-  const user = useSelector(
-    (state: RootState) =>
-      state.SignuinDealer?.dealer || state.SigninWholesaler?.wholesaler
+  const dealer = useSelector((state: RootState) => state.SignuinDealer?.dealer);
+  const wholesaler = useSelector(
+    (state: RootState) => state.SigninWholesaler?.wholesaler
   );
 
+  const user = dealer || wholesaler;
   const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
     setSelectedTab(newValue);
   };
+
+  const [isUpdateOpen, setIsUpdateOpen] = useState(false);
+  const openUpdatePopup = () => setIsUpdateOpen(true);
+  const closeUpdatePopup = () => setIsUpdateOpen(false);
 
   return (
     <Box sx={{ width: "100%", padding: 4 }}>
@@ -78,7 +85,7 @@ const Dashboard = () => {
                 boxShadow: 2,
               }}
             >
-              <Box display="flex" mb={4}>
+              <Box display="flex" gap={2} mb={4}>
                 {user.role === "dealer" && (
                   <Button
                     variant="contained"
@@ -97,9 +104,29 @@ const Dashboard = () => {
                       router.push("/signup");
                     }}
                   >
-                    update profile
+                    Update Profile
                   </Button>
                 )}
+
+                <Button
+                  variant="outlined"
+                  sx={{
+                    borderColor: "#1801b4",
+                    color: "#1801b4",
+                    textTransform: "capitalize",
+                    fontWeight: 600,
+                    px: 4,
+                    py: 1.5,
+                    borderRadius: 2,
+                    "&:hover": {
+                      borderColor: "#140191",
+                      color: "#140191",
+                    },
+                  }}
+                  onClick={openUpdatePopup}
+                >
+                  Update Password
+                </Button>
               </Box>
 
               <Box
@@ -113,13 +140,13 @@ const Dashboard = () => {
                 {[
                   { label: "Name", value: user.name },
                   { label: "Email", value: user.email },
-                  // { label: "Phone", value: user.phone },
-                  // {
-                  //   label: "Business Registration Number",
-                  //   value: user.businessRegistrationNumber,
-                  // },
-                  // { label: "Contact Person", value: user.contactPerson },
-                  // { label: "Address", value: user.address },
+                  {
+                    label: "Business Registration Number",
+                    value: user.businessRegistrationNumber,
+                  },
+                  { label: "Address", value: user.address },
+                  { label: "Phone Number", value: user.phone },
+                  { label: "Contact Person", value: user.contactPerson },
                 ].map((item, idx) => (
                   <Box
                     key={idx}
@@ -146,6 +173,22 @@ const Dashboard = () => {
                 ))}
               </Box>
             </Box>
+
+            <Popup
+              isOpen={isUpdateOpen}
+              onClose={closeUpdatePopup}
+              title="Update Password"
+            >
+              <div
+                onClick={(e) => e.stopPropagation()}
+                onSubmit={(e) => e.stopPropagation()}
+              >
+                <PasswordForm
+                  mode="update"
+                  role={user.role as "dealer" | "wholesaler"}
+                />
+              </div>
+            </Popup>
           </Box>
         )}
 

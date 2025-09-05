@@ -70,7 +70,6 @@
     border-bottom-left-radius: 25px;
     border-bottom-right-radius: 25px;
     padding: 0.6rem 1.4rem;
-    font-weight: 500;
     backdrop-filter: blur(10px);
     transition: all 0.3s ease;
 
@@ -81,10 +80,6 @@
 
     @media (max-width: 768px) {
       margin-top: 20px;
-    }
-      
-    @media (max-width: 480px) {
-      font-size: 0.95rem;
     }
   }
 }

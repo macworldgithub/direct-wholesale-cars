@@ -13,6 +13,8 @@ import "./login.scss";
 import LocalizedButton from "@/components/UIComponents/LocalizedButton/LocalizedButton";
 import LocalizedInput from "@/components/UIComponents/LocalizedInput/LocalizedInput";
 import Toast from "@/components/UIComponents/Toast/Toast";
+import Popup from "@/components/UIComponents/Popup/Popup";
+import PasswordForm from "@/components/AppComponents/PasswordForm/PasswordForm";
 
 type LoginFormData = {
   email: string;
@@ -26,6 +28,11 @@ const LoginPage = () => {
   const pathname = usePathname();
 
   const [toastOpen, setToastOpen] = useState(false);
+  const [isForgotOpen, setIsForgotOpen] = useState(false);
+
+  const openForgotPopup = () => setIsForgotOpen(true);
+  const closeForgotPopup = () => setIsForgotOpen(false);
+
 
   const { loading, error } = useSelector(
     (state: RootState) => state.SignuinDealer
@@ -53,10 +60,10 @@ const LoginPage = () => {
 
   const onSubmit = async (data: LoginFormData) => {
     const accountRole = searchParams?.get("role");
-    if (!accountRole) {
-      alert("Please select an account type from the options above.");
-      return;
-    }
+    // if (!accountRole) {
+    //   alert("Please select an account type from the options above.");
+    //   return;
+    // }
 
     let result;
     if (accountRole === "dealer") {
@@ -147,9 +154,7 @@ const LoginPage = () => {
                 return (
                   <div
                     key={type}
-                    className={`account-option ${
-                      isSelected ? "selected" : ""
-                    }`}
+                    className={`account-option ${isSelected ? "selected" : ""}`}
                     onClick={() => {
                       const params = new URLSearchParams(
                         searchParams?.toString()
@@ -171,11 +176,25 @@ const LoginPage = () => {
             </div>
 
             <div className="login-options">
-              <a href="#" className="login-forgot">
+              <a
+                href="#"
+                className="login-forgot"
+                onClick={(e) => {
+                  e.preventDefault();
+                  openForgotPopup();
+                }}
+              >
                 Forgot Password?
               </a>
             </div>
 
+            <Popup
+              isOpen={isForgotOpen}
+              onClose={closeForgotPopup}
+              title="Forgot Password"
+            >
+              <PasswordForm mode="forget" />
+            </Popup>
             {error && <div className="login-error">{error}</div>}
 
             <LocalizedButton

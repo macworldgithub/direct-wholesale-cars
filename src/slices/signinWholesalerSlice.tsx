@@ -6,6 +6,10 @@ interface Wholesaler {
   name: string;
   email: string;
   role: string;
+  businessRegistrationNumber: string;
+  address: string;
+  phone: string;
+  contactPerson: string;
 }
 
 interface LoginState {
@@ -68,6 +72,10 @@ const signinWholeSalerSlice = createSlice({
           _id: user.id,
           name: user.name,
           email: user.email,
+          businessRegistrationNumber: user.businessRegistrationNumber,
+          address: user.address,
+          phone: user.phone,
+          contactPerson: user.contactPerson,
           role,
         };
         state.isAuthenticated = true;
