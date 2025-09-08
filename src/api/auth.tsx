@@ -92,7 +92,7 @@ export const SigninDealer = createAsyncThunk<
 >("login/dealer", async (payload, { rejectWithValue }) => {
   try {
     const response = await axios.post<Response>(
-      `${BACKEND_URL}/auth/dealer`,
+      `${BACKEND_URL}/auth/login/dealer`,
       payload
     );
 
