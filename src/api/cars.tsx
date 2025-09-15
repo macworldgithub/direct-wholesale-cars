@@ -317,3 +317,27 @@ export const sendEmailInquiry = createAsyncThunk<
     }
   }
 );
+
+export interface DeleteAllCarsResponse {
+  message: string;
+}
+
+export const deleteAllCarsByWholesaler = createAsyncThunk<
+  DeleteAllCarsResponse,
+  { wholesalerId: string },
+  { rejectValue: string }
+>(
+  "cars/deleteAllByWholesaler",
+  async ({ wholesalerId }, { rejectWithValue }) => {
+    try {
+      const response = await axios.delete<DeleteAllCarsResponse>(
+        `${BACKEND_URL}/cars/${wholesalerId}`
+      );
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to delete all cars"
+      );
+    }
+  }
+);

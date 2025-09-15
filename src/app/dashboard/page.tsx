@@ -10,16 +10,18 @@ import {
   CircularProgress,
   Button,
 } from "@mui/material";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store/store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/store/store";
 import CarAuctionForm from "../add_car/page";
 import { useRouter } from "next/navigation";
 import CarListing from "@/components/AppComponents/CarListing/CarListing";
 
 import Popup from "@/components/UIComponents/Popup/Popup";
 import PasswordForm from "@/components/AppComponents/PasswordForm/PasswordForm";
+import { deleteAllCarsByWholesaler } from "@/api/cars";
 
 const Dashboard = () => {
+  const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
   const [selectedTab, setSelectedTab] = useState(0);
 
@@ -36,6 +38,20 @@ const Dashboard = () => {
   const [isUpdateOpen, setIsUpdateOpen] = useState(false);
   const openUpdatePopup = () => setIsUpdateOpen(true);
   const closeUpdatePopup = () => setIsUpdateOpen(false);
+
+  const handleRemoveAll = async () => {
+    if (!wholesaler?._id) return;
+
+    const result = await dispatch(
+      deleteAllCarsByWholesaler({ wholesalerId: wholesaler._id })
+    );
+
+    if (deleteAllCarsByWholesaler.fulfilled.match(result)) {
+      alert(result.payload.message);
+    } else {
+      alert("Failed to delete cars");
+    }
+  };
 
   return (
     <Box sx={{ width: "100%", padding: 4 }}>
@@ -190,6 +206,26 @@ const Dashboard = () => {
               </div>
             </Popup>
           </Box>
+        )}
+        {selectedTab === 2 && user?.role === "wholesaler" && (
+          <Suspense fallback={<CircularProgress />}>
+            <Box display="flex" justifyContent="flex-end" mb={2}>
+              {wholesaler?._id && (
+                <Button
+                  variant="contained"
+                  color="error"
+                  onClick={handleRemoveAll}
+                  sx={{
+                    textTransform: "capitalize",
+                    fontWeight: 600,
+                    borderRadius: 2,
+                  }}
+                >
+                  Remove All
+                </Button>
+              )}
+            </Box>
+          </Suspense>
         )}
 
         {selectedTab === 1 && user?.role === "wholesaler" && (
