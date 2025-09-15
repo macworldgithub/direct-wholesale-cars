@@ -5,21 +5,27 @@ import { useDispatch, useSelector } from "react-redux";
 import LocalizedTable from "../../UIComponents/LocalizedTable/LocalizedTable";
 import Pagination from "../../UIComponents/Pagination/Pagination";
 import { AppDispatch, RootState } from "@/store/store";
-import { fetchAllCarAds, deleteCarAd } from "@/api/cars"; // <-- import delete
+import { fetchAllCarAds, deleteCarAd, fetchCarsWithFilters } from "@/api/cars"; // <-- import delete
 import Link from "next/link";
 import LocalizedButton from "@/components/UIComponents/LocalizedButton/LocalizedButton";
 
 const CarListing: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const ads = useSelector((state: RootState) => state.carAds.ads);
-  const loading = useSelector((state: RootState) => state.carAds.loading);
+  const { ads, pagination, loading } = useSelector(
+    (state: RootState) => state.carAds
+  );
 
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
   useEffect(() => {
-    dispatch(fetchAllCarAds());
-  }, [dispatch]);
+    dispatch(
+      fetchCarsWithFilters({
+        page: currentPage.toString(),
+        limit: itemsPerPage.toString(),
+      })
+    );
+  }, [dispatch, currentPage]);
 
   const handleDelete = (id: string) => {
     if (confirm("Are you sure you want to delete this car ad?")) {
@@ -63,14 +69,16 @@ const CarListing: React.FC = () => {
     regoDue: car.regoDue || "—",
     asking: car.asking ? `$${car.asking.toLocaleString()}` : "—",
     available: (
-      <span style={{ 
-        padding: '4px 8px', 
-        borderRadius: '12px', 
-        fontSize: '12px',
-        backgroundColor: car.available ? '#d1fae5' : '#fee2e2',
-        color: car.available ? '#065f46' : '#991b1b'
-      }}>
-        {car.available ? 'Available' : 'Unavailable'}
+      <span
+        style={{
+          padding: "4px 8px",
+          borderRadius: "12px",
+          fontSize: "12px",
+          backgroundColor: car.available ? "#d1fae5" : "#fee2e2",
+          color: car.available ? "#065f46" : "#991b1b",
+        }}
+      >
+        {car.available ? "Available" : "Unavailable"}
       </span>
     ),
     update: (
@@ -78,7 +86,7 @@ const CarListing: React.FC = () => {
         onClick={() => (window.location.href = `/add_car?id=${car?._id}`)}
         size="sm"
         label="Update"
-      />  
+      />
     ),
     delete: (
       <LocalizedButton
@@ -90,7 +98,6 @@ const CarListing: React.FC = () => {
     ),
   }));
 
-  const totalPages = Math.ceil(tableData.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const currentData = tableData.slice(startIndex, startIndex + itemsPerPage);
 
@@ -102,9 +109,9 @@ const CarListing: React.FC = () => {
         emptyMessage="No cars found"
       />
       <Pagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageChange={setCurrentPage}
+        currentPage={pagination.page ?? 1}
+        totalPages={pagination.totalPages ?? 1}
+        onPageChange={(page) => setCurrentPage(page)}
       />
     </div>
   );

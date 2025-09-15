@@ -110,7 +110,7 @@
 //             />
 //           </div>
 //         </div>
-          
+
 //         {loading ? (
 //           <div className="loading-container">
 //             <div className="spinner"></div>
@@ -236,7 +236,6 @@
 // };
 // export default CarsPage;
 
-
 // "use client";
 
 // import Banner from "@/components/UIComponents/Banner/Banner";
@@ -282,7 +281,7 @@
 //     const timer = setTimeout(() => {
 //       setShowTable(true);
 //     }, 50);
-    
+
 //     return () => clearTimeout(timer);
 //   }, []);
 
@@ -306,7 +305,7 @@
 //       const timer = setTimeout(() => {
 //         setShowTable(true);
 //       }, 100);
-      
+
 //       return () => clearTimeout(timer);
 //     }
 //   }, [isClient, loading, ads.length]);
@@ -378,7 +377,7 @@
 //               />
 //             </div>
 //           </div>
-          
+
 //           {loading ? (
 //             <div className="loading-container">
 //               <div className="spinner"></div>
@@ -505,120 +504,169 @@
 
 // export default CarsPage;
 
-"use client"
-import Banner from "@/components/UIComponents/Banner/Banner"
-import { useEffect, useState, useRef, useLayoutEffect } from "react"
-import { useRouter } from "next/navigation"
-import "./CarsPage.scss"
-import Hero from "../Hero/Hero"
-import { useDispatch, useSelector } from "react-redux"
-import type { AppDispatch, RootState } from "@/store/store"
-import { deleteCarByWholesalerAndVin, fetchCarsWithFilters } from "@/api/cars"
-import Dropdown from "@/components/UIComponents/Dropdown/Dropdown"
-import type { CarAd } from "@/slices/carAdsSlice"
-import Pagination from "../../UIComponents/Pagination/Pagination"
+"use client";
+import Banner from "@/components/UIComponents/Banner/Banner";
+import { useEffect, useState, useRef, useLayoutEffect, Suspense } from "react";
+import { useRouter } from "next/navigation";
+import "./CarsPage.scss";
+import Hero from "../Hero/Hero";
+import { useDispatch, useSelector } from "react-redux";
+import type { AppDispatch, RootState } from "@/store/store";
+import {
+  deleteAllCarsByWholesaler,
+  deleteCarByWholesalerAndVin,
+  fetchCarsWithFilters,
+} from "@/api/cars";
+import Dropdown from "@/components/UIComponents/Dropdown/Dropdown";
+import type { CarAd } from "@/slices/carAdsSlice";
+import Pagination from "../../UIComponents/Pagination/Pagination";
+import { Box, Button, CircularProgress } from "@mui/material";
 
 const sortOptions = [
   { label: "Sort by Price: Low to high", value: "price_low_to_high" },
   { label: "Sort by Price: High to low", value: "price_high_to_low" },
   { label: "Sort by Date: Newest first", value: "date_new" },
   { label: "Sort by Date: Oldest first", value: "date_old" },
-]
+];
 
 const CarsPage = () => {
-  const { ads, pagination, loading } = useSelector((state: RootState) => state.carAds)
+  const { ads, pagination, loading } = useSelector(
+    (state: RootState) => state.carAds
+  );
   // Use the provided approach to get wholesaler and check if user is wholesaler
-  const wholesaler = useSelector((state: RootState) => state.SigninWholesaler.wholesaler)
-  const isWholesaler = Boolean(wholesaler?._id)
-  const [sortValue, setSortValue] = useState<string>(sortOptions[0].value)
-  const [isSticky, setIsSticky] = useState(false)
-  const [currentPage, setCurrentPage] = useState(1)
-  const [isClient, setIsClient] = useState(false)
-  const [showTable, setShowTable] = useState(false)
-  const router = useRouter()
-  const dispatch = useDispatch<AppDispatch>()
-  const resultsRef = useRef<HTMLDivElement | null>(null)
+  const wholesaler = useSelector(
+    (state: RootState) => state.SigninWholesaler.wholesaler
+  );
+  const isWholesaler = Boolean(wholesaler?._id);
+  const [sortValue, setSortValue] = useState<string>(sortOptions[0].value);
+  const [isSticky, setIsSticky] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [isClient, setIsClient] = useState(false);
+  const [showTable, setShowTable] = useState(false);
+  const router = useRouter();
+  const dispatch = useDispatch<AppDispatch>();
+  const resultsRef = useRef<HTMLDivElement | null>(null);
 
   // Ensure client-side rendering for proper CSS application
   useEffect(() => {
-    setIsClient(true)
+    setIsClient(true);
     const timer = setTimeout(() => {
-      setShowTable(true)
-    }, 50)
-    return () => clearTimeout(timer)
-  }, [])
+      setShowTable(true);
+    }, 50);
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     const onScroll = () => {
-      setIsSticky(window.scrollY > 100)
-    }
-    window.addEventListener("scroll", onScroll)
-    return () => window.removeEventListener("scroll", onScroll)
-  }, [])
+      setIsSticky(window.scrollY > 100);
+    };
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   useEffect(() => {
     dispatch(
       fetchCarsWithFilters({
         page: currentPage.toString(),
         limit: "10",
-      }),
-    )
-  }, [dispatch, currentPage])
+      })
+    );
+  }, [dispatch, currentPage]);
 
   // Force re-render after layout is complete
   useLayoutEffect(() => {
     if (isClient && !loading && ads.length > 0) {
       const timer = setTimeout(() => {
-        setShowTable(true)
-      }, 100)
-      return () => clearTimeout(timer)
+        setShowTable(true);
+      }, 100);
+      return () => clearTimeout(timer);
     }
-  }, [isClient, loading, ads.length])
+  }, [isClient, loading, ads.length]);
 
   const handleViewDetails = (car: CarAd) => {
-    router.push(`/car_Details?wholesalerId=${car.wholesaler ?? ''}&vin=${car.vin ?? ''}`)
-  }
+    router.push(
+      `/car_Details?wholesalerId=${car.wholesaler ?? ""}&vin=${car.vin ?? ""}`
+    );
+  };
 
   const handleSortChange = (value: string) => {
-    setSortValue(value)
-  }
+    setSortValue(value);
+  };
 
   const handleScrollToResults = () => {
     if (resultsRef.current) {
-      resultsRef.current.scrollIntoView({ behavior: "smooth" })
+      resultsRef.current.scrollIntoView({ behavior: "smooth" });
     }
-  }
+  };
+
+  const handleRemoveAll = async () => {
+    if (!wholesaler?._id) return;
+
+    const result = await dispatch(
+      deleteAllCarsByWholesaler({ wholesalerId: wholesaler._id })
+    );
+
+    if (deleteAllCarsByWholesaler.fulfilled.match(result)) {
+      alert(result.payload.message);
+    } else {
+      alert("Failed to delete cars");
+    }
+  };
 
   const sortedAds = [...ads].sort((a, b) => {
     switch (sortValue) {
       case "price_low_to_high":
-        const aPrice = typeof a.asking === 'number' && !isNaN(a.asking) ? a.asking : Infinity
-        const bPrice = typeof b.asking === 'number' && !isNaN(b.asking) ? b.asking : Infinity
-        return aPrice - bPrice
+        const aPrice =
+          typeof a.asking === "number" && !isNaN(a.asking)
+            ? a.asking
+            : Infinity;
+        const bPrice =
+          typeof b.asking === "number" && !isNaN(b.asking)
+            ? b.asking
+            : Infinity;
+        return aPrice - bPrice;
       case "price_high_to_low":
-        const aPriceHigh = typeof a.asking === 'number' && !isNaN(a.asking) ? a.asking : -Infinity
-        const bPriceHigh = typeof b.asking === 'number' && !isNaN(b.asking) ? b.asking : -Infinity
-        return bPriceHigh - aPriceHigh
+        const aPriceHigh =
+          typeof a.asking === "number" && !isNaN(a.asking)
+            ? a.asking
+            : -Infinity;
+        const bPriceHigh =
+          typeof b.asking === "number" && !isNaN(b.asking)
+            ? b.asking
+            : -Infinity;
+        return bPriceHigh - aPriceHigh;
       case "date_new":
-        const aDateNew = a.createdAt && !isNaN(new Date(a.createdAt).getTime()) ? new Date(a.createdAt).getTime() : -Infinity
-        const bDateNew = b.createdAt && !isNaN(new Date(b.createdAt).getTime()) ? new Date(b.createdAt).getTime() : -Infinity
-        return bDateNew - aDateNew
+        const aDateNew =
+          a.createdAt && !isNaN(new Date(a.createdAt).getTime())
+            ? new Date(a.createdAt).getTime()
+            : -Infinity;
+        const bDateNew =
+          b.createdAt && !isNaN(new Date(b.createdAt).getTime())
+            ? new Date(b.createdAt).getTime()
+            : -Infinity;
+        return bDateNew - aDateNew;
       case "date_old":
-        const aDateOld = a.createdAt && !isNaN(new Date(a.createdAt).getTime()) ? new Date(a.createdAt).getTime() : Infinity
-        const bDateOld = b.createdAt && !isNaN(new Date(b.createdAt).getTime()) ? new Date(b.createdAt).getTime() : Infinity
-        return aDateOld - bDateOld
+        const aDateOld =
+          a.createdAt && !isNaN(new Date(a.createdAt).getTime())
+            ? new Date(a.createdAt).getTime()
+            : Infinity;
+        const bDateOld =
+          b.createdAt && !isNaN(new Date(b.createdAt).getTime())
+            ? new Date(b.createdAt).getTime()
+            : Infinity;
+        return aDateOld - bDateOld;
       default:
-        return 0
+        return 0;
     }
-  })
+  });
 
   // Check if the user is a wholesaler and matches the car's wholesaler ID
   const canDeleteCar = (car: CarAd) => {
-    return isWholesaler && wholesaler?._id === car.wholesaler
-  }
+    return isWholesaler && wholesaler?._id === car.wholesaler;
+  };
 
   if (!isClient) {
-    return null // Prevent SSR mismatch
+    return null; // Prevent SSR mismatch
   }
 
   return (
@@ -641,12 +689,37 @@ const CarsPage = () => {
         <div ref={resultsRef}>
           <div className="results-header">
             <div className="results-count">
-              {pagination.total ?? 0} {pagination.total === 1 ? "Vehicle" : "Vehicles"} Found
+              {pagination.total ?? 0}{" "}
+              {pagination.total === 1 ? "Vehicle" : "Vehicles"} Found
             </div>
             <div className="sort-dropdown">
-              <Dropdown options={sortOptions} value={sortValue} onChange={handleSortChange} />
+              <Dropdown
+                options={sortOptions}
+                value={sortValue}
+                onChange={handleSortChange}
+              />
             </div>
           </div>
+          {wholesaler?._id && (
+            <Suspense fallback={<CircularProgress />}>
+              <Box display="flex" justifyContent="flex-end" mb={2} mr={2}>
+                {wholesaler?._id && (
+                  <Button
+                    variant="contained"
+                    color="error"
+                    onClick={handleRemoveAll}
+                    sx={{
+                      textTransform: "capitalize",
+                      fontWeight: 600,
+                      borderRadius: 2,
+                    }}
+                  >
+                    Remove All
+                  </Button>
+                )}
+              </Box>
+            </Suspense>
+          )}
 
           {loading ? (
             <div className="loading-container">
@@ -654,7 +727,11 @@ const CarsPage = () => {
               <p>Loading vehicles...</p>
             </div>
           ) : (
-            <div className={`cars-container ${showTable ? "cars-ready" : "cars-loading"}`}>
+            <div
+              className={`cars-container ${
+                showTable ? "cars-ready" : "cars-loading"
+              }`}
+            >
               <div className="desktop-table">
                 <table className="cars-table">
                   <thead>
@@ -676,29 +753,89 @@ const CarsPage = () => {
                   </thead>
                   <tbody>
                     {sortedAds.map((car) => (
-                      <tr key={car._id ?? Math.random().toString()} className="car-row">
-                        <td className="stock-cell">{car.stock && typeof car.stock === 'string' ? car.stock : 'N/A'}</td>
-                        <td className="vin-cell">{car.vin && typeof car.vin === 'string' ? car.vin : 'N/A'}</td>
-                        <td className="branch-cell">{car.branch && typeof car.branch === 'string' ? car.branch : 'N/A'}</td>
-                        <td className="bay-cell">{car.bayNumber && typeof car.bayNumber === 'string' ? car.bayNumber : 'N/A'}</td>
-                        <td className="description-cell">{car.description && typeof car.description === 'string' ? car.description : 'N/A'}</td>
-                        <td className="odometer-cell">
-                          {typeof car.odometer === 'number' && !isNaN(car.odometer) ? `${car.odometer.toLocaleString()} km` : 'N/A'}
+                      <tr
+                        key={car._id ?? Math.random().toString()}
+                        className="car-row"
+                      >
+                        <td className="stock-cell">
+                          {car.stock && typeof car.stock === "string"
+                            ? car.stock
+                            : "N/A"}
                         </td>
-                        <td className="build-date-cell">{car.buildDate && typeof car.buildDate === 'string' ? car.buildDate : 'N/A'}</td>
-                        <td className="drive-type-cell">{car.driveType && typeof car.driveType === 'string' ? car.driveType : 'N/A'}</td>
-                        <td className="fuel-type-cell">{car.fuelType && typeof car.fuelType === 'string' ? car.fuelType : 'N/A'}</td>
-                        <td className="seats-cell">{typeof car.seats === 'number' && !isNaN(car.seats) ? car.seats : 'N/A'}</td>
+                        <td className="vin-cell">
+                          {car.vin && typeof car.vin === "string"
+                            ? car.vin
+                            : "N/A"}
+                        </td>
+                        <td className="branch-cell">
+                          {car.branch && typeof car.branch === "string"
+                            ? car.branch
+                            : "N/A"}
+                        </td>
+                        <td className="bay-cell">
+                          {car.bayNumber && typeof car.bayNumber === "string"
+                            ? car.bayNumber
+                            : "N/A"}
+                        </td>
+                        <td className="description-cell">
+                          {car.description &&
+                          typeof car.description === "string"
+                            ? car.description
+                            : "N/A"}
+                        </td>
+                        <td className="odometer-cell">
+                          {typeof car.odometer === "number" &&
+                          !isNaN(car.odometer)
+                            ? `${car.odometer.toLocaleString()} km`
+                            : "N/A"}
+                        </td>
+                        <td className="build-date-cell">
+                          {car.buildDate && typeof car.buildDate === "string"
+                            ? car.buildDate
+                            : "N/A"}
+                        </td>
+                        <td className="drive-type-cell">
+                          {car.driveType && typeof car.driveType === "string"
+                            ? car.driveType
+                            : "N/A"}
+                        </td>
+                        <td className="fuel-type-cell">
+                          {car.fuelType && typeof car.fuelType === "string"
+                            ? car.fuelType
+                            : "N/A"}
+                        </td>
+                        <td className="seats-cell">
+                          {typeof car.seats === "number" && !isNaN(car.seats)
+                            ? car.seats
+                            : "N/A"}
+                        </td>
                         <td className="price-cell">
-                          {typeof car.asking === 'number' && !isNaN(car.asking) ? `$${car.asking.toLocaleString()}` : 'N/A'}
+                          {typeof car.asking === "number" && !isNaN(car.asking)
+                            ? `$${car.asking.toLocaleString()}`
+                            : "N/A"}
                         </td>
                         <td className="status-cell">
-                          <span className={`status-badge ${typeof car.available === 'boolean' ? (car.available ? 'available' : 'unavailable') : 'unavailable'}`}>
-                            {typeof car.available === 'boolean' ? (car.available ? 'Available' : 'Unavailable') : 'N/A'}
+                          <span
+                            className={`status-badge ${
+                              typeof car.available === "boolean"
+                                ? car.available
+                                  ? "available"
+                                  : "unavailable"
+                                : "unavailable"
+                            }`}
+                          >
+                            {typeof car.available === "boolean"
+                              ? car.available
+                                ? "Available"
+                                : "Unavailable"
+                              : "N/A"}
                           </span>
                         </td>
                         <td className="actions-cell">
-                          <button className="view-details-btn" onClick={() => handleViewDetails(car)}>
+                          <button
+                            className="view-details-btn"
+                            onClick={() => handleViewDetails(car)}
+                          >
                             View Details
                           </button>
                           <button
@@ -707,11 +844,19 @@ const CarsPage = () => {
                               window.dispatchEvent(
                                 new CustomEvent("openChat", {
                                   detail: {
-                                    receiverId: car.wholesaler && typeof car.wholesaler === 'string' ? car.wholesaler : '',
-                                    name: car.branch && typeof car.branch === 'string' ? car.branch : 'Unknown',
+                                    receiverId:
+                                      car.wholesaler &&
+                                      typeof car.wholesaler === "string"
+                                        ? car.wholesaler
+                                        : "",
+                                    name:
+                                      car.branch &&
+                                      typeof car.branch === "string"
+                                        ? car.branch
+                                        : "Unknown",
                                   },
-                                }),
-                              )
+                                })
+                              );
                             }}
                           >
                             Message Seller
@@ -721,25 +866,32 @@ const CarsPage = () => {
                               className="view-details-btn"
                               onClick={async () => {
                                 try {
-                                  const vin = car.vin && typeof car.vin === 'string' ? car.vin : ''
-                                  const confirmed = window.confirm(`Are you sure you want to delete car with VIN ${vin || 'N/A'}?`)
-                                  if (!confirmed) return
+                                  const vin =
+                                    car.vin && typeof car.vin === "string"
+                                      ? car.vin
+                                      : "";
+                                  const confirmed = window.confirm(
+                                    `Are you sure you want to delete car with VIN ${
+                                      vin || "N/A"
+                                    }?`
+                                  );
+                                  if (!confirmed) return;
                                   if (car.wholesaler && vin) {
                                     await dispatch(
                                       deleteCarByWholesalerAndVin({
                                         wholesalerId: car.wholesaler,
                                         vin,
-                                      }),
-                                    )
+                                      })
+                                    );
                                     dispatch(
                                       fetchCarsWithFilters({
                                         page: currentPage.toString(),
                                         limit: "10",
-                                      }),
-                                    )
+                                      })
+                                    );
                                   }
                                 } catch (e) {
-                                  console.error(e)
+                                  console.error(e);
                                 }
                               }}
                             >
@@ -755,18 +907,29 @@ const CarsPage = () => {
 
               <div className="mobile-cards">
                 {sortedAds.map((car) => (
-                  <div key={car._id ?? Math.random().toString()} className="car-card">
+                  <div
+                    key={car._id ?? Math.random().toString()}
+                    className="car-card"
+                  >
                     <div className="car-card-header">
                       <div className="car-title">
                         <h3 className="car-description">
-                          {car.description && typeof car.description === 'string' ? car.description : 'N/A'}
+                          {car.description &&
+                          typeof car.description === "string"
+                            ? car.description
+                            : "N/A"}
                         </h3>
                         <div className="car-stock">
-                          Stock: {car.stock && typeof car.stock === 'string' ? car.stock : 'N/A'}
+                          Stock:{" "}
+                          {car.stock && typeof car.stock === "string"
+                            ? car.stock
+                            : "N/A"}
                         </div>
                       </div>
                       <div className="car-price">
-                        {typeof car.asking === 'number' && !isNaN(car.asking) ? `$${car.asking.toLocaleString()}` : 'N/A'}
+                        {typeof car.asking === "number" && !isNaN(car.asking)
+                          ? `$${car.asking.toLocaleString()}`
+                          : "N/A"}
                       </div>
                     </div>
 
@@ -774,41 +937,79 @@ const CarsPage = () => {
                       <div className="car-info-grid">
                         <div className="info-item">
                           <span className="info-label">VIN</span>
-                          <span className="info-value vin-text">{car.vin && typeof car.vin === 'string' ? car.vin : 'N/A'}</span>
+                          <span className="info-value vin-text">
+                            {car.vin && typeof car.vin === "string"
+                              ? car.vin
+                              : "N/A"}
+                          </span>
                         </div>
                         <div className="info-item">
                           <span className="info-label">Odometer</span>
                           <span className="info-value">
-                            {typeof car.odometer === 'number' && !isNaN(car.odometer) ? `${car.odometer.toLocaleString()} km` : 'N/A'}
+                            {typeof car.odometer === "number" &&
+                            !isNaN(car.odometer)
+                              ? `${car.odometer.toLocaleString()} km`
+                              : "N/A"}
                           </span>
                         </div>
                         <div className="info-item">
                           <span className="info-label">Branch</span>
-                          <span className="info-value">{car.branch && typeof car.branch === 'string' ? car.branch : 'N/A'}</span>
+                          <span className="info-value">
+                            {car.branch && typeof car.branch === "string"
+                              ? car.branch
+                              : "N/A"}
+                          </span>
                         </div>
                         <div className="info-item">
                           <span className="info-label">Bay</span>
-                          <span className="info-value">{car.bayNumber && typeof car.bayNumber === 'string' ? car.bayNumber : 'N/A'}</span>
+                          <span className="info-value">
+                            {car.bayNumber && typeof car.bayNumber === "string"
+                              ? car.bayNumber
+                              : "N/A"}
+                          </span>
                         </div>
                         <div className="info-item">
                           <span className="info-label">Build Date</span>
-                          <span className="info-value">{car.buildDate && typeof car.buildDate === 'string' ? car.buildDate : 'N/A'}</span>
+                          <span className="info-value">
+                            {car.buildDate && typeof car.buildDate === "string"
+                              ? car.buildDate
+                              : "N/A"}
+                          </span>
                         </div>
                         <div className="info-item">
                           <span className="info-label">Fuel</span>
-                          <span className="info-value">{car.fuelType && typeof car.fuelType === 'string' ? car.fuelType : 'N/A'}</span>
+                          <span className="info-value">
+                            {car.fuelType && typeof car.fuelType === "string"
+                              ? car.fuelType
+                              : "N/A"}
+                          </span>
                         </div>
                       </div>
 
                       <div className="car-status">
-                        <span className={`status-badge ${typeof car.available === 'boolean' ? (car.available ? 'available' : 'unavailable') : 'unavailable'}`}>
-                          {typeof car.available === 'boolean' ? (car.available ? 'Available' : 'Unavailable') : 'N/A'}
+                        <span
+                          className={`status-badge ${
+                            typeof car.available === "boolean"
+                              ? car.available
+                                ? "available"
+                                : "unavailable"
+                              : "unavailable"
+                          }`}
+                        >
+                          {typeof car.available === "boolean"
+                            ? car.available
+                              ? "Available"
+                              : "Unavailable"
+                            : "N/A"}
                         </span>
                       </div>
                     </div>
 
                     <div className="car-card-actions">
-                      <button className="action-btn primary" onClick={() => handleViewDetails(car)}>
+                      <button
+                        className="action-btn primary"
+                        onClick={() => handleViewDetails(car)}
+                      >
                         View Details
                       </button>
                       <button
@@ -817,11 +1018,18 @@ const CarsPage = () => {
                           window.dispatchEvent(
                             new CustomEvent("openChat", {
                               detail: {
-                                receiverId: car.wholesaler && typeof car.wholesaler === 'string' ? car.wholesaler : '',
-                                name: car.branch && typeof car.branch === 'string' ? car.branch : 'Unknown',
+                                receiverId:
+                                  car.wholesaler &&
+                                  typeof car.wholesaler === "string"
+                                    ? car.wholesaler
+                                    : "",
+                                name:
+                                  car.branch && typeof car.branch === "string"
+                                    ? car.branch
+                                    : "Unknown",
                               },
-                            }),
-                          )
+                            })
+                          );
                         }}
                       >
                         Message
@@ -831,25 +1039,32 @@ const CarsPage = () => {
                           className="action-btn danger"
                           onClick={async () => {
                             try {
-                              const vin = car.vin && typeof car.vin === 'string' ? car.vin : ''
-                              const confirmed = window.confirm(`Are you sure you want to delete car with VIN ${vin || 'N/A'}?`)
-                              if (!confirmed) return
+                              const vin =
+                                car.vin && typeof car.vin === "string"
+                                  ? car.vin
+                                  : "";
+                              const confirmed = window.confirm(
+                                `Are you sure you want to delete car with VIN ${
+                                  vin || "N/A"
+                                }?`
+                              );
+                              if (!confirmed) return;
                               if (car.wholesaler && vin) {
                                 await dispatch(
                                   deleteCarByWholesalerAndVin({
                                     wholesalerId: car.wholesaler,
                                     vin,
-                                  }),
-                                )
+                                  })
+                                );
                                 dispatch(
                                   fetchCarsWithFilters({
                                     page: currentPage.toString(),
                                     limit: "10",
-                                  }),
-                                )
+                                  })
+                                );
                               }
                             } catch (e) {
-                              console.error(e)
+                              console.error(e);
                             }
                           }}
                         >
@@ -877,7 +1092,7 @@ const CarsPage = () => {
         </div>
       </main>
     </div>
-  )
-}
+  );
+};
 
-export default CarsPage
+export default CarsPage;
