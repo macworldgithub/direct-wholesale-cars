@@ -373,7 +373,7 @@ const PasswordForm = ({ mode, role: propRole }: PasswordFormProps) => {
           <LocalizedButton
             label="Send OTP"
             className="password-btn"
-            size="lg"
+            size="sm"
             type="submit"
           />
         )}
