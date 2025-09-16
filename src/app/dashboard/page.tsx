@@ -79,7 +79,7 @@ const Dashboard = () => {
       >
         <Tab label="Profile" />
         {user?.role === "wholesaler" && <Tab label="Add a Car" />}
-        {user?.role === "wholesaler" && <Tab label="Car Listing" />}
+        {/* {user?.role === "wholesaler" && <Tab label="Car Listing" />} */}
       </Tabs>
 
       <Box sx={{ mt: 4 }}>

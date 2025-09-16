@@ -20,6 +20,7 @@ const BurgerMenu: React.FC<BurgerMenuProps> = ({ isOpen, toggle }) => {
       <div className={`burger-dropdown ${isOpen ? 'show' : ''}`}>
         <Link href="/" onClick={toggle}>Home</Link>
         <Link href="/cars" onClick={toggle}>Cars</Link>
+        <Link href="/add_car_list" onClick={toggle}>Add Cars</Link>
         <Link href="/about" onClick={toggle}>About Us</Link>
         <Link href="/contact" onClick={toggle}>Contact</Link>
         <Link href="/login" onClick={toggle}>Login</Link>
