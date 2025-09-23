@@ -17,7 +17,7 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "Direct WholeSale",
+  title: "Direct Wholesale Cars",
   description: "Find your next car with Direct Wholesale Cars. We connect buyers with trusted dealers to provide affordable, reliable vehicles at wholesale rates.",
 };
 
