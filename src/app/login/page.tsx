@@ -33,10 +33,15 @@ const LoginPage = () => {
   const openForgotPopup = () => setIsForgotOpen(true);
   const closeForgotPopup = () => setIsForgotOpen(false);
 
-
   const { loading, error } = useSelector(
-    (state: RootState) => state.SignuinDealer
+    (state: RootState) => state.SignuinDealer,
   );
+
+  useEffect(() => {
+    if (error) {
+      alert(error);
+    }
+  }, [error]);
 
   const {
     handleSubmit,
@@ -58,21 +63,46 @@ const LoginPage = () => {
     }
   }, [setValue]);
 
+  // const onSubmit = async (data: LoginFormData) => {
+  //   const accountRole = searchParams?.get("role");
+  //   // if (!accountRole) {
+  //   //   alert("Please select an account type from the options above.");
+  //   //   return;
+  //   // }
+
+  //   let result;
+  //   if (accountRole === "dealer") {
+  //     result = await dispatch(
+  //       SigninDealer({ email: data.email, password: data.password }),
+  //     );
+  //     console.log(result, "dealer");
+  //   } else if (accountRole === "wholesaler") {
+  //     result = await dispatch(
+  //       SigninWholesaler({ email: data.email, password: data.password }),
+  //     );
+  //     console.log(result, "dealer");
+  //   }
+
+  //   if (
+  //     (accountRole === "dealer" && SigninDealer.fulfilled.match(result)) ||
+  //     (accountRole === "wholesaler" && SigninWholesaler.fulfilled.match(result))
+  //   ) {
+  //     setToastOpen(true);
+  //     router.push("/");
+  //   }
+  // };
+
   const onSubmit = async (data: LoginFormData) => {
     const accountRole = searchParams?.get("role");
-    // if (!accountRole) {
-    //   alert("Please select an account type from the options above.");
-    //   return;
-    // }
-
     let result;
+
     if (accountRole === "dealer") {
       result = await dispatch(
-        SigninDealer({ email: data.email, password: data.password })
+        SigninDealer({ email: data.email, password: data.password }),
       );
     } else if (accountRole === "wholesaler") {
       result = await dispatch(
-        SigninWholesaler({ email: data.email, password: data.password })
+        SigninWholesaler({ email: data.email, password: data.password }),
       );
     }
 
@@ -81,9 +111,10 @@ const LoginPage = () => {
       (accountRole === "wholesaler" && SigninWholesaler.fulfilled.match(result))
     ) {
       setToastOpen(true);
-      setTimeout(() => {
-        router.push("/");
-      }, 2000);
+      router.push("/");
+    } else {
+      // Agar login fail hua, result me payload hoga error message
+      alert(result.payload || "Invalid credentials");
     }
   };
 
@@ -157,7 +188,7 @@ const LoginPage = () => {
                     className={`account-option ${isSelected ? "selected" : ""}`}
                     onClick={() => {
                       const params = new URLSearchParams(
-                        searchParams?.toString()
+                        searchParams?.toString(),
                       );
                       params.set("role", type);
                       router.replace(`${pathname}?${params.toString()}`);

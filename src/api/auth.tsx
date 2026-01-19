@@ -16,7 +16,7 @@ export const SignupDealer = createAsyncThunk(
           headers: isFormData
             ? { "Content-Type": "multipart/form-data" }
             : { "Content-Type": "application/json" },
-        }
+        },
       );
 
       try {
@@ -24,7 +24,7 @@ export const SignupDealer = createAsyncThunk(
           isFormData ? (data.get("email") as string) : (data.email as string),
           "Welcome to Direct Wholesale Cars",
           (isFormData ? (data.get("firstName") as string) : data.firstName) ||
-            "Dealer"
+            "Dealer",
         );
       } catch (emailErr) {
         console.error("Signup succeeded, but email sending failed", emailErr);
@@ -34,7 +34,7 @@ export const SignupDealer = createAsyncThunk(
     } catch (error: any) {
       return rejectWithValue(error.response?.data || "Signup failed");
     }
-  }
+  },
 );
 
 export const SignupWholesaler = createAsyncThunk(
@@ -50,7 +50,7 @@ export const SignupWholesaler = createAsyncThunk(
           headers: isFormData
             ? { "Content-Type": "multipart/form-data" }
             : { "Content-Type": "application/json" },
-        }
+        },
       );
 
       try {
@@ -58,7 +58,7 @@ export const SignupWholesaler = createAsyncThunk(
           isFormData ? (data.get("email") as string) : (data.email as string),
           "Welcome to Direct Wholesale Cars",
           (isFormData ? (data.get("firstName") as string) : data.firstName) ||
-            "Wholesaler"
+            "Wholesaler",
         );
       } catch (emailErr) {
         console.error("Signup succeeded, but email sending failed", emailErr);
@@ -68,7 +68,7 @@ export const SignupWholesaler = createAsyncThunk(
     } catch (error: any) {
       return rejectWithValue(error.response?.data || "Signup failed");
     }
-  }
+  },
 );
 
 interface Response {
@@ -84,6 +84,7 @@ interface Response {
     contactPerson: string;
   };
 }
+
 export const SigninDealer = createAsyncThunk<
   // Response & { signedProfileImage?: string },
   Response,
@@ -93,35 +94,14 @@ export const SigninDealer = createAsyncThunk<
   try {
     const response = await axios.post<Response>(
       `${BACKEND_URL}/auth/login/dealer`,
-      payload
+      payload,
     );
-
-    // const { accessToken, accountType } = response.data;
-
-    // let signedProfileImage: string | undefined = undefined;
-
-    // try {
-    //   const signedRes = await axios.get<{ url: string }>(
-    //     `${BACKEND_URL}/dealers/signed-profile-image`,
-    //     {
-    //       params: { key: accountType.profileImage },
-    //       headers: {
-    //         Authorization: `Bearer ${accessToken}`,
-    //       },
-    //     }
-    //   );
-    //   signedProfileImage = signedRes.data.url;
-    // } catch (signedErr) {
-    //   console.error("Failed to fetch signed profile image", signedErr);
-    // }
-
     return {
       ...response.data,
-      // signedProfileImage,
     };
   } catch (error: any) {
     return rejectWithValue(
-      error.response?.data?.message || "An error occurred"
+      error.response?.data?.message || "Invalid credentails",
     );
   }
 });
@@ -135,7 +115,7 @@ export const SigninWholesaler = createAsyncThunk<
   try {
     const response = await axios.post<Response>(
       `${BACKEND_URL}/auth/login/wholesaler`,
-      payload
+      payload,
     );
 
     // const { accessToken, accountType } = response.data;
@@ -160,7 +140,7 @@ export const SigninWholesaler = createAsyncThunk<
     };
   } catch (error: any) {
     return rejectWithValue(
-      error.response?.data?.message || "An error occurred"
+      error.response?.data?.message || "An error occurred",
     );
   }
 });
@@ -211,7 +191,7 @@ export const UpdateDealer = createAsyncThunk<
             ? { "Content-Type": "multipart/form-data" }
             : { "Content-Type": "application/json" }),
         },
-      }
+      },
     );
 
     const { account } = response.data;
@@ -226,7 +206,7 @@ export const UpdateDealer = createAsyncThunk<
             headers: {
               Authorization: `Bearer ${token}`,
             },
-          }
+          },
         );
         signedProfileImage = signedRes.data.url;
       } catch (err) {
@@ -240,7 +220,7 @@ export const UpdateDealer = createAsyncThunk<
     };
   } catch (error: any) {
     return rejectWithValue(
-      error.response?.data?.message || "Failed to update account"
+      error.response?.data?.message || "Failed to update account",
     );
   }
 });
@@ -248,7 +228,7 @@ export const UpdateDealer = createAsyncThunk<
 const sendWelcomeEmail = async (
   to: string,
   subject: string,
-  username: string
+  username: string,
 ) => {
   await axios.post(
     `${BACKEND_URL}/email/send-template`,
@@ -257,7 +237,7 @@ const sendWelcomeEmail = async (
       headers: {
         "Content-Type": "application/json",
       },
-    }
+    },
   );
 };
 
@@ -295,7 +275,7 @@ export const resetPassword = createAsyncThunk<
     } catch (err: any) {
       return rejectWithValue(err.response?.data?.message || "Invalid OTP");
     }
-  }
+  },
 );
 
 export const requestChangePassword = createAsyncThunk<
@@ -312,15 +292,15 @@ export const requestChangePassword = createAsyncThunk<
           email,
           oldPassword,
           role,
-        }
+        },
       );
       return res.data;
     } catch (err: any) {
       return rejectWithValue(
-        err.response?.data?.message || "Failed to send OTP"
+        err.response?.data?.message || "Failed to send OTP",
       );
     }
-  }
+  },
 );
 
 export const verifyChangePassword = createAsyncThunk<
@@ -338,13 +318,13 @@ export const verifyChangePassword = createAsyncThunk<
           otp,
           newPassword,
           role,
-        }
+        },
       );
       return res.data;
     } catch (err: any) {
       return rejectWithValue(err.response?.data?.message || "Invalid OTP");
     }
-  }
+  },
 );
 
 export const resendForgotOtp = createAsyncThunk<
@@ -360,7 +340,7 @@ export const resendForgotOtp = createAsyncThunk<
     return res.data;
   } catch (err: any) {
     return rejectWithValue(
-      err.response?.data?.message || "Failed to resend OTP"
+      err.response?.data?.message || "Failed to resend OTP",
     );
   }
 });
@@ -378,7 +358,7 @@ export const resendChangeOtp = createAsyncThunk<
     return res.data;
   } catch (err: any) {
     return rejectWithValue(
-      err.response?.data?.message || "Failed to resend OTP"
+      err.response?.data?.message || "Failed to resend OTP",
     );
   }
 });
