@@ -531,11 +531,11 @@ const sortOptions = [
 
 const CarsPage = () => {
   const { ads, pagination, loading } = useSelector(
-    (state: RootState) => state.carAds
+    (state: RootState) => state.carAds,
   );
   // Use the provided approach to get wholesaler and check if user is wholesaler
   const wholesaler = useSelector(
-    (state: RootState) => state.SigninWholesaler.wholesaler
+    (state: RootState) => state.SigninWholesaler.wholesaler,
   );
   const isWholesaler = Boolean(wholesaler?._id);
   const [sortValue, setSortValue] = useState<string>(sortOptions[0].value);
@@ -569,7 +569,7 @@ const CarsPage = () => {
       fetchCarsWithFilters({
         page: currentPage.toString(),
         limit: "10",
-      })
+      }),
     );
   }, [dispatch, currentPage]);
 
@@ -585,7 +585,7 @@ const CarsPage = () => {
 
   const handleViewDetails = (car: CarAd) => {
     router.push(
-      `/car_Details?wholesalerId=${car.wholesaler ?? ""}&vin=${car.vin ?? ""}`
+      `/car_Details?wholesalerId=${car.wholesaler ?? ""}&vin=${car.vin ?? ""}`,
     );
   };
 
@@ -603,7 +603,7 @@ const CarsPage = () => {
     if (!wholesaler?._id) return;
 
     const result = await dispatch(
-      deleteAllCarsByWholesaler({ wholesalerId: wholesaler._id })
+      deleteAllCarsByWholesaler({ wholesalerId: wholesaler._id }),
     );
 
     if (deleteAllCarsByWholesaler.fulfilled.match(result)) {
@@ -703,7 +703,7 @@ const CarsPage = () => {
           {wholesaler?._id && (
             <Suspense fallback={<CircularProgress />}>
               <Box display="flex" justifyContent="flex-end" mb={2} mr={2}>
-                {wholesaler?._id && (
+                {/* {wholesaler?._id && (
                   <Button
                     variant="contained"
                     color="error"
@@ -716,7 +716,7 @@ const CarsPage = () => {
                   >
                     Remove All
                   </Button>
-                )}
+                )} */}
               </Box>
             </Suspense>
           )}
@@ -855,7 +855,7 @@ const CarsPage = () => {
                                         ? car.branch
                                         : "Unknown",
                                   },
-                                })
+                                }),
                               );
                             }}
                           >
@@ -873,7 +873,7 @@ const CarsPage = () => {
                                   const confirmed = window.confirm(
                                     `Are you sure you want to delete car with VIN ${
                                       vin || "N/A"
-                                    }?`
+                                    }?`,
                                   );
                                   if (!confirmed) return;
                                   if (car.wholesaler && vin) {
@@ -881,13 +881,13 @@ const CarsPage = () => {
                                       deleteCarByWholesalerAndVin({
                                         wholesalerId: car.wholesaler,
                                         vin,
-                                      })
+                                      }),
                                     );
                                     dispatch(
                                       fetchCarsWithFilters({
                                         page: currentPage.toString(),
                                         limit: "10",
-                                      })
+                                      }),
                                     );
                                   }
                                 } catch (e) {
@@ -1028,7 +1028,7 @@ const CarsPage = () => {
                                     ? car.branch
                                     : "Unknown",
                               },
-                            })
+                            }),
                           );
                         }}
                       >
@@ -1046,7 +1046,7 @@ const CarsPage = () => {
                               const confirmed = window.confirm(
                                 `Are you sure you want to delete car with VIN ${
                                   vin || "N/A"
-                                }?`
+                                }?`,
                               );
                               if (!confirmed) return;
                               if (car.wholesaler && vin) {
@@ -1054,13 +1054,13 @@ const CarsPage = () => {
                                   deleteCarByWholesalerAndVin({
                                     wholesalerId: car.wholesaler,
                                     vin,
-                                  })
+                                  }),
                                 );
                                 dispatch(
                                   fetchCarsWithFilters({
                                     page: currentPage.toString(),
                                     limit: "10",
-                                  })
+                                  }),
                                 );
                               }
                             } catch (e) {
